@@ -1,4 +1,6 @@
 
+"use client";
+
 import { kpiData, attendanceChartData, teamProductivityData, productivityTrendData, taskCompletionData } from "@/lib/data"
 import { KpiCard } from "@/components/kpi-card"
 import { AttendanceTrendsChart } from "@/components/attendance-trends-chart"
@@ -45,6 +47,32 @@ const newKpiData = [
 
 
 export default function AdminDashboardPage() {
+  const handleExport = (format: 'csv' | 'word') => {
+    let data = '';
+    let mimeType = '';
+    let fileExtension = '';
+
+    if (format === 'csv') {
+      data = 'Metric,Value,Change\nTotal Employees,1250,+1.5%\nProductivity,99.2%,+1.2%';
+      mimeType = 'text/csv';
+      fileExtension = 'csv';
+    } else {
+      data = 'Dashboard Report\n\nTotal Employees: 1,250 (+1.5%)\nProductivity: 99.2% (+1.2%)';
+      mimeType = 'application/msword';
+      fileExtension = 'doc';
+    }
+
+    const blob = new Blob([data], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dashboard-report.${fileExtension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
@@ -57,11 +85,11 @@ export default function AdminDashboardPage() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => handleExport('csv')}>
               <FileSpreadsheet className="mr-2 h-4 w-4" />
               CSV
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => handleExport('word')}>
               <FileText className="mr-2 h-4 w-4" />
               Word
             </DropdownMenuItem>

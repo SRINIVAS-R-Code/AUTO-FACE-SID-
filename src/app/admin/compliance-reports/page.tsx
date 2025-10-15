@@ -1,4 +1,6 @@
 
+"use client";
+
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -30,6 +32,32 @@ export default function ComplianceReportsPage() {
     }
   };
 
+  const handleExport = (format: 'csv' | 'word') => {
+    let data = '';
+    let mimeType = '';
+    let fileExtension = '';
+
+    if (format === 'csv') {
+      data = 'Admin,Action,Target,Timestamp\nAdmin User,Viewed Feed,Alice Brown,2024-07-23 10:45 AM';
+      mimeType = 'text/csv';
+      fileExtension = 'csv';
+    } else {
+      data = 'Compliance Report\n\nAdmin: Admin User, Action: Viewed Feed, Target: Alice Brown, Timestamp: 2024-07-23 10:45 AM';
+      mimeType = 'application/msword';
+      fileExtension = 'doc';
+    }
+
+    const blob = new Blob([data], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `compliance-report.${fileExtension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
 
   return (
     <div className="space-y-6">
@@ -43,11 +71,11 @@ export default function ComplianceReportsPage() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => handleExport('csv')}>
                 <FileSpreadsheet className="mr-2 h-4 w-4" />
                 CSV
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => handleExport('word')}>
                 <FileText className="mr-2 h-4 w-4" />
                 Word
                 </DropdownMenuItem>

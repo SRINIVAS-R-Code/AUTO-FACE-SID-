@@ -26,6 +26,32 @@ const performanceData = employeeData.map(employee => ({
 export default function PerformanceAnalyticsPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
+  const handleExport = (format: 'csv' | 'word') => {
+    let data = '';
+    let mimeType = '';
+    let fileExtension = '';
+
+    if (format === 'csv') {
+      data = 'Employee,Productivity,Task Completion\nAlice Brown,95,88\nBob Johnson,92,91';
+      mimeType = 'text/csv';
+      fileExtension = 'csv';
+    } else {
+      data = 'Performance Report\n\nEmployee: Alice Brown, Productivity: 95%\nEmployee: Bob Johnson, Productivity: 92%';
+      mimeType = 'application/msword';
+      fileExtension = 'doc';
+    }
+
+    const blob = new Blob([data], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `performance-report.${fileExtension}`;
+    document.body.appendChild(a);
+a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const filteredEmployees = performanceData.filter(employee =>
     employee.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -52,11 +78,11 @@ export default function PerformanceAnalyticsPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleExport('csv')}>
                 <FileSpreadsheet className="mr-2 h-4 w-4" />
                 CSV
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleExport('word')}>
                 <FileText className="mr-2 h-4 w-4" />
                 Word
               </DropdownMenuItem>
