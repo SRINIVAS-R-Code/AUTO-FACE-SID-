@@ -9,6 +9,7 @@ import type { Employee } from '@/lib/types'
 import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
+import { useToast } from '@/hooks/use-toast'
 
 type CameraFeedProps = {
   employee: Employee
@@ -17,13 +18,15 @@ type CameraFeedProps = {
 export function CameraFeed({ employee }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isCameraOn, setIsCameraOn] = useState(false)
+  const [snapshotUrl, setSnapshotUrl] = useState<string | null>(null);
+  const { toast } = useToast();
   
   const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
 
   useEffect(() => {
     // This effect handles starting and stopping the camera stream
+    let stream: MediaStream;
     if (isCameraOn) {
-      let stream: MediaStream;
       const enableStream = async () => {
         try {
           stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -33,6 +36,11 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         } catch (err) {
           console.error("Error accessing camera: ", err);
           setIsCameraOn(false); // Turn button back off if permission is denied
+          toast({
+            variant: "destructive",
+            title: "Camera Access Denied",
+            description: "Please grant camera permission in your browser settings.",
+          });
         }
       };
       enableStream();
@@ -47,12 +55,41 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         }
       };
     }
-  }, [isCameraOn]); // This effect re-runs whenever isCameraOn changes
+  }, [isCameraOn, toast]); // This effect re-runs whenever isCameraOn changes
 
 
   const toggleCamera = () => {
     setIsCameraOn(prev => !prev);
+    if (isCameraOn) {
+      // Clear snapshot when turning off camera
+      setSnapshotUrl(null);
+    }
   }
+
+  const handleCapture = () => {
+    if (videoRef.current && isCameraOn) {
+      const video = videoRef.current;
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/png');
+        setSnapshotUrl(dataUrl);
+        toast({
+          title: "Snapshot Captured!",
+          description: `A snapshot of ${employee.name} has been taken.`,
+        });
+      }
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Camera is Off",
+        description: "Please turn on the camera to capture a snapshot.",
+      });
+    }
+  };
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
@@ -106,7 +143,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon">
+                  <Button variant="outline" size="icon" onClick={handleCapture}>
                     <Camera className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
@@ -131,9 +168,15 @@ export function CameraFeed({ employee }: CameraFeedProps) {
       </Card>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>{employee.name} - Live Feed</DialogTitle>
+          <DialogTitle>{snapshotUrl ? `${employee.name} - Snapshot` : `${employee.name} - Live Feed`}</DialogTitle>
         </DialogHeader>
-        <VideoPlayer isFullView />
+        {snapshotUrl ? (
+          <div className="relative aspect-video w-full">
+            <Image src={snapshotUrl} alt={`Snapshot of ${employee.name}`} fill objectFit="contain" />
+          </div>
+        ) : (
+          <VideoPlayer isFullView />
+        )}
       </DialogContent>
     </Dialog>
   )
