@@ -23,6 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
@@ -32,7 +38,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/context/auth-context"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Camera } from "lucide-react"
+import { Camera, Image as ImageIcon, Sparkles } from "lucide-react"
 
 const settingsFormSchema = z.object({
   // Profile
@@ -97,7 +103,7 @@ export default function SettingsPage() {
     })
   }
 
-  const handlePhotoChange = () => {
+  const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
@@ -111,11 +117,22 @@ export default function SettingsPage() {
           setAvatarUrl(result);
           toast({
             title: "Profile Photo Updated",
-            description: "Your new photo has been saved.",
+            description: "Your new photo has been uploaded.",
           });
         }
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRandomPhoto = () => {
+    if (setAvatarUrl) {
+      const newAvatarUrl = `https://picsum.photos/seed/${Date.now()}/100/100`;
+      setAvatarUrl(newAvatarUrl);
+      toast({
+        title: "Profile Photo Updated",
+        description: "A new random photo has been generated.",
+      });
     }
   };
 
@@ -146,25 +163,40 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <FormItem className="flex items-center gap-6">
-                        <div className="relative">
-                            <Avatar className="h-20 w-20">
-                                <AvatarImage src={avatarUrl || ''} alt={username || 'Admin'} data-ai-hint="person face" />
-                                <AvatarFallback>{username?.charAt(0).toUpperCase()}</AvatarFallback>
-                            </Avatar>
-                             <Button type="button" size="icon" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full" onClick={handlePhotoChange}>
-                                <Camera className="h-4 w-4" />
-                             </Button>
-                             <input 
-                                type="file"
-                                ref={fileInputRef}
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handleFileSelect}
-                             />
-                        </div>
+                         <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <div className="relative cursor-pointer">
+                                    <Avatar className="h-20 w-20">
+                                        <AvatarImage src={avatarUrl || ''} alt={username || 'Admin'} data-ai-hint="person face" />
+                                        <AvatarFallback>{username?.charAt(0).toUpperCase()}</AvatarFallback>
+                                    </Avatar>
+                                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-opacity rounded-full">
+                                        <Camera className="h-6 w-6" />
+                                    </div>
+                                </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem onSelect={handleUploadClick}>
+                                    <ImageIcon className="mr-2 h-4 w-4" />
+                                    <span>Upload Photo</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onSelect={handleRandomPhoto}>
+                                    <Sparkles className="mr-2 h-4 w-4" />
+                                    <span>Generate Random</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                         <input 
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handleFileSelect}
+                         />
                         <div>
                             <FormLabel>Profile Photo</FormLabel>
-                            <FormDescription>Click the camera icon to change your profile photo.</FormDescription>
+                            <FormDescription>Click the avatar to change your profile photo.</FormDescription>
                         </div>
                     </FormItem>
                    <FormField
