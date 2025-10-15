@@ -24,17 +24,15 @@ export function CameraFeed({ employee }: CameraFeedProps) {
     let stream: MediaStream | null = null;
     
     const enableStream = async () => {
-      if (isCameraOn) {
-        try {
-          stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        } catch (err) {
-          console.error("Error accessing camera: ", err);
-          alert("Could not access camera. Please check permissions.");
-          setIsCameraOn(false);
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
         }
+      } catch (err) {
+        console.error("Error accessing camera: ", err);
+        // We won't alert here to avoid spamming the user if they deny permission for many feeds
+        setIsCameraOn(false);
       }
     };
 
@@ -53,6 +51,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
     }
 
     return () => {
+      // This cleanup runs when the component unmounts OR when dependencies change before the new effect runs.
       disableStream();
     };
   }, [isCameraOn]);
@@ -64,7 +63,9 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-      {!isCameraOn ? (
+      {isCameraOn ? (
+         <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
+      ) : (
         <>
           <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
           {!isFullView && (
@@ -74,8 +75,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
             </div>
           )}
         </>
-      ) : (
-        <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
       )}
 
       {isCameraOn && (
@@ -84,7 +83,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
           LIVE
         </div>
       )}
-      <div className="absolute bottom-2 left-2 text-white bg-black/50 rounded p-1 text-xs">
+       <div className="absolute bottom-2 left-2 bg-black/50 text-white rounded px-2 py-1 text-xs">
           <p>Status: {isCameraOn ? 'ONLINE' : 'OFFLINE'}</p>
       </div>
     </div>
