@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from "next/link"
@@ -5,6 +6,14 @@ import { usePathname } from "next/navigation"
 import {
   User,
   Bot,
+  LayoutDashboard,
+  Video,
+  CalendarCheck,
+  BarChart2,
+  Heart,
+  Bell,
+  Settings,
+  Pencil,
 } from "lucide-react"
 
 import {
@@ -14,8 +23,10 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarFooter,
 } from "@/components/ui/sidebar"
 import { useSidebar } from "@/components/ui/sidebar"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 const useSafePathname = () => {
   try {
@@ -32,7 +43,13 @@ const useSafePathname = () => {
 }
 
 const userNavItems = [
-    { href: "/user/dashboard", icon: User, label: "My Dashboard" },
+    { href: "/user/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { href: "#", icon: Video, label: "Live Camera" },
+    { href: "#", icon: CalendarCheck, label: "Attendance" },
+    { href: "#", icon: BarChart2, label: "Analytics" },
+    { href: "#", icon: Heart, label: "Wellness" },
+    { href: "#", icon: Bell, label: "Notifications" },
+    { href: "#", icon: Settings, label: "Settings" },
 ]
 
 export function UserSidebarNav() {
@@ -42,14 +59,24 @@ export function UserSidebarNav() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Bot className="h-5 w-5 text-primary-foreground" />
-          </div>
-          {state === 'expanded' && <span className="text-lg font-semibold">MonitorAI</span>}
+        <div className="flex items-center gap-2 p-2">
+          {state === 'expanded' && <span className="text-lg font-semibold">Employee Portal</span>}
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      
+      <SidebarContent className="flex-grow">
+        <div className="p-4 space-y-2">
+            <Avatar className="h-16 w-16">
+                <AvatarFallback className="bg-primary/20 text-primary text-3xl">S</AvatarFallback>
+            </Avatar>
+            <div className="relative">
+                <h3 className="font-semibold">srinivas</h3>
+                <p className="text-xs text-muted-foreground">user@company.com</p>
+                <button className="absolute top-0 right-0 text-muted-foreground hover:text-foreground">
+                    <Pencil size={14} />
+                </button>
+            </div>
+        </div>
         <SidebarMenu>
           {userNavItems.map((item) => (
             <SidebarMenuItem key={item.href}>
@@ -66,6 +93,10 @@ export function UserSidebarNav() {
           ))}
         </SidebarMenu>
       </SidebarContent>
+
+      <SidebarFooter>
+        {/* Can add footer items here if needed */}
+      </SidebarFooter>
     </Sidebar>
   )
 }

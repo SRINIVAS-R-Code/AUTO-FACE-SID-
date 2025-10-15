@@ -1,82 +1,148 @@
-import { UserAttendanceCalendar } from "@/components/user-attendance-calendar"
-import { WellnessTracker } from "@/components/wellness-tracker"
-import { NotificationsPanel } from "@/components/notifications-panel"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CheckCircle, Clock, TrendingUp, Zap } from "lucide-react"
 
-const userPerformance = {
-  productivity: "97%",
-  punctuality: "99%",
-  tasksCompleted: 124,
-  overtimeHours: 5,
-};
+"use client";
 
-const activityFeed = [
-  { id: 1, action: "Checked in", time: "9:02 AM" },
-  { id: 2, action: "Completed task 'Design new landing page'", time: "11:30 AM" },
-  { id: 3, action: "Submitted wellness check-in", time: "1:00 PM" },
-  { id: 4, action: "Checked out", time: "5:58 PM" },
-];
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  CheckCircle,
+  Clock,
+  Hourglass,
+  Computer,
+  Smile,
+  Zap,
+  MapPin,
+  Circle,
+  Activity,
+  TimerOff,
+  UserCheck,
+} from "lucide-react";
 
 export default function UserDashboardPage() {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const formattedDate = time.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric', year: '2025' });
+
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">My Dashboard</h1>
-      
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance Summary</CardTitle>
-              <CardDescription>Your key metrics at a glance.</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="flex flex-col items-center justify-center space-y-1 bg-muted/50 p-4 rounded-lg">
-                <Zap className="h-6 w-6 text-primary" />
-                <span className="text-2xl font-bold">{userPerformance.productivity}</span>
-                <span className="text-xs text-muted-foreground">Productivity</span>
-              </div>
-              <div className="flex flex-col items-center justify-center space-y-1 bg-muted/50 p-4 rounded-lg">
-                <CheckCircle className="h-6 w-6 text-primary" />
-                <span className="text-2xl font-bold">{userPerformance.punctuality}</span>
-                <span className="text-xs text-muted-foreground">Punctuality</span>
-              </div>
-              <div className="flex flex-col items-center justify-center space-y-1 bg-muted/50 p-4 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-primary" />
-                <span className="text-2xl font-bold">{userPerformance.tasksCompleted}</span>
-                <span className="text-xs text-muted-foreground">Tasks Done</span>
-              </div>
-              <div className="flex flex-col items-center justify-center space-y-1 bg-muted/50 p-4 rounded-lg">
-                <Clock className="h-6 w-6 text-primary" />
-                <span className="text-2xl font-bold">{userPerformance.overtimeHours}</span>
-                <span className="text-xs text-muted-foreground">Overtime (h)</span>
-              </div>
-            </CardContent>
-          </Card>
-          <WellnessTracker />
-        </div>
-        <div className="lg:col-span-1 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Today's Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {activityFeed.map(item => (
-                  <div key={item.id} className="flex items-center">
-                    <div className="flex-1">
-                      <p className="text-sm">{item.action}</p>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{item.time}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-          <UserAttendanceCalendar />
-          <NotificationsPanel />
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-semibold">Welcome back, srinivas</h1>
+          <p className="text-muted-foreground">Wednesday, October 15, 2025</p>
         </div>
       </div>
+      
+      <Card className="bg-card/60">
+        <CardContent className="pt-6 flex flex-col md:flex-row items-start justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-16 w-16">
+              <AvatarFallback className="bg-primary/20 text-primary text-2xl">
+                <UserCheck size={32} />
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h2 className="text-2xl font-bold">Welcome back, srinivas !</h2>
+              <p className="text-muted-foreground">Software Engineer • Employee ID: EMP001</p>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1"><Circle className="h-3 w-3 fill-green-500 text-green-500" /> Active</span>
+                <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> Main Office</span>
+                <span className="flex items-center gap-1"><Smile className="h-3 w-3" /> Wellness: Good</span>
+                <span className="flex items-center gap-1"><UserCheck className="h-3 w-3" /> Face Detected</span>
+              </div>
+            </div>
+          </div>
+          <div className="text-right flex-shrink-0">
+            <p className="text-muted-foreground text-sm">Current Time</p>
+            <p className="text-3xl font-bold text-primary">{formattedTime}</p>
+            <p className="text-muted-foreground text-sm">{formattedDate}</p>
+            <div className="flex items-center justify-end gap-2 mt-2 text-sm text-green-500">
+                <Zap size={16}/> AI Engine: 98.5%
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex justify-between items-center">
+              Today's Status <CheckCircle className="text-muted-foreground"/>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">Not Checked In</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex justify-between items-center">
+              Working Hours <Clock className="text-muted-foreground"/>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">0.0h</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex justify-between items-center">
+              Active Time <Activity className="text-muted-foreground"/>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">0.0h</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex justify-between items-center">
+              Idle Time <TimerOff className="text-muted-foreground"/>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">0.0h</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><UserCheck /> Face Recognition</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-2">AI-powered monitoring</p>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Status</span>
+              <Badge variant="default" className="bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30">Face Detected</Badge>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Computer /> System Interaction</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-2">Real-time activity monitoring</p>
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm font-medium">Keyboard Activity</span>
+                <span className="text-sm font-bold">87%</span>
+              </div>
+              <Progress value={87} />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
-  )
+  );
 }
