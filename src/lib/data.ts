@@ -94,3 +94,26 @@ export const taskCompletionData = [
     { status: "Excelling", count: 15, fill: "hsl(var(--chart-2))" },
     { status: "Behind", count: 10, fill: "hsl(var(--chart-3))" },
 ]
+
+export const employeeProductivityData = [
+  { month: "Jan", productivity: 85 },
+  { month: "Feb", productivity: 88 },
+  { month: "Mar", productivity: 86 },
+  { month: "Apr", productivity: 90 },
+  { month: "May", productivity: 91 },
+  { month: "Jun", productivity: 89 },
+];
+
+export const employeeTaskCompletionData = [
+  { status: 'Completed', tasks: 120, fill: 'hsl(var(--chart-1))' },
+  { status: 'Pending', tasks: 25, fill: 'hsl(var(--chart-3))' },
+  { status: 'Overdue', tasks: 8, fill: 'hsl(var(--chart-5))' },
+]
+
+export const employeeActivityData = [
+  { metric: "Keyboard", value: 92 },
+  { metric: "Mouse", value: 85 },
+  { metric: "Focus", value: 95 },
+  { metric: "Meetings", value: 75 },
+  { metric: "Calls", value: 80 },
+]

@@ -11,29 +11,29 @@ import {
 } from "@/components/ui/card"
 import { ChartTooltipContent, ChartContainer, type ChartConfig } from "@/components/ui/chart"
 
-type TeamProductivityChartProps = {
-  data: { department: string; productivity: number }[]
+type EmployeeProductivityChartProps = {
+  data: { month: string; productivity: number }[]
 }
 
 const chartConfig = {
   productivity: {
     label: "Productivity",
-    color: "hsl(var(--primary))",
+    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
-export function TeamProductivityChart({ data }: TeamProductivityChartProps) {
+export function EmployeeProductivityChart({ data }: EmployeeProductivityChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Team Productivity</CardTitle>
-        <CardDescription>Average productivity by department.</CardDescription>
+        <CardTitle>Monthly Productivity</CardTitle>
+        <CardDescription>Productivity score over the last 6 months.</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <XAxis
-                dataKey="department"
+                dataKey="month"
                 stroke="#888888"
                 fontSize={12}
                 tickLine={false}
