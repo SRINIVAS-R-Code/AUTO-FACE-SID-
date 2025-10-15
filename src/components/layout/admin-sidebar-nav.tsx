@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from "next/link"
@@ -64,7 +65,6 @@ const navGroups = [
       { href: "/admin/performance-analytics", icon: LineChart, label: "Performance Analytics" },
       { href: "/admin/security-cameras", icon: Video, label: "Security Cameras" },
       { href: "/admin/ai-monitoring", icon: Cpu, label: "AI Monitoring" },
-      { href: "/admin/auto-monitor", icon: Bot, label: "Auto Monitor" },
     ],
   },
   {

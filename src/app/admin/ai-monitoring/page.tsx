@@ -3,16 +3,19 @@
 
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { ShieldCheck } from "lucide-react"
+import { ShieldCheck, Cpu } from "lucide-react"
 import { employeeData } from "@/lib/data"
+import { Badge } from "@/components/ui/badge"
+
+const aiStatuses = ["Active", "Idle", "Not Detected", "Low Engagement"];
 
 export default function AIMonitoringPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">AI Monitoring</h1>
-          <p className="text-muted-foreground">Live overview of all employee camera feeds with AI analysis.</p>
+          <h1 className="text-2xl font-semibold flex items-center gap-2"><Cpu /> AI-Powered Insights</h1>
+          <p className="text-muted-foreground">Real-time AI analysis of employee activity and status.</p>
         </div>
         <Alert className="max-w-md">
           <ShieldCheck className="h-4 w-4" />
@@ -24,9 +27,23 @@ export default function AIMonitoringPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {employeeData.map(employee => (
-          <CameraFeed key={employee.id} employee={employee} />
-        ))}
+        {employeeData.map((employee, index) => {
+          const aiStatus = aiStatuses[index % aiStatuses.length];
+          let badgeVariant: "default" | "secondary" | "destructive" | "outline" = "default";
+          if (aiStatus === "Active") badgeVariant = "default";
+          else if (aiStatus === "Idle") badgeVariant = "secondary";
+          else if (aiStatus === "Not Detected") badgeVariant = "destructive";
+          else if (aiStatus === "Low Engagement") badgeVariant = "outline";
+
+          return (
+            <div key={employee.id} className="relative">
+              <CameraFeed employee={employee} />
+              <div className="absolute top-16 right-4">
+                <Badge variant={badgeVariant}>{aiStatus}</Badge>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
