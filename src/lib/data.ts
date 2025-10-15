@@ -117,3 +117,12 @@ export const employeeActivityData = [
   { metric: "Meetings", value: 75 },
   { metric: "Calls", value: 80 },
 ]
+
+export const employeeActivityTrendData = [
+  { month: 'Jan', activity: 82 },
+  { month: 'Feb', activity: 85 },
+  { month: 'Mar', activity: 88 },
+  { month: 'Apr', activity: 86 },
+  { month: 'May', activity: 90 },
+  { month: 'Jun', activity: 92 },
+];
