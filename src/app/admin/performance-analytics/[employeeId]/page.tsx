@@ -4,7 +4,6 @@
 import { notFound, useParams } from 'next/navigation';
 import { employeeData, employeeProductivityData, employeeTaskCompletionData, employeeActivityTrendData, employeeActivityData } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -43,13 +42,14 @@ export default function EmployeeAnalyticsPage() {
             </Button>
         </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <EmployeeProductivityChart data={employeeProductivityData} />
+            <EmployeeActivityTrendChart data={employeeActivityTrendData} />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <EmployeeProductivityChart data={employeeProductivityData} />
-                <EmployeeActivityTrendChart data={employeeActivityTrendData} />
-                <div className="md:col-span-2">
-                    <EmployeeActivityChart data={employeeActivityData} />
-                </div>
+            <div className="lg:col-span-2">
+                <EmployeeActivityChart data={employeeActivityData} />
             </div>
             <div className="lg:col-span-1">
                  <EmployeeTaskCompletionChart data={employeeTaskCompletionData} />
