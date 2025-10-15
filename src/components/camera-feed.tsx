@@ -5,17 +5,21 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Video, VideoOff, Camera, Expand } from 'lucide-react'
+import { Video, VideoOff, Camera, Expand, Keyboard, Mouse, Eye } from 'lucide-react'
 import type { Employee } from '@/lib/types'
 import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { useToast } from '@/hooks/use-toast'
-import { ToastAction } from './ui/toast'
+import { Progress } from './ui/progress'
 
 type CameraFeedProps = {
   employee: Employee
 }
+
+const ACTIVITY_DECAY_RATE = 0.5; // smaller is slower
+const ACTIVITY_UPDATE_INTERVAL = 1000; // ms
+
 
 export function CameraFeed({ employee }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -23,6 +27,10 @@ export function CameraFeed({ employee }: CameraFeedProps) {
   const { toast } = useToast();
   
   const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
+
+  const [keyboardActivity, setKeyboardActivity] = useState(100);
+  const [mouseActivity, setMouseActivity] = useState(100);
+  const [screenFocus, setScreenFocus] = useState(100);
 
   useEffect(() => {
     // This effect handles starting and stopping the camera stream
@@ -57,6 +65,33 @@ export function CameraFeed({ employee }: CameraFeedProps) {
       };
     }
   }, [isCameraOn, toast]); // This effect re-runs whenever isCameraOn changes
+
+  useEffect(() => {
+    const handleKeyDown = () => setKeyboardActivity(100);
+    const handleMouseMove = () => setMouseActivity(100);
+    const handleVisibilityChange = () => {
+      setScreenFocus(document.hidden ? 0 : 100);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    const activityDecayTimer = setInterval(() => {
+        setKeyboardActivity(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
+        setMouseActivity(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
+        if (!document.hidden) {
+             setScreenFocus(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
+        }
+    }, ACTIVITY_UPDATE_INTERVAL);
+
+    return () => {
+        clearInterval(activityDecayTimer);
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+    }
+  }, []);
 
 
   const toggleCamera = () => {
@@ -133,10 +168,33 @@ export function CameraFeed({ employee }: CameraFeedProps) {
             {isCameraOn ? 'ONLINE' : 'OFFLINE'}
           </Badge>
         </CardHeader>
-        <CardContent className="flex-grow">
+        <CardContent className="flex-grow space-y-4">
           <VideoPlayer />
+           <div className="space-y-3 pt-2">
+            <div>
+              <div className="flex justify-between items-center mb-1 text-xs">
+                <span className="flex items-center gap-1.5 text-muted-foreground"><Keyboard size={14}/> Keyboard</span>
+                <span className="font-bold text-primary">{Math.round(keyboardActivity)}%</span>
+              </div>
+              <Progress value={keyboardActivity} className="h-2"/>
+            </div>
+             <div>
+              <div className="flex justify-between items-center mb-1 text-xs">
+                <span className="flex items-center gap-1.5 text-muted-foreground"><Mouse size={14}/> Mouse</span>
+                <span className="font-bold text-green-500">{Math.round(mouseActivity)}%</span>
+              </div>
+              <Progress value={mouseActivity} className="h-2 [&>div]:bg-green-500" />
+            </div>
+             <div>
+              <div className="flex justify-between items-center mb-1 text-xs">
+                <span className="flex items-center gap-1.5 text-muted-foreground"><Eye size={14}/> Focus</span>
+                <span className="font-bold text-blue-500">{Math.round(screenFocus)}%</span>
+              </div>
+              <Progress value={screenFocus} className="h-2 [&>div]:bg-blue-500"/>
+            </div>
+          </div>
         </CardContent>
-        <CardFooter className="mt-4 flex justify-center gap-2">
+        <CardFooter className="mt-auto flex justify-center gap-2 pt-0">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
