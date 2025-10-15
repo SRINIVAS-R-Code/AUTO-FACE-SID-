@@ -1,14 +1,14 @@
 
 "use client";
 
-import { productivityTrendData, taskCompletionData, teamProductivityData } from "@/lib/data"
+import { productivityTrendData, taskCompletionData, teamProductivityData, employeeActivityData } from "@/lib/data"
 import { KpiCard } from "@/components/kpi-card"
-import { DepartmentPerformanceChart } from "@/components/department-performance-chart"
 import { ProductivityTrendChart } from "@/components/productivity-trend-chart"
 import { TaskCompletionPieChart } from "@/components/task-completion-pie-chart"
 import { Users, Zap, Clock, UserCheck } from "lucide-react"
 import { useAuth } from "@/context/auth-context";
 import { TeamProductivityChart } from "@/components/team-productivity-chart";
+import { EmployeeActivityChart } from "@/components/employee-activity-chart";
 
 export default function AnalyticsPage() {
     const { username } = useAuth();
@@ -55,7 +55,7 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ProductivityTrendChart data={productivityTrendData} />
-        <DepartmentPerformanceChart />
+        <EmployeeActivityChart data={employeeActivityData} />
       </div>
 
        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
