@@ -19,7 +19,7 @@ import { useTheme } from "next-themes";
 import { useNotification } from "@/context/notification-context";
 
 export function Header() {
-  const { role, logout, username } = useAuth();
+  const { role, logout, username, avatarUrl } = useAuth();
   const { theme, setTheme } = useTheme();
   const { notifications } = useNotification();
   
@@ -81,7 +81,7 @@ export function Header() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={`https://picsum.photos/seed/${username || role}/100/100`} alt={userName} data-ai-hint="person face" />
+                <AvatarImage src={avatarUrl || `https://picsum.photos/seed/${username || role}/100/100`} alt={userName} data-ai-hint="person face" />
                 <AvatarFallback>{userFallback}</AvatarFallback>
               </Avatar>
             </Button>
@@ -119,3 +119,5 @@ export function Header() {
     </header>
   )
 }
+
+    

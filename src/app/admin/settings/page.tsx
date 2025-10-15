@@ -30,6 +30,8 @@ import { useToast } from "@/hooks/use-toast"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/context/auth-context"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Camera } from "lucide-react"
 
 const settingsFormSchema = z.object({
   // Profile
@@ -60,7 +62,7 @@ type SettingsFormValues = z.infer<typeof settingsFormSchema>
 
 export default function SettingsPage() {
   const { toast } = useToast()
-  const { username, setUsername: setAuthUsername } = useAuth()
+  const { username, setUsername: setAuthUsername, avatarUrl, setAvatarUrl } = useAuth()
 
 
   const form = useForm<SettingsFormValues>({
@@ -93,6 +95,17 @@ export default function SettingsPage() {
     })
   }
 
+  const handlePhotoChange = () => {
+    if (setAvatarUrl) {
+        const newAvatarUrl = `https://picsum.photos/seed/${Math.random()}/100/100`;
+        setAvatarUrl(newAvatarUrl);
+        toast({
+            title: "Profile Photo Updated",
+            description: "Your new photo has been saved.",
+        });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -118,6 +131,21 @@ export default function SettingsPage() {
                   <CardDescription>Manage your personal administrator account details.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                    <FormItem className="flex items-center gap-6">
+                        <div className="relative">
+                            <Avatar className="h-20 w-20">
+                                <AvatarImage src={avatarUrl || ''} alt={username || 'Admin'} data-ai-hint="person face" />
+                                <AvatarFallback>{username?.charAt(0).toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                             <Button type="button" size="icon" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full" onClick={handlePhotoChange}>
+                                <Camera className="h-4 w-4" />
+                             </Button>
+                        </div>
+                        <div>
+                            <FormLabel>Profile Photo</FormLabel>
+                            <FormDescription>Click the camera icon to change your profile photo.</FormDescription>
+                        </div>
+                    </FormItem>
                    <FormField
                     control={form.control}
                     name="adminName"
@@ -431,3 +459,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
