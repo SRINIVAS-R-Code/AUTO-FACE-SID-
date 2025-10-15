@@ -18,46 +18,53 @@ export function CameraFeed({ employee }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isCameraOn, setIsCameraOn] = useState(false)
   
-  // Unique placeholder based on employee ID
   const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
 
-  const toggleCamera = async () => {
-    if (isCameraOn) {
-      const stream = videoRef.current?.srcObject as MediaStream | null
-      stream?.getTracks().forEach((track) => track.stop())
-      if (videoRef.current) {
-        videoRef.current.srcObject = null
-      }
-      setIsCameraOn(false)
-    } else {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true })
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-        }
-        setIsCameraOn(true)
-      } catch (err) {
-        console.error("Error accessing camera: ", err)
-        alert("Could not access camera. Please check permissions.")
-      }
-    }
-  }
-
   useEffect(() => {
-    return () => {
-      // Clean up camera stream on component unmount
+    let stream: MediaStream | null = null;
+    
+    const enableStream = async () => {
+      if (isCameraOn) {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (err) {
+          console.error("Error accessing camera: ", err);
+          alert("Could not access camera. Please check permissions.");
+          setIsCameraOn(false);
+        }
+      }
+    };
+
+    const disableStream = () => {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
       }
+    };
+
+    if (isCameraOn) {
+      enableStream();
+    } else {
+      disableStream();
     }
-  }, []);
+
+    return () => {
+      disableStream();
+    };
+  }, [isCameraOn]);
+
+
+  const toggleCamera = () => {
+    setIsCameraOn(prev => !prev);
+  }
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-      {isCameraOn ? (
-        <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
-      ) : (
+      {!isCameraOn ? (
         <>
           <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
           {!isFullView && (
@@ -67,6 +74,8 @@ export function CameraFeed({ employee }: CameraFeedProps) {
             </div>
           )}
         </>
+      ) : (
+        <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
       )}
 
       {isCameraOn && (
