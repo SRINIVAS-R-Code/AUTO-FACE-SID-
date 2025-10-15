@@ -4,7 +4,6 @@ import { AttendanceTrendsChart } from "@/components/attendance-trends-chart"
 import { EmployeeStatusTable } from "@/components/employee-status-table"
 import { DepartmentPerformanceChart } from "@/components/department-performance-chart"
 import { Clock, Zap, BarChart3, Users } from "lucide-react"
-import { ChartContainer } from "@/components/ui/chart"
 
 const newKpiData = [
   ...kpiData,
@@ -54,7 +53,7 @@ export default function AdminDashboardPage() {
 
       <div className="grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-3">
-            <AttendanceTrendsChart data={attendanceChartData} />
+          <AttendanceTrendsChart data={attendanceChartData} />
         </div>
         <div className="lg:col-span-2">
           <DepartmentPerformanceChart />
