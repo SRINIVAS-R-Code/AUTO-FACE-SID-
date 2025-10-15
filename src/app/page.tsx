@@ -105,7 +105,7 @@ export default function LoginPage() {
                   Sign In
                 </Button>
                 <CardDescription className="text-center text-sm pt-4 !font-extrabold text-muted-foreground/90">
-                   Demo: Use `admin`/`admin` for Admin Portal or any username with password `user` for User Portal.
+                   Admin: `admin`/`admin` | User: any username /`user`
                 </CardDescription>
               </form>
             </CardContent>

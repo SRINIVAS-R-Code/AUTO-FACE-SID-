@@ -74,7 +74,7 @@ export function UserSidebarNav() {
                 <AvatarFallback className="bg-primary/20 text-primary text-3xl">{userFallback}</AvatarFallback>
             </Avatar>
             <div className="relative">
-                <h3 className="font-semibold">{username || 'Employee'}</h3>
+                <h3 className="font-semibold">{username}</h3>
                 <p className="text-xs text-muted-foreground">{username?.toLowerCase() || 'user'}@company.com</p>
                 <button className="absolute top-0 right-0 text-muted-foreground hover:text-foreground">
                     <Pencil size={14} />
