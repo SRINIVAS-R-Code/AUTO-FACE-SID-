@@ -30,7 +30,7 @@ export function EmployeeActivityTrendChart({ data }: EmployeeActivityTrendChartP
         <CardDescription>Overall activity level over the last 6 months.</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="h-[250px] w-full">
             <LineChart data={data} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
               <CartesianGrid vertical={false} />
               <XAxis

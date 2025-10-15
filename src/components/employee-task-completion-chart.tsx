@@ -41,7 +41,7 @@ export function EmployeeTaskCompletionChart({ data }: EmployeeTaskCompletionChar
         <CardDescription>Distribution of assigned tasks.</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="h-[250px] w-full">
           <PieChart>
             <ChartTooltipContent
               nameKey="tasks"

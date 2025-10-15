@@ -24,12 +24,13 @@ const chartConfig = {
 
 export function EmployeeActivityChart({ data }: EmployeeActivityChartProps) {
   return (
-    <Card className="border-0 shadow-none h-full flex flex-col">
-      <CardHeader className="p-2">
+    <Card>
+      <CardHeader>
         <CardTitle>Performance & Activity Snapshot</CardTitle>
+        <CardDescription>A holistic view of key performance indicators.</CardDescription>
       </CardHeader>
-      <CardContent className="p-0 flex-grow">
-        <ChartContainer config={chartConfig} className="w-full h-full min-h-[200px]">
+      <CardContent className="pb-0">
+        <ChartContainer config={chartConfig} className="w-full h-[250px]">
           <RadarChart data={data}>
             <ChartTooltip content={<ChartTooltipContent />} />
             <PolarGrid />

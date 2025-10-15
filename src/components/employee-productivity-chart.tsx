@@ -30,7 +30,7 @@ export function EmployeeProductivityChart({ data }: EmployeeProductivityChartPro
         <CardDescription>Productivity score over the last 6 months.</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="h-[250px] w-full">
             <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <XAxis
                 dataKey="month"
