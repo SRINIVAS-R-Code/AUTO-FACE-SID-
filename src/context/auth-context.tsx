@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     otherStorage.removeItem('userRole');
     otherStorage.removeItem('username');
 
-    setTimeout(() => setIsLoading(false), 500); 
+    setIsLoading(false);
   };
 
   const logout = () => {
