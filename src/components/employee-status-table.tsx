@@ -23,21 +23,19 @@ import { Badge } from "@/components/ui/badge"
 import { employeeData } from "@/lib/data"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, Eye } from "lucide-react"
+import { ChevronRight, Eye, Home, WifiOff } from "lucide-react"
 
 export function EmployeeStatusTable() {
-  const getBadgeVariant = (status: (typeof employeeData)[0]['status']) => {
-    switch (status) {
-      case 'On Time':
-        return 'default'
-      case 'Late':
-        return 'destructive'
-      case 'On Leave':
-        return 'secondary'
-      case 'Absent':
-        return 'outline'
-      default:
-        return 'default'
+  const getStatusBadge = (employee: (typeof employeeData)[0]) => {
+    switch (employee.workLocation) {
+        case 'Office':
+            return <Badge variant="default" className='bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30 capitalize'>{employee.status}</Badge>;
+        case 'Home':
+            return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 border-blue-500/30"><Home className="mr-1.5 h-3 w-3" /> WFH</Badge>;
+        case 'Disconnected':
+            return <Badge variant="destructive"><WifiOff className="mr-1.5 h-3 w-3" /> Disconnected</Badge>;
+        default:
+            return <Badge variant="outline">{employee.status}</Badge>;
     }
   }
 
@@ -85,9 +83,7 @@ export function EmployeeStatusTable() {
                   </Link>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Badge variant={getBadgeVariant(employee.status)} className={cn(employee.status === 'On Time' && 'bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30', 'capitalize')}>
-                    {employee.status}
-                  </Badge>
+                  {getStatusBadge(employee)}
                 </TableCell>
               </TableRow>
             ))}

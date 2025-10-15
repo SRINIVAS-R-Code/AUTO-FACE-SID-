@@ -5,13 +5,14 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Video, VideoOff, Camera, Expand, Keyboard, Mouse, Eye } from 'lucide-react'
+import { Video, VideoOff, Camera, Expand, Keyboard, Mouse, Eye, Home, WifiOff } from 'lucide-react'
 import type { Employee } from '@/lib/types'
 import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { useToast } from '@/hooks/use-toast'
 import { Progress } from './ui/progress'
+import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 
 type CameraFeedProps = {
   employee: Employee
@@ -32,10 +33,12 @@ export function CameraFeed({ employee }: CameraFeedProps) {
   const [mouseActivity, setMouseActivity] = useState(100);
   const [screenFocus, setScreenFocus] = useState(100);
 
+  const isDisconnected = employee.workLocation === 'Disconnected';
+
   useEffect(() => {
     // This effect handles starting and stopping the camera stream
     let stream: MediaStream;
-    if (isCameraOn) {
+    if (isCameraOn && !isDisconnected) {
       const enableStream = async () => {
         try {
           stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -63,8 +66,13 @@ export function CameraFeed({ employee }: CameraFeedProps) {
           videoRef.current.srcObject = null;
         }
       };
+    } else {
+        // Ensure camera is off if disconnected
+        if (isDisconnected && isCameraOn) {
+            setIsCameraOn(false);
+        }
     }
-  }, [isCameraOn, toast]); // This effect re-runs whenever isCameraOn changes
+  }, [isCameraOn, isDisconnected, toast]); 
 
   useEffect(() => {
     const handleKeyDown = () => setKeyboardActivity(100);
@@ -95,10 +103,22 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
 
   const toggleCamera = () => {
+    if (isDisconnected) {
+        toast({
+            variant: "destructive",
+            title: "Cannot Start Camera",
+            description: "The employee's system is disconnected from the network.",
+        });
+        return;
+    }
     setIsCameraOn(prev => !prev);
   }
 
   const handleCapture = () => {
+    if (isDisconnected) {
+      toast({ variant: "destructive", title: "Cannot Capture", description: "Employee is disconnected." });
+      return;
+    }
     if (videoRef.current && isCameraOn) {
       const video = videoRef.current;
       const canvas = document.createElement('canvas');
@@ -133,18 +153,41 @@ export function CameraFeed({ employee }: CameraFeedProps) {
     }
   };
 
+  const getStatusBadge = () => {
+    switch(employee.workLocation) {
+      case 'Office':
+        return <Badge variant={isCameraOn ? 'default' : 'outline'} className={isCameraOn ? 'bg-green-500/20 text-green-700 border-green-500/30' : ''}>{isCameraOn ? 'Online' : 'Offline'}</Badge>;
+      case 'Home':
+        return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 border-blue-500/30"><Home className="mr-1.5 h-3 w-3" /> WFH</Badge>;
+      case 'Disconnected':
+        return <Badge variant="destructive"><WifiOff className="mr-1.5 h-3 w-3" /> Disconnected</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  }
+
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
       <video ref={videoRef} className={`h-full w-full object-cover ${isCameraOn ? '' : 'hidden'}`} autoPlay muted playsInline />
       {!isCameraOn && (
         <>
           <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
-          {!isFullView && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
-              <VideoOff className="h-12 w-12 text-white/80" />
-              <p className="mt-2 text-sm text-white/90 font-semibold">Camera is off</p>
-            </div>
-          )}
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 p-4 text-center">
+            {isDisconnected ? (
+               <Alert variant="destructive" className="max-w-xs bg-destructive/50 border-destructive/80 text-destructive-foreground">
+                  <WifiOff className="h-4 w-4" />
+                  <AlertTitle>Network Disconnected</AlertTitle>
+                  <AlertDescription>
+                    Unable to establish a connection.
+                  </AlertDescription>
+                </Alert>
+            ) : (
+                <>
+                 <VideoOff className="h-12 w-12 text-white/80" />
+                 <p className="mt-2 text-sm text-white/90 font-semibold">Camera is off</p>
+                </>
+            )}
+          </div>
         </>
       )}
 
@@ -154,7 +197,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         </div>
       )}
        <div className="absolute bottom-2 left-2 bg-black/50 text-white rounded px-2 py-1 text-xs">
-          <p>Status: {isCameraOn ? 'ONLINE' : 'OFFLINE'}</p>
+          <p>Status: {getStatusBadge()}</p>
       </div>
     </div>
   )
@@ -164,9 +207,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
       <Card className="flex flex-col">
         <CardHeader className="flex-row items-center justify-between">
           <CardTitle className="text-base">{employee.name}</CardTitle>
-          <Badge variant={isCameraOn ? 'default' : 'outline'} className={isCameraOn ? 'bg-green-500/20 text-green-700 border-green-500/30' : ''}>
-            {isCameraOn ? 'ONLINE' : 'OFFLINE'}
-          </Badge>
+          {getStatusBadge()}
         </CardHeader>
         <CardContent className="flex-grow space-y-4">
           <VideoPlayer />
@@ -198,7 +239,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button onClick={toggleCamera} variant="outline" size="icon">
+                  <Button onClick={toggleCamera} variant="outline" size="icon" disabled={isDisconnected}>
                     {isCameraOn ? <VideoOff className="h-4 w-4" /> : <Video className="h-4 w-4" />}
                   </Button>
                 </TooltipTrigger>
@@ -208,7 +249,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={handleCapture}>
+                  <Button variant="outline" size="icon" onClick={handleCapture} disabled={isDisconnected}>
                     <Camera className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>

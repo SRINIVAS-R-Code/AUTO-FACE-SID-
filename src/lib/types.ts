@@ -9,6 +9,7 @@ export type Employee = {
   position: string;
   department: string;
   status: 'On Time' | 'Late' | 'Absent' | 'On Leave' | 'Active';
+  workLocation: 'Office' | 'Home' | 'Disconnected';
   lastSeen: string;
 };
 
@@ -50,4 +51,5 @@ export type SecurityEvent = {
   description: string;
   ipAddress: string;
 };
+
 
