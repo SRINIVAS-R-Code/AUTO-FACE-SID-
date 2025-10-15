@@ -95,12 +95,12 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         <CardContent className="flex-grow">
           <VideoPlayer />
         </CardContent>
-        <CardFooter className="mt-4 flex gap-2">
-            <Button onClick={toggleCamera} variant="outline" className="w-full">
+        <CardFooter className="mt-4 flex justify-center gap-2">
+            <Button onClick={toggleCamera} variant="outline" size="sm">
               <Video className="mr-2 h-4 w-4" />
               {isCameraOn ? 'Stop' : 'Start'} Stream
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" size="sm">
                <Camera className="mr-2 h-4 w-4" />
                Capture
             </Button>
