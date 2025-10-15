@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
@@ -10,6 +11,7 @@ import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { useToast } from '@/hooks/use-toast'
+import { ToastAction } from './ui/toast'
 
 type CameraFeedProps = {
   employee: Employee
@@ -18,7 +20,6 @@ type CameraFeedProps = {
 export function CameraFeed({ employee }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isCameraOn, setIsCameraOn] = useState(false)
-  const [snapshotUrl, setSnapshotUrl] = useState<string | null>(null);
   const { toast } = useToast();
   
   const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
@@ -60,10 +61,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
   const toggleCamera = () => {
     setIsCameraOn(prev => !prev);
-    if (isCameraOn) {
-      // Clear snapshot when turning off camera
-      setSnapshotUrl(null);
-    }
   }
 
   const handleCapture = () => {
@@ -76,10 +73,20 @@ export function CameraFeed({ employee }: CameraFeedProps) {
       if (context) {
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataUrl = canvas.toDataURL('image/png');
-        setSnapshotUrl(dataUrl);
         toast({
           title: "Snapshot Captured!",
-          description: `A snapshot of ${employee.name} has been taken.`,
+          description: (
+            <div className="mt-2">
+              <Image
+                src={dataUrl}
+                alt={`Snapshot of ${employee.name}`}
+                width={400}
+                height={300}
+                className="rounded-md object-contain"
+              />
+            </div>
+          ),
+          duration: 5000,
         });
       }
     } else {
@@ -168,15 +175,9 @@ export function CameraFeed({ employee }: CameraFeedProps) {
       </Card>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>{snapshotUrl ? `${employee.name} - Snapshot` : `${employee.name} - Live Feed`}</DialogTitle>
+          <DialogTitle>{`${employee.name} - Live Feed`}</DialogTitle>
         </DialogHeader>
-        {snapshotUrl ? (
-          <div className="relative aspect-video w-full">
-            <Image src={snapshotUrl} alt={`Snapshot of ${employee.name}`} fill objectFit="contain" />
-          </div>
-        ) : (
-          <VideoPlayer isFullView />
-        )}
+        <VideoPlayer isFullView />
       </DialogContent>
     </Dialog>
   )
