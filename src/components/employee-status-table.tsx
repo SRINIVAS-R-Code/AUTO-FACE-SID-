@@ -23,7 +23,7 @@ import { Badge } from "@/components/ui/badge"
 import { employeeData } from "@/lib/data"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Eye } from "lucide-react"
 
 export function EmployeeStatusTable() {
   const getBadgeVariant = (status: (typeof employeeData)[0]['status']) => {
@@ -56,6 +56,7 @@ export function EmployeeStatusTable() {
               <TableHead>Employee</TableHead>
               <TableHead>Department</TableHead>
               <TableHead>Last Seen</TableHead>
+              <TableHead>Live View</TableHead>
               <TableHead className="text-right">Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -76,6 +77,13 @@ export function EmployeeStatusTable() {
                 </TableCell>
                 <TableCell>{employee.department}</TableCell>
                 <TableCell>{employee.lastSeen}</TableCell>
+                <TableCell>
+                  <Link href="/admin/monitoring">
+                    <Button variant="ghost" size="icon">
+                      <Eye className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                </TableCell>
                 <TableCell className="text-right">
                   <Badge variant={getBadgeVariant(employee.status)} className={cn(employee.status === 'On Time' && 'bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30', 'capitalize')}>
                     {employee.status}
