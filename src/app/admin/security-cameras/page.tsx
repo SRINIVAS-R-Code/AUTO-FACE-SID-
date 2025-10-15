@@ -11,8 +11,8 @@ export default function SecurityCamerasPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Security Cameras</h1>
-          <p className="text-muted-foreground">Live overview of all employee camera feeds.</p>
+          <h1 className="text-2xl font-semibold">Security Command Center</h1>
+          <p className="text-muted-foreground">Central hub for all live employee camera feeds.</p>
         </div>
         <Alert className="max-w-md">
           <ShieldCheck className="h-4 w-4" />
