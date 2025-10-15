@@ -26,7 +26,7 @@ const ACTIVITY_UPDATE_INTERVAL = 1000; // ms
 
 export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [isCameraOn, setIsCameraOn] = useState(false)
+  const [isCameraOn, setIsCameraOn] = useState(true)
   const { toast } = useToast();
   const { employees } = useEmployee();
   const { addNotification } = useNotification();
@@ -315,3 +315,5 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
     </Dialog>
   )
 }
+
+    

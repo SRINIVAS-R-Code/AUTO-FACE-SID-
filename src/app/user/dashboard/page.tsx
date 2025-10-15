@@ -3,8 +3,8 @@
 
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { ShieldCheck, ListChecks, Activity, CheckCircle, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { ShieldCheck, Activity, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-context";
 
 const timeStats = [
@@ -14,12 +14,6 @@ const timeStats = [
     { title: "Break Time", value: "45m", icon: Coffee },
     { title: "Stream Off", value: "15m", icon: VideoOff },
     { title: "Log Out Time", value: "17:58 PM", icon: LogOut },
-];
-
-const tasks = [
-    { id: 1, title: "Finalize Q3 report", completed: false },
-    { id: 2, title: "Submit expense claims", completed: false },
-    { id: 3, title: "Team meeting follow-up", completed: true },
 ];
 
 const recentActivity = [
@@ -44,6 +38,10 @@ export default function UserDashboardPage() {
                 This system uses Face Recognition for attendance and monitoring purposes only. Your privacy is respected.
             </AlertDescription>
             </Alert>
+        </div>
+
+        <div>
+            <CameraFeed />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -79,10 +77,8 @@ export default function UserDashboardPage() {
                 </CardContent>
             </Card>
         </div>
-
-        <div>
-            <CameraFeed />
-        </div>
     </div>
   )
 }
+
+    
