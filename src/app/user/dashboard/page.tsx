@@ -29,7 +29,7 @@ export default function UserDashboardPage() {
   }, []);
 
   const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  const formattedDate = time.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric', year: '2025' });
+  const formattedDate = time.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
 
   return (
@@ -37,7 +37,7 @@ export default function UserDashboardPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-semibold">Welcome back, srinivas</h1>
-          <p className="text-muted-foreground">Wednesday, October 15, 2025</p>
+          <p className="text-muted-foreground">{formattedDate}</p>
         </div>
       </div>
       
