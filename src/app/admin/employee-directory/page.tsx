@@ -34,7 +34,7 @@ import type { Employee } from "@/lib/types";
 
 export default function EmployeeDirectoryPage() {
   const [employeeData, setEmployeeData] = useState<Employee[]>(initialEmployeeData);
-  const [newEmployee, setNewEmployee] = useState({ name: '', email: '', position: '', department: '' });
+  const [newEmployee, setNewEmployee] = useState({ id: `emp${(initialEmployeeData.length + 1).toString().padStart(3, '0')}`, name: '', email: '', position: '', department: '' });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
@@ -42,7 +42,7 @@ export default function EmployeeDirectoryPage() {
   const { toast } = useToast();
 
   const handleAddEmployee = () => {
-    if (!newEmployee.name || !newEmployee.email || !newEmployee.position || !newEmployee.department) {
+    if (!newEmployee.id || !newEmployee.name || !newEmployee.email || !newEmployee.position || !newEmployee.department) {
       toast({
         variant: "destructive",
         title: "Missing Information",
@@ -52,7 +52,6 @@ export default function EmployeeDirectoryPage() {
     }
 
     const newEntry: Employee = {
-      id: `emp${(employeeData.length + 1).toString().padStart(3, '0')}`,
       avatar: `https://picsum.photos/seed/${employeeData.length + 1}/100/100`,
       status: 'Active',
       workLocation: 'Office',
@@ -65,7 +64,7 @@ export default function EmployeeDirectoryPage() {
       title: "Employee Added",
       description: `${newEmployee.name} has been added to the directory.`,
     });
-    setNewEmployee({ name: '', email: '', position: '', department: '' });
+    setNewEmployee({ id: `emp${(employeeData.length + 2).toString().padStart(3, '0')}`, name: '', email: '', position: '', department: '' });
     setIsAddDialogOpen(false);
   };
   
@@ -104,7 +103,7 @@ export default function EmployeeDirectoryPage() {
         <h1 className="text-3xl font-bold">Employee Management</h1>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button onClick={() => setNewEmployee({ ...newEmployee, id: `emp${(employeeData.length + 1).toString().padStart(3, '0')}` })}>
               <UserPlus className="mr-2 h-4 w-4" /> Add Employee
             </Button>
           </DialogTrigger>
@@ -116,6 +115,10 @@ export default function EmployeeDirectoryPage() {
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="id" className="text-right">Employee ID</Label>
+                <Input id="id" value={newEmployee.id} onChange={(e) => setNewEmployee({...newEmployee, id: e.target.value})} className="col-span-3" />
+              </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">Name</Label>
                 <Input id="name" value={newEmployee.name} onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})} className="col-span-3" />
@@ -151,6 +154,10 @@ export default function EmployeeDirectoryPage() {
             </DialogHeader>
             {employeeToEdit && (
             <div className="grid gap-4 py-4">
+                 <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-id" className="text-right">Employee ID</Label>
+                    <Input id="edit-id" value={employeeToEdit.id} onChange={(e) => setEmployeeToEdit({...employeeToEdit, id: e.target.value})} className="col-span-3" />
+                </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="edit-name" className="text-right">Name</Label>
                     <Input id="edit-name" value={employeeToEdit.name} onChange={(e) => setEmployeeToEdit({...employeeToEdit, name: e.target.value})} className="col-span-3" />
@@ -236,5 +243,3 @@ export default function EmployeeDirectoryPage() {
     </div>
   );
 }
-
-    
