@@ -19,12 +19,12 @@ import { useTheme } from "next-themes";
 import { useNotification } from "@/context/notification-context";
 
 export function Header() {
-  const { role, logout, username, avatarUrl } = useAuth();
+  const { role, logout, username, avatarUrl, email } = useAuth();
   const { theme, setTheme } = useTheme();
   const { notifications } = useNotification();
   
   const userName = username || (role === 'admin' ? 'Admin User' : 'User');
-  const userEmail = role === 'admin' ? 'admin@monitorai.com' : `${(username || 'user').toLowerCase()}@company.com`;
+  const userEmail = email || (role === 'admin' ? 'admin@monitorai.com' : `${(username || 'user').toLowerCase()}@company.com`);
   const userFallback = username ? username.charAt(0).toUpperCase() : (role === 'admin' ? 'A' : 'U');
   const notificationsLink = role === 'admin' ? '/admin/notifications' : '/user/notifications';
 
@@ -119,5 +119,3 @@ export function Header() {
     </header>
   )
 }
-
-    

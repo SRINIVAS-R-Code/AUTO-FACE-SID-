@@ -9,6 +9,7 @@ type Role = 'admin' | 'user' | null;
 interface AuthContextType {
   role: Role;
   username: string | null;
+  email: string | null;
   avatarUrl: string | null;
   isLoading: boolean;
   login: (role: Role, username?: string, rememberMe?: boolean) => void;
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [role, setRole] = useState<Role>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -31,17 +33,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Check localStorage first, then sessionStorage
     let sessionRole = localStorage.getItem('userRole') as Role;
     let sessionUser = localStorage.getItem('username');
+    let sessionEmail = localStorage.getItem('email');
     let sessionAvatar = localStorage.getItem('avatarUrl');
 
     if (!sessionRole || !sessionUser) {
       sessionRole = sessionStorage.getItem('userRole') as Role;
       sessionUser = sessionStorage.getItem('username');
+      sessionEmail = sessionStorage.getItem('email');
       sessionAvatar = sessionStorage.getItem('avatarUrl');
     }
     
-    if (sessionRole && sessionUser) {
+    if (sessionRole && sessionUser && sessionEmail) {
       setRole(sessionRole);
       setUsername(sessionUser);
+      setEmail(sessionEmail);
       setAvatarUrl(sessionAvatar || `https://picsum.photos/seed/${sessionUser}/100/100`);
     }
     setIsLoading(false);
@@ -67,17 +72,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const newAvatarUrl = `https://picsum.photos/seed/${name}/100/100`;
 
     if (newRole === 'admin') {
-      setUsername('Admin');
+      const adminName = 'Admin';
+      const adminEmail = 'admin@monitorai.com';
+      setUsername(adminName);
+      setEmail(adminEmail);
       setAvatarUrl(newAvatarUrl);
       storage.setItem('userRole', 'admin');
-      storage.setItem('username', 'Admin');
+      storage.setItem('username', adminName);
+      storage.setItem('email', adminEmail);
       storage.setItem('avatarUrl', newAvatarUrl);
       router.push('/admin/dashboard');
     } else if (newRole === 'user') {
+      const userEmail = `${name.toLowerCase().replace(/\s/g, '.')}@company.com`;
       setUsername(name);
+      setEmail(userEmail);
       setAvatarUrl(newAvatarUrl);
       storage.setItem('userRole', 'user');
       storage.setItem('username', name);
+      storage.setItem('email', userEmail);
       storage.setItem('avatarUrl', newAvatarUrl);
       router.push('/user/dashboard');
     }
@@ -86,6 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const otherStorage = rememberMe ? sessionStorage : localStorage;
     otherStorage.removeItem('userRole');
     otherStorage.removeItem('username');
+    otherStorage.removeItem('email');
     otherStorage.removeItem('avatarUrl');
 
     setIsLoading(false);
@@ -95,17 +108,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setRole(null);
     setUsername(null);
     setAvatarUrl(null);
-    sessionStorage.removeItem('userRole');
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('avatarUrl');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('username');
-    localStorage.removeItem('avatarUrl');
+    setEmail(null);
+    sessionStorage.clear();
+    localStorage.clear();
     router.push('/');
   };
 
   return (
-    <AuthContext.Provider value={{ role, login, logout, username, avatarUrl, isLoading, setUsername: handleSetUsername, setAvatarUrl: handleSetAvatarUrl }}>
+    <AuthContext.Provider value={{ role, login, logout, username, email, avatarUrl, isLoading, setUsername: handleSetUsername, setAvatarUrl: handleSetAvatarUrl }}>
       {children}
     </AuthContext.Provider>
   );
@@ -118,5 +128,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
-    

@@ -55,7 +55,7 @@ const userNavItems = [
 export function UserSidebarNav() {
   const pathname = useSafePathname()
   const { state } = useSidebar()
-  const { username } = useAuth();
+  const { username, email } = useAuth();
   const userFallback = username ? username.charAt(0).toUpperCase() : "U";
 
 
@@ -75,10 +75,12 @@ export function UserSidebarNav() {
             </Avatar>
             <div className="relative">
                 <h3 className="font-semibold">{username}</h3>
-                <p className="text-xs text-muted-foreground">{username?.toLowerCase() || 'user'}@company.com</p>
-                <button className="absolute top-0 right-0 text-muted-foreground hover:text-foreground">
-                    <Pencil size={14} />
-                </button>
+                <p className="text-xs text-muted-foreground">{email}</p>
+                <Link href="/user/settings">
+                  <button className="absolute top-0 right-0 text-muted-foreground hover:text-foreground">
+                      <Pencil size={14} />
+                  </button>
+                </Link>
             </div>
         </div>
         <SidebarMenu>
