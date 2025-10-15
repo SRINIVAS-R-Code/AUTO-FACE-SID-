@@ -76,8 +76,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
             LIVE
           </div>
           <div className="absolute bottom-2 left-2 text-white bg-black/50 rounded p-1 text-xs">
-            <p>Resolution: 1920x1080</p>
-            <p>FPS: 30</p>
             <p>Status: ONLINE</p>
           </div>
         </>
