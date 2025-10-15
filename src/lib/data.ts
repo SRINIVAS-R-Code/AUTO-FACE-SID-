@@ -1,3 +1,4 @@
+
 import type { Kpi, Employee, AttendanceRecord } from "@/lib/types";
 import { Users, Clock, AlertTriangle, UserCheck } from "lucide-react";
 
@@ -33,18 +34,18 @@ export const kpiData: Kpi[] = [
 ];
 
 export const employeeData: Employee[] = [
-  { id: '1', name: 'Alicia Rodriguez', email: 'alicia.r@example.com', avatar: 'https://picsum.photos/seed/1/100/100', department: 'Engineering', status: 'On Time', lastSeen: '9:02 AM' },
-  { id: '2', name: 'Ben Carter', email: 'ben.c@example.com', avatar: 'https://picsum.photos/seed/2/100/100', department: 'Marketing', status: 'Late', lastSeen: '9:17 AM' },
-  { id: '3', name: 'Carla Diaz', email: 'carla.d@example.com', avatar: 'https://picsum.photos/seed/3/100/100', department: 'Sales', status: 'On Time', lastSeen: '8:55 AM' },
-  { id: '4', name: 'David Lee', email: 'david.l@example.com', avatar: 'https://picsum.photos/seed/4/100/100', department: 'HR', status: 'On Leave', lastSeen: 'Yesterday' },
-  { id: '5', name: 'Eva Green', email: 'eva.g@example.com', avatar: 'https://picsum.photos/seed/5/100/100', department: 'Engineering', status: 'Absent', lastSeen: 'Yesterday' },
-  { id: '6', name: 'Frank Miller', email: 'frank.m@example.com', avatar: 'https://picsum.photos/seed/6/100/100', department: 'Sales', status: 'On Time', lastSeen: '9:01 AM' },
-  { id: '7', name: 'Grace Hall', email: 'grace.h@example.com', avatar: 'https://picsum.photos/seed/7/100/100', department: 'Marketing', status: 'On Time', lastSeen: '8:59 AM' },
-  { id: '8', name: 'Henry Ward', email: 'henry.w@example.com', avatar: 'https://picsum.photos/seed/8/100/100', department: 'Engineering', status: 'Late', lastSeen: '9:25 AM' },
-  { id: '9', name: 'Ivy Chen', email: 'ivy.c@example.com', avatar: 'https://picsum.photos/seed/9/100/100', department: 'HR', status: 'On Time', lastSeen: '9:00 AM' },
-  { id: '10', name: 'Jack Taylor', email: 'jack.t@example.com', avatar: 'https://picsum.photos/seed/10/100/100', department: 'Sales', status: 'On Time', lastSeen: '8:45 AM' },
-  { id: '11', name: 'Kate Wilson', email: 'kate.w@example.com', avatar: 'https://picsum.photos/seed/11/100/100', department: 'Marketing', status: 'On Leave', lastSeen: 'Yesterday' },
-  { id: '12', name: 'Leo Martin', email: 'leo.m@example.com', avatar: 'https://picsum.photos/seed/12/100/100', department: 'Engineering', status: 'On Time', lastSeen: '9:03 AM' },
+  { id: 'adm001', name: 'Admin User', email: 'admin@example.com', avatar: 'https://picsum.photos/seed/1/100/100', position: 'System Administrator', department: 'IT', status: 'Active', lastSeen: '9:02 AM' },
+  { id: 'emp004', name: 'Alice Brown', email: 'alice.b@example.com', avatar: 'https://picsum.photos/seed/2/100/100', position: 'HR Specialist', department: 'HR', status: 'Active', lastSeen: '9:17 AM' },
+  { id: 'emp003', name: 'Bob Johnson', email: 'bob.j@example.com', avatar: 'https://picsum.photos/seed/3/100/100', position: 'Sales Representative', department: 'Sales', status: 'Active', lastSeen: '8:55 AM' },
+  { id: 'emp005', name: 'Charlie Wilson', email: 'charlie.w@example.com', avatar: 'https://picsum.photos/seed/4/100/100', position: 'Accountant', department: 'Finance', status: 'Active', lastSeen: 'Yesterday' },
+  { id: 'emp006', name: 'Diana Davis', email: 'diana.d@example.com', avatar: 'https://picsum.photos/seed/5/100/100', position: 'Operations Manager', department: 'Operations', status: 'Active', lastSeen: 'Yesterday' },
+  { id: 'emp007', name: 'Edward Miller', email: 'edward.m@example.com', avatar: 'https://picsum.photos/seed/6/100/100', position: 'System Administrator', department: 'IT', status: 'Active', lastSeen: '9:01 AM' },
+  { id: 'emp008', name: 'Fiona Garcia', email: 'fiona.g@example.com', avatar: 'https://picsum.photos/seed/7/100/100', position: 'Support Specialist', department: 'Customer Service', status: 'Active', lastSeen: '8:59 AM' },
+  { id: 'emp009', name: 'George Lee', email: 'george.l@example.com', avatar: 'https://picsum.photos/seed/8/100/100', position: 'Research Analyst', department: 'Research', status: 'Active', lastSeen: '9:25 AM' },
+  { id: 'emp010', name: 'Helen Taylor', email: 'helen.t@example.com', avatar: 'https://picsum.photos/seed/9/100/100', position: 'Legal Counsel', department: 'Legal', status: 'Active', lastSeen: '9:00 AM' },
+  { id: 'emp011', name: 'Jane Smith', email: 'jane.s@example.com', avatar: 'https://picsum.photos/seed/10/100/100', position: 'Marketing Manager', department: 'Marketing', status: 'Active', lastSeen: '8:45 AM' },
+  { id: 'emp012', name: 'John Doe', email: 'john.d@example.com', avatar: 'https://picsum.photos/seed/11/100/100', position: 'Software Developer', department: 'Engineering', status: 'Active', lastSeen: 'Yesterday' },
+  { id: 'emp013', name: 'Regular User', email: 'user@example.com', avatar: 'https://picsum.photos/seed/12/100/100', position: 'Staff Member', department: 'General', status: 'Active', lastSeen: '9:03 AM' },
 ];
 
 export const attendanceChartData = [

@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from "lucide-react";
 
 export type Employee = {
@@ -5,8 +6,9 @@ export type Employee = {
   name: string;
   email: string;
   avatar: string;
-  department: 'Engineering' | 'HR' | 'Marketing' | 'Sales';
-  status: 'On Time' | 'Late' | 'Absent' | 'On Leave';
+  position: string;
+  department: string;
+  status: 'On Time' | 'Late' | 'Absent' | 'On Leave' | 'Active';
   lastSeen: string;
 };
 
