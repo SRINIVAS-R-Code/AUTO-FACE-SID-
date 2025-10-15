@@ -5,26 +5,22 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Video, VideoOff, Camera, Expand, Keyboard, Mouse, Eye, Home, WifiOff } from 'lucide-react'
+import { Video, VideoOff, Camera, Expand, Home, WifiOff } from 'lucide-react'
 import type { Employee } from '@/lib/types'
 import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { useToast } from '@/hooks/use-toast'
-import { Progress } from './ui/progress'
 import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { useEmployee } from '@/context/employee-context'
 import { useNotification } from '@/context/notification-context'
+import { ActivityMonitor } from './activity-monitor'
 
 type CameraFeedProps = {
   employee?: Employee;
   isCameraOn: boolean;
   setIsCameraOn: (isOn: boolean | ((prevState: boolean) => boolean)) => void;
 }
-
-const ACTIVITY_DECAY_RATE = 0.5; // smaller is slower
-const ACTIVITY_UPDATE_INTERVAL = 1000; // ms
-
 
 export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -36,10 +32,6 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
   const previousWorkLocation = useRef(employee.workLocation);
 
   const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
-
-  const [keyboardActivity, setKeyboardActivity] = useState(100);
-  const [mouseActivity, setMouseActivity] = useState(100);
-  const [screenFocus, setScreenFocus] = useState(100);
 
   const isDisconnected = employee.workLocation === 'Disconnected';
 
@@ -81,33 +73,6 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
         }
     }
   }, [isCameraOn, isDisconnected, toast, setIsCameraOn]); 
-
-  useEffect(() => {
-    const handleKeyDown = () => setKeyboardActivity(100);
-    const handleMouseMove = () => setMouseActivity(100);
-    const handleVisibilityChange = () => {
-      setScreenFocus(document.hidden ? 0 : 100);
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    const activityDecayTimer = setInterval(() => {
-        setKeyboardActivity(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
-        setMouseActivity(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
-        if (!document.hidden) {
-             setScreenFocus(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
-        }
-    }, ACTIVITY_UPDATE_INTERVAL);
-
-    return () => {
-        clearInterval(activityDecayTimer);
-        window.removeEventListener('keydown', handleKeyDown);
-        window.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-    }
-  }, []);
 
   useEffect(() => {
     if (previousWorkLocation.current !== employee.workLocation) {
@@ -246,29 +211,9 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
         </CardHeader>
         <CardContent className="flex-grow space-y-4">
           <VideoPlayer />
-           <div className="space-y-3 pt-2">
-            <div>
-              <div className="flex justify-between items-center mb-1 text-xs">
-                <span className="flex items-center gap-1.5 text-muted-foreground"><Keyboard size={14}/> Keyboard</span>
-                <span className="font-bold text-primary">{Math.round(keyboardActivity)}%</span>
-              </div>
-              <Progress value={keyboardActivity} className="h-2"/>
-            </div>
-             <div>
-              <div className="flex justify-between items-center mb-1 text-xs">
-                <span className="flex items-center gap-1.5 text-muted-foreground"><Mouse size={14}/> Mouse</span>
-                <span className="font-bold text-green-500">{Math.round(mouseActivity)}%</span>
-              </div>
-              <Progress value={mouseActivity} className="h-2 [&>div]:bg-green-500" />
-            </div>
-             <div>
-              <div className="flex justify-between items-center mb-1 text-xs">
-                <span className="flex items-center gap-1.5 text-muted-foreground"><Eye size={14}/> Focus</span>
-                <span className="font-bold text-blue-500">{Math.round(screenFocus)}%</span>
-              </div>
-              <Progress value={screenFocus} className="h-2 [&>div]:bg-blue-500"/>
-            </div>
-          </div>
+           <div className="pt-2">
+            <ActivityMonitor />
+           </div>
         </CardContent>
         <CardFooter className="mt-auto flex justify-center gap-2 pt-0">
             <TooltipProvider>
@@ -316,5 +261,3 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
     </Dialog>
   )
 }
-
-    
