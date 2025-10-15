@@ -3,21 +3,20 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
   CheckCircle,
   Clock,
-  Hourglass,
-  Computer,
-  Smile,
-  Zap,
-  MapPin,
-  Circle,
   Activity,
   TimerOff,
   UserCheck,
+  Computer,
+  Smile,
+  MapPin,
+  Circle,
+  Zap,
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 
@@ -65,7 +64,6 @@ export default function UserDashboardPage() {
           <div className="text-right flex-shrink-0">
             <p className="text-muted-foreground text-sm">Current Time</p>
             <p className="text-3xl font-bold text-primary">{formattedTime}</p>
-            <p className="text-muted-foreground text-sm">{formattedDate}</p>
             <div className="flex items-center justify-end gap-2 mt-2 text-sm text-green-500">
                 <Zap size={16}/> AI Engine: 98.5%
             </div>
@@ -81,7 +79,7 @@ export default function UserDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">Not Checked In</p>
+            <p className="text-3xl font-bold">Checked In</p>
           </CardContent>
         </Card>
         <Card>
@@ -91,7 +89,7 @@ export default function UserDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">0.0h</p>
+            <p className="text-3xl font-bold">4.2h</p>
           </CardContent>
         </Card>
         <Card>
@@ -101,7 +99,7 @@ export default function UserDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">0.0h</p>
+            <p className="text-3xl font-bold">3.8h</p>
           </CardContent>
         </Card>
         <Card>
@@ -111,7 +109,7 @@ export default function UserDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">0.0h</p>
+            <p className="text-3xl font-bold">0.4h</p>
           </CardContent>
         </Card>
       </div>
