@@ -11,42 +11,11 @@ import { ProductivityTrendChart } from "@/components/productivity-trend-chart"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { TaskCompletionPieChart } from "@/components/task-completion-pie-chart"
-
-
-const newKpiData = [
-  ...kpiData,
-  {
-    title: "Productivity",
-    value: "99.2%",
-    change: "+1.2%",
-    changeType: "increase",
-    icon: Zap,
-  },
-  {
-    title: "Overtime Hours",
-    value: "120",
-    change: "-5%",
-    changeType: "decrease",
-    icon: Clock,
-  },
-  {
-    title: "Task Completion",
-    value: "95%",
-    change: "+2%",
-    changeType: "increase",
-    icon: BarChart3,
-  },
-   {
-    title: "Active Employees",
-    value: "1,245",
-    change: "+10",
-    changeType: "increase",
-    icon: Users,
-  }
-].slice(0, 4);
+import { useEmployee } from "@/context/employee-context"
 
 
 export default function AdminDashboardPage() {
+  const { employees } = useEmployee();
   const handleExport = (format: 'csv' | 'word') => {
     let data = '';
     let mimeType = '';
@@ -72,6 +41,38 @@ export default function AdminDashboardPage() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+  
+  const newKpiData = [
+    {
+      title: "Total Employees",
+      value: employees.length.toString(),
+      change: "+1.5%",
+      changeType: "increase",
+      icon: Users,
+    },
+    {
+      title: "Productivity",
+      value: "99.2%",
+      change: "+1.2%",
+      changeType: "increase",
+      icon: Zap,
+    },
+    {
+      title: "Overtime Hours",
+      value: "120",
+      change: "-5%",
+      changeType: "decrease",
+      icon: Clock,
+    },
+     {
+      title: "Active Employees",
+      value: employees.filter(e => e.status === 'Active').length.toString(),
+      change: "+10",
+      changeType: "increase",
+      icon: Users,
+    }
+  ].slice(0, 4);
+
 
   return (
     <div className="space-y-6">

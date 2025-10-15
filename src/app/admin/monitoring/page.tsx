@@ -4,9 +4,10 @@
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { ShieldCheck } from "lucide-react"
-import { employeeData } from "@/lib/data"
+import { useEmployee } from "@/context/employee-context"
 
 export default function MonitoringPage() {
+  const { employees } = useEmployee();
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
@@ -24,7 +25,7 @@ export default function MonitoringPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {employeeData.map(employee => (
+        {employees.map(employee => (
           <CameraFeed key={employee.id} employee={employee} />
         ))}
       </div>

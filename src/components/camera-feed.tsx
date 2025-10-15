@@ -13,20 +13,24 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/t
 import { useToast } from '@/hooks/use-toast'
 import { Progress } from './ui/progress'
 import { Alert, AlertDescription, AlertTitle } from './ui/alert'
+import { useEmployee } from '@/context/employee-context'
 
 type CameraFeedProps = {
-  employee: Employee
+  employee?: Employee
 }
 
 const ACTIVITY_DECAY_RATE = 0.5; // smaller is slower
 const ACTIVITY_UPDATE_INTERVAL = 1000; // ms
 
 
-export function CameraFeed({ employee }: CameraFeedProps) {
+export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isCameraOn, setIsCameraOn] = useState(false)
   const { toast } = useToast();
+  const { employees } = useEmployee();
   
+  const employee = employeeProp || employees[0];
+
   const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
 
   const [keyboardActivity, setKeyboardActivity] = useState(100);

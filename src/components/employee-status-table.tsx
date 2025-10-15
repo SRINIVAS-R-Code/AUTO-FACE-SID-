@@ -20,13 +20,15 @@ import {
 } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { employeeData } from "@/lib/data"
+import { useEmployee } from "@/context/employee-context"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ChevronRight, Eye, Home, WifiOff } from "lucide-react"
 
 export function EmployeeStatusTable() {
-  const getStatusBadge = (employee: (typeof employeeData)[0]) => {
+  const { employees } = useEmployee();
+
+  const getStatusBadge = (employee: (typeof employees)[0]) => {
     switch (employee.workLocation) {
         case 'Office':
             return <Badge variant="default" className='bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30 capitalize'>{employee.status}</Badge>;
@@ -59,7 +61,7 @@ export function EmployeeStatusTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {employeeData.map((employee) => (
+            {employees.map((employee) => (
               <TableRow key={employee.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">

@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { EmployeePerformanceCard } from "@/components/employee-performance-card";
-import { employeeData } from "@/lib/data";
+import { useEmployee } from "@/context/employee-context";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,16 +15,17 @@ import { Button } from "@/components/ui/button"
 import { FileDown, FileText, FileSpreadsheet, Search } from "lucide-react"
 import { Input } from "@/components/ui/input";
 
-const performanceData = employeeData.map(employee => ({
-  ...employee,
-  performance: {
-    productivity: Math.floor(Math.random() * 21) + 80, // 80-100%
-    taskCompletion: Math.floor(Math.random() * 21) + 75, // 75-95%
-  }
-}));
-
 export default function PerformanceAnalyticsPage() {
+  const { employees } = useEmployee();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const performanceData = employees.map(employee => ({
+    ...employee,
+    performance: {
+      productivity: Math.floor(Math.random() * 21) + 80, // 80-100%
+      taskCompletion: Math.floor(Math.random() * 21) + 75, // 75-95%
+    }
+  }));
 
   const handleExport = (format: 'csv' | 'word') => {
     let data = '';

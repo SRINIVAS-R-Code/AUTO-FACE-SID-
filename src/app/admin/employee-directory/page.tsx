@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { employeeData as initialEmployeeData } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { Circle, UserPlus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,10 +30,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import type { Employee } from "@/lib/types";
+import { useEmployee } from "@/context/employee-context";
 
 export default function EmployeeDirectoryPage() {
-  const [employeeData, setEmployeeData] = useState<Employee[]>(initialEmployeeData);
-  const [newEmployee, setNewEmployee] = useState({ id: `emp${(initialEmployeeData.length + 1).toString().padStart(3, '0')}`, name: '', email: '', position: '', department: '' });
+  const { employees, addEmployee, updateEmployee, deleteEmployee } = useEmployee();
+  const [newEmployee, setNewEmployee] = useState({ id: '', name: '', email: '', position: '', department: '' });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
@@ -50,21 +50,9 @@ export default function EmployeeDirectoryPage() {
       });
       return;
     }
-
-    const newEntry: Employee = {
-      avatar: `https://picsum.photos/seed/${employeeData.length + 1}/100/100`,
-      status: 'Active',
-      workLocation: 'Office',
-      lastSeen: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      ...newEmployee,
-    };
-
-    setEmployeeData([...employeeData, newEntry]);
-    toast({
-      title: "Employee Added",
-      description: `${newEmployee.name} has been added to the directory.`,
-    });
-    setNewEmployee({ id: `emp${(employeeData.length + 2).toString().padStart(3, '0')}`, name: '', email: '', position: '', department: '' });
+    
+    addEmployee(newEmployee);
+    setNewEmployee({ id: '', name: '', email: '', position: '', department: '' });
     setIsAddDialogOpen(false);
   };
   
@@ -76,11 +64,7 @@ export default function EmployeeDirectoryPage() {
   const handleUpdateEmployee = () => {
     if (!employeeToEdit) return;
 
-    setEmployeeData(employeeData.map(e => e.id === employeeToEdit.id ? employeeToEdit : e));
-    toast({
-        title: "Employee Updated",
-        description: `${employeeToEdit.name}'s information has been updated.`,
-    });
+    updateEmployee(employeeToEdit);
     setIsEditDialogOpen(false);
     setEmployeeToEdit(null);
   };
@@ -88,11 +72,7 @@ export default function EmployeeDirectoryPage() {
   const handleDeleteEmployee = () => {
     if (!employeeToDelete) return;
 
-    setEmployeeData(employeeData.filter(e => e.id !== employeeToDelete.id));
-    toast({
-        title: "Employee Removed",
-        description: `${employeeToDelete.name} has been removed from the directory.`,
-    });
+    deleteEmployee(employeeToDelete.id);
     setEmployeeToDelete(null);
   };
 
@@ -103,7 +83,7 @@ export default function EmployeeDirectoryPage() {
         <h1 className="text-3xl font-bold">Employee Management</h1>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => setNewEmployee({ ...newEmployee, id: `emp${(employeeData.length + 1).toString().padStart(3, '0')}` })}>
+            <Button onClick={() => setNewEmployee({ ...newEmployee, id: `emp${(employees.length + 1).toString().padStart(3, '0')}` })}>
               <UserPlus className="mr-2 h-4 w-4" /> Add Employee
             </Button>
           </DialogTrigger>
@@ -185,7 +165,7 @@ export default function EmployeeDirectoryPage() {
 
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {employeeData.map((employee) => (
+        {employees.map((employee) => (
           <Card key={employee.id} className="bg-card/80 hover:bg-card/95 transition-colors flex flex-col">
             <CardHeader>
               <CardTitle>{employee.name}</CardTitle>

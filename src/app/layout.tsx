@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/context/theme-provider';
+import { EmployeeProvider } from '@/context/employee-context';
 
 export const metadata: Metadata = {
   title: 'Monitor Workers Automatically using Face Recognition and System Interaction Detection',
@@ -29,8 +30,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            {children}
-            <Toaster />
+            <EmployeeProvider>
+              {children}
+              <Toaster />
+            </EmployeeProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
