@@ -45,7 +45,7 @@ export const employeeData: Employee[] = [
   { id: 'emp010', name: 'Helen Taylor', email: 'helen.t@example.com', avatar: 'https://picsum.photos/seed/9/100/100', position: 'Legal Counsel', department: 'Legal', status: 'Active', workLocation: 'Home', lastSeen: '9:00 AM' },
   { id: 'emp011', name: 'Jane Smith', email: 'jane.s@example.com', avatar: 'https://picsum.photos/seed/10/100/100', position: 'Marketing Manager', department: 'Marketing', status: 'Active', workLocation: 'Office', lastSeen: '8:45 AM' },
   { id: 'emp012', name: 'John Doe', email: 'john.d@example.com', avatar: 'https://picsum.photos/seed/11/100/100', position: 'Software Developer', department: 'Engineering', status: 'Active', workLocation: 'Office', lastSeen: 'Yesterday' },
-  { id: 'emp013', name: 'Regular User', email: 'user@example.com', avatar: 'https://picsum.photos/seed/12/100/100', position: 'Staff Member', department: 'General', status: 'Active', workLocation: 'Office', lastSeen: '9:03 AM' },
+  { id: 'emp013', name: 'User One', email: 'user@example.com', avatar: 'https://picsum.photos/seed/12/100/100', position: 'Staff Member', department: 'General', status: 'Active', workLocation: 'Office', lastSeen: '9:03 AM' },
 ];
 
 
@@ -134,4 +134,3 @@ export const securityEvents: SecurityEvent[] = [
   { id: 'sec4', timestamp: '2024-07-23 11:20 AM', type: 'Unusual Activity', user: 'Diana Davis', userAvatar: 'https://picsum.photos/seed/5/100/100', description: 'Anomalous after-hours system access detected.', ipAddress: '203.0.113.5' },
   { id: 'sec5', timestamp: '2024-07-22 09:05 AM', type: 'Failed Login', user: 'bob.j@example.com', userAvatar: 'https://picsum.photos/seed/3/100/100', description: 'Attempted login with invalid credentials.', ipAddress: '192.168.1.112' },
 ];
-
