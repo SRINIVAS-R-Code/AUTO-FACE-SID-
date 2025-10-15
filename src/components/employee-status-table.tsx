@@ -37,9 +37,9 @@ export function EmployeeStatusTable() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recent Activity</CardTitle>
+        <CardTitle>Employee Status</CardTitle>
         <CardDescription>
-          Latest employee statuses for today.
+          Live overview of employee check-in statuses.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -47,6 +47,8 @@ export function EmployeeStatusTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Employee</TableHead>
+              <TableHead>Department</TableHead>
+              <TableHead>Last Seen</TableHead>
               <TableHead className="text-right">Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -59,9 +61,14 @@ export function EmployeeStatusTable() {
                       <AvatarImage src={employee.avatar} alt={employee.name} data-ai-hint="person face" />
                       <AvatarFallback>{employee.name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <div className="font-medium">{employee.name}</div>
+                    <div>
+                      <div className="font-medium">{employee.name}</div>
+                      <div className="text-xs text-muted-foreground">{employee.email}</div>
+                    </div>
                   </div>
                 </TableCell>
+                <TableCell>{employee.department}</TableCell>
+                <TableCell>{employee.lastSeen}</TableCell>
                 <TableCell className="text-right">
                   <Badge variant={getBadgeVariant(employee.status)} className={cn(employee.status === 'On Time' && 'bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30', 'capitalize')}>
                     {employee.status}
