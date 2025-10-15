@@ -3,13 +3,17 @@
 
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { ShieldCheck, ListChecks, Activity, BarChart, CheckCircle } from "lucide-react"
+import { ShieldCheck, ListChecks, Activity, CheckCircle, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-context";
 
-const quickStats = [
-    { title: "Status", value: "Active", icon: CheckCircle },
-    { title: "Productivity", value: "94%", icon: BarChart },
+const timeStats = [
+    { title: "Log In Time", value: "09:02 AM", icon: LogIn },
+    { title: "Screen Time", value: "6h 15m", icon: ScreenShare },
+    { title: "Working Time", value: "7h 30m", icon: Briefcase },
+    { title: "Break Time", value: "45m", icon: Coffee },
+    { title: "Stream Off", value: "15m", icon: VideoOff },
+    { title: "Log Out Time", value: "17:58 PM", icon: LogOut },
 ];
 
 const tasks = [
@@ -43,35 +47,24 @@ export default function UserDashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Quick Stats</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-2 gap-4">
-                    {quickStats.map(stat => (
-                        <div key={stat.title} className="p-4 bg-muted/50 rounded-lg">
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                                <stat.icon className="h-4 w-4" />
-                                <h4 className="text-sm font-medium">{stat.title}</h4>
+            <div className="lg:col-span-2">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Daily Activity</CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {timeStats.map(stat => (
+                            <div key={stat.title} className="p-4 bg-muted/50 rounded-lg">
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <stat.icon className="h-4 w-4" />
+                                    <h4 className="text-sm font-medium">{stat.title}</h4>
+                                </div>
+                                <p className="text-2xl font-bold mt-1">{stat.value}</p>
                             </div>
-                            <p className="text-2xl font-bold mt-1">{stat.value}</p>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><ListChecks /> My Tasks</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                     {tasks.map(task => (
-                        <div key={task.id} className="flex items-center">
-                            <CheckCircle className={`h-4 w-4 mr-3 ${task.completed ? 'text-green-500' : 'text-muted-foreground/50'}`} />
-                            <span className={`${task.completed ? 'line-through text-muted-foreground' : ''}`}>{task.title}</span>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
+                        ))}
+                    </CardContent>
+                </Card>
+            </div>
              <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><Activity /> Recent Activity</CardTitle>
