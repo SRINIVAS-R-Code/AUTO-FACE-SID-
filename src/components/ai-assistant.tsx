@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
-import { aiAssistantAnswerQuestions } from "@/ai/flows/ai-assistant-answer-questions"
+import { assistantFlow } from "@/ai/flows/ai-assistant-flow"
 import { Skeleton } from "./ui/skeleton"
 
 type Message = {
@@ -37,10 +37,10 @@ export function AIAssistant() {
     setIsLoading(true)
 
     try {
-      const result = await aiAssistantAnswerQuestions({ question: input })
+      const result = await assistantFlow(input)
       const assistantMessage: Message = {
         role: "assistant",
-        content: result.answer,
+        content: result,
       }
       setMessages((prev) => [...prev, assistantMessage])
     } catch (error) {
@@ -132,7 +132,7 @@ export function AIAssistant() {
             <Input
               value={input}
               onChange={handleInputChange}
-              placeholder="Ask about HR, policies, etc."
+              placeholder="Ask a question or for advice..."
               className="flex-1"
               disabled={isLoading}
             />
