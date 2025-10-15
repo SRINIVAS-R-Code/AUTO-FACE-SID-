@@ -30,6 +30,7 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
   const { employees } = useEmployee();
   
   const employee = employeeProp || employees[0];
+  const previousWorkLocation = useRef(employee.workLocation);
 
   const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
 
@@ -105,6 +106,24 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
     }
   }, []);
 
+  useEffect(() => {
+    if (previousWorkLocation.current !== employee.workLocation) {
+        if (employee.workLocation === 'Disconnected') {
+            toast({
+                variant: 'destructive',
+                title: 'Employee Disconnected',
+                description: `${employee.name} has lost network connection.`,
+            });
+        } else if (previousWorkLocation.current === 'Disconnected') {
+            toast({
+                title: 'Employee Reconnected',
+                description: `${employee.name} is back online.`,
+            });
+        }
+        previousWorkLocation.current = employee.workLocation;
+    }
+  }, [employee.workLocation, employee.name, toast]);
+
 
   const toggleCamera = () => {
     if (isDisconnected) {
@@ -115,7 +134,12 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
         });
         return;
     }
-    setIsCameraOn(prev => !prev);
+    const newCameraState = !isCameraOn;
+    setIsCameraOn(newCameraState);
+    toast({
+        title: `Camera ${newCameraState ? 'Activated' : 'Deactivated'}`,
+        description: `Camera for ${employee.name} has been turned ${newCameraState ? 'on' : 'off'}.`,
+    });
   }
 
   const handleCapture = () => {
@@ -201,8 +225,8 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
         </div>
       )}
        <div className="absolute bottom-2 left-2 bg-black/50 text-white rounded px-2 py-1 text-xs flex items-center gap-1.5">
-          <span>Status:</span>
-          {getStatusBadge()}
+        <span>Status:</span>
+        {getStatusBadge()}
       </div>
     </div>
   )
@@ -286,5 +310,3 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
     </Dialog>
   )
 }
-
-    
