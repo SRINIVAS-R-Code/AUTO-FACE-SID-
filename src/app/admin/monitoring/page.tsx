@@ -1,15 +1,17 @@
+"use client"
+
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { EmployeeMonitorList } from "@/components/employee-monitor-list"
 import { ShieldCheck } from "lucide-react"
+import { employeeData } from "@/lib/data"
 
 export default function MonitoringPage() {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Live Worker Monitoring</h1>
-          <p className="text-muted-foreground">Select an employee to view their live feed.</p>
+          <h1 className="text-2xl font-semibold">Live Camera Feeds</h1>
+          <p className="text-muted-foreground">Live overview of all employee camera feeds.</p>
         </div>
         <Alert className="max-w-md">
           <ShieldCheck className="h-4 w-4" />
@@ -20,14 +22,10 @@ export default function MonitoringPage() {
         </Alert>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <CameraFeed />
-          <CameraFeed />
-        </div>
-        <div className="lg:col-span-1">
-          <EmployeeMonitorList />
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {employeeData.map(employee => (
+          <CameraFeed key={employee.id} employee={employee} />
+        ))}
       </div>
     </div>
   )

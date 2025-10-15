@@ -1,14 +1,19 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Video, VideoOff, Square, Circle } from 'lucide-react'
+import { Video, VideoOff, Square, Circle, Camera } from 'lucide-react'
+import type { Employee } from '@/lib/types'
+import { Badge } from './ui/badge'
 
-export function CameraFeed() {
+type CameraFeedProps = {
+  employee: Employee
+}
+
+export function CameraFeed({ employee }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isCameraOn, setIsCameraOn] = useState(false)
-  const [isRecording, setIsRecording] = useState(false)
 
   const toggleCamera = async () => {
     if (isCameraOn) {
@@ -33,10 +38,12 @@ export function CameraFeed() {
     }
   }
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording)
-    // TODO: Implement actual video recording logic
-  }
+  useEffect(() => {
+    // Automatically turn on camera for demo purposes
+    toggleCamera();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
 
   useEffect(() => {
     return () => {
@@ -47,45 +54,51 @@ export function CameraFeed() {
   }, [])
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Live Feed</CardTitle>
+    <Card className="flex flex-col">
+      <CardHeader className="flex-row items-center justify-between">
+        <CardTitle className="text-base">{employee.name}</CardTitle>
+        <Badge variant={employee.status === 'On Time' || employee.status === 'Late' ? 'default' : 'outline'} className={employee.status === 'On Time' || employee.status === 'Late' ? 'bg-green-500/20 text-green-700 border-green-500/30' : ''}>
+          <Circle className="mr-2 h-2 w-2 fill-current" />
+          ONLINE
+        </Badge>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-grow">
         <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-          <video ref={videoRef} className="h-full w-full object-cover" muted />
+          <video ref={videoRef} className="h-full w-full object-cover" muted playsInline />
           {!isCameraOn && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/50">
-                <VideoOff className="h-16 w-16 text-muted-foreground" />
-                <p className="mt-2 text-muted-foreground">Camera is off</p>
+                <VideoOff className="h-12 w-12 text-muted-foreground" />
+                <p className="mt-2 text-sm text-muted-foreground">Camera is off</p>
             </div>
           )}
           {isCameraOn && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-1/2 h-2/3 border-4 border-primary/50 rounded-lg shadow-lg animate-pulse border-dashed" />
-              <div className="absolute bottom-4 left-4 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                Face Detection Active
+            <>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-1/2 h-2/3 border-2 border-primary/50 rounded-lg shadow-lg animate-pulse border-dashed" />
               </div>
-            </div>
+              <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-0.5 rounded-md text-xs font-bold flex items-center gap-1">
+                <Circle className="h-2 w-2 fill-white" />
+                LIVE
+              </div>
+              <div className="absolute bottom-2 left-2 text-white bg-black/50 rounded p-1 text-xs">
+                <p>Resolution: 1920x1080</p>
+                <p>FPS: 30</p>
+                <p>Status: ONLINE</p>
+              </div>
+            </>
           )}
-           {isRecording && (
-              <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-1.5 rounded-md">
-                <Circle className="h-3 w-3 fill-white" />
-                <span className="font-mono text-sm">REC</span>
-              </div>
-            )}
-        </div>
-        <div className="mt-4 flex gap-4">
-          <Button onClick={toggleCamera} variant="outline">
-            {isCameraOn ? <VideoOff className="mr-2 h-4 w-4" /> : <Video className="mr-2 h-4 w-4" />}
-            {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
-          </Button>
-          <Button onClick={toggleRecording} disabled={!isCameraOn}>
-             {isRecording ? <Square className="mr-2 h-4 w-4" /> : <Circle className="mr-2 h-4 w-4" />}
-             {isRecording ? 'Stop Recording' : 'Start Recording'}
-          </Button>
         </div>
       </CardContent>
+      <CardFooter className="mt-4 flex gap-2">
+          <Button onClick={toggleCamera} variant="outline" className="w-full">
+            <Video className="mr-2 h-4 w-4" />
+            View Stream
+          </Button>
+          <Button variant="outline" className="w-full">
+             <Camera className="mr-2 h-4 w-4" />
+             Capture
+          </Button>
+        </CardFooter>
     </Card>
   )
 }
