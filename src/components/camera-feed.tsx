@@ -43,6 +43,14 @@ export function CameraFeed({ employee }: CameraFeedProps) {
   }
 
   useEffect(() => {
+    // This effect ensures that the video plays when the stream is attached.
+    if (videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.play().catch(error => {
+        // Autoplay was prevented.
+        console.error("Video play was prevented:", error);
+      });
+    }
+
     return () => {
       // Clean up camera stream on component unmount
       if (videoRef.current && videoRef.current.srcObject) {
@@ -50,14 +58,14 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         stream.getTracks().forEach((track) => track.stop());
       }
     }
-  }, [])
+  }, [isCameraOn]);
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
       {isCameraOn ? (
          <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
       ) : (
-        <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} layout="fill" objectFit="cover" data-ai-hint="office background" />
+        <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
       )}
       {!isCameraOn && !isFullView && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
