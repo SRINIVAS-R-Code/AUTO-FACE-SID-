@@ -1,22 +1,69 @@
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { BarChart2 } from "lucide-react";
+"use client";
+
+import { kpiData, productivityTrendData, taskCompletionData } from "@/lib/data"
+import { KpiCard } from "@/components/kpi-card"
+import { DepartmentPerformanceChart } from "@/components/department-performance-chart"
+import { ProductivityTrendChart } from "@/components/productivity-trend-chart"
+import { TaskCompletionPieChart } from "@/components/task-completion-pie-chart"
+import { Users, Zap, Clock, UserCheck } from "lucide-react"
+import { useAuth } from "@/context/auth-context";
 
 export default function AnalyticsPage() {
+    const { username } = useAuth();
+    const userKpiData = [
+        {
+          title: "My Productivity",
+          value: "94.5%",
+          change: "+2.1%",
+          changeType: "increase",
+          icon: Zap,
+        },
+        {
+          title: "On-Time Rate",
+          value: "99.1%",
+          change: "+0.8%",
+          changeType: "increase",
+          icon: UserCheck,
+        },
+        {
+          title: "Avg. Focus Time",
+          value: "6.8h",
+          change: "-0.2h",
+          changeType: "decrease",
+          icon: Clock,
+        },
+         {
+          title: "Tasks Completed",
+          value: "134",
+          change: "+12",
+          changeType: "increase",
+          icon: Users,
+        }
+      ];
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">My Analytics</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><BarChart2 /> Productivity Overview</CardTitle>
-          <CardDescription>
-            This page will show your personal analytics and productivity metrics. This is a placeholder.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Analytics content goes here...</p>
-        </CardContent>
-      </Card>
+      <h1 className="text-2xl font-semibold">My Performance Analytics</h1>
+      
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {userKpiData.map((kpi) => (
+          <KpiCard key={kpi.title} kpi={kpi} />
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <ProductivityTrendChart data={productivityTrendData} />
+        <DepartmentPerformanceChart />
+      </div>
+
+       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <TaskCompletionPieChart data={taskCompletionData} />
+        {/* Placeholder for another chart */}
+        <div className="flex items-center justify-center h-full bg-muted rounded-lg">
+            <p className="text-muted-foreground">More analytics coming soon.</p>
+        </div>
+      </div>
     </div>
   );
 }
