@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/select"
 import { attendanceRecords } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import { Eye } from "lucide-react"
+import { Button } from "./ui/button"
 
 export function AttendanceTable() {
   const [departmentFilter, setDepartmentFilter] = useState("all")
@@ -77,6 +79,7 @@ export function AttendanceTable() {
                 <TableHead>Date</TableHead>
                 <TableHead>Check In</TableHead>
                 <TableHead>Check Out</TableHead>
+                <TableHead>Stream Live</TableHead>
                 <TableHead className="text-right">Status</TableHead>
               </TableRow>
             </TableHeader>
@@ -96,6 +99,11 @@ export function AttendanceTable() {
                   <TableCell>{record.date}</TableCell>
                   <TableCell>{record.checkIn}</TableCell>
                   <TableCell>{record.checkOut}</TableCell>
+                  <TableCell>
+                    <Button variant="ghost" size="icon">
+                      <Eye className="h-5 w-5" />
+                    </Button>
+                  </TableCell>
                   <TableCell className="text-right">
                     <Badge variant={getBadgeVariant(record.status)} className={cn(record.status === 'On Time' && 'bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30', 'capitalize')}>
                       {record.status}
