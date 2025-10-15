@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -23,26 +23,63 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 
+const ACTIVITY_DECAY_RATE = 0.5; // smaller is slower
+const ACTIVITY_UPDATE_INTERVAL = 1000; // ms
+
 export default function UserDashboardPage() {
   const [time, setTime] = useState(new Date());
   const { username } = useAuth();
-  const [keyboardActivity, setKeyboardActivity] = useState(75);
-  const [mouseActivity, setMouseActivity] = useState(90);
-  const [screenFocus, setScreenFocus] = useState(85);
+  
+  const [keyboardActivity, setKeyboardActivity] = useState(100);
+  const [mouseActivity, setMouseActivity] = useState(100);
+  const [screenFocus, setScreenFocus] = useState(100);
+
+  const keyActivityTimeoutRef = useRef<NodeJS.Timeout>();
+  const mouseActivityTimeoutRef = useRef<NodeJS.Timeout>();
 
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
 
-    const activityTimer = setInterval(() => {
-        setKeyboardActivity(Math.floor(Math.random() * 21) + 70); // 70-90
-        setMouseActivity(Math.floor(Math.random() * 21) + 75); // 75-95
-        setScreenFocus(Math.floor(Math.random() * 16) + 80); // 80-95
-      }, 3000);
+    const handleKeyDown = () => {
+      setKeyboardActivity(100);
+      if (keyActivityTimeoutRef.current) clearTimeout(keyActivityTimeoutRef.current);
+    };
+
+    const handleMouseMove = () => {
+      setMouseActivity(100);
+      if (mouseActivityTimeoutRef.current) clearTimeout(mouseActivityTimeoutRef.current);
+    };
+    
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setScreenFocus(0);
+      } else {
+        setScreenFocus(100);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    const activityDecayTimer = setInterval(() => {
+        setKeyboardActivity(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
+        setMouseActivity(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
+        if (!document.hidden) {
+             setScreenFocus(prev => Math.max(0, prev - ACTIVITY_DECAY_RATE));
+        }
+    }, ACTIVITY_UPDATE_INTERVAL);
+
 
     return () => {
         clearInterval(timer);
-        clearInterval(activityTimer);
+        clearInterval(activityDecayTimer);
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        if (keyActivityTimeoutRef.current) clearTimeout(keyActivityTimeoutRef.current);
+        if (mouseActivityTimeoutRef.current) clearTimeout(mouseActivityTimeoutRef.current);
     }
   }, []);
 
@@ -160,21 +197,21 @@ export default function UserDashboardPage() {
             <div>
               <div className="flex justify-between items-center mb-1 text-sm">
                 <span className="flex items-center gap-2 text-muted-foreground"><Keyboard /> Keyboard Activity</span>
-                <span className="font-bold text-primary">{keyboardActivity}%</span>
+                <span className="font-bold text-primary">{Math.round(keyboardActivity)}%</span>
               </div>
               <Progress value={keyboardActivity} />
             </div>
              <div>
               <div className="flex justify-between items-center mb-1 text-sm">
                 <span className="flex items-center gap-2 text-muted-foreground"><Mouse /> Mouse Activity</span>
-                <span className="font-bold text-green-500">{mouseActivity}%</span>
+                <span className="font-bold text-green-500">{Math.round(mouseActivity)}%</span>
               </div>
               <Progress value={mouseActivity} className="[&>div]:bg-green-500" />
             </div>
              <div>
               <div className="flex justify-between items-center mb-1 text-sm">
                 <span className="flex items-center gap-2 text-muted-foreground"><Eye /> Screen Focus</span>
-                <span className="font-bold text-blue-500">{screenFocus}%</span>
+                <span className="font-bold text-blue-500">{Math.round(screenFocus)}%</span>
               </div>
               <Progress value={screenFocus} className="[&>div]:bg-blue-500"/>
             </div>
@@ -185,3 +222,4 @@ export default function UserDashboardPage() {
   );
 }
 
+    
