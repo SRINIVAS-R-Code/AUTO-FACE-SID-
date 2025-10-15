@@ -200,8 +200,9 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
           LIVE
         </div>
       )}
-       <div className="absolute bottom-2 left-2 bg-black/50 text-white rounded px-2 py-1 text-xs">
-          <p>Status: {getStatusBadge()}</p>
+       <div className="absolute bottom-2 left-2 bg-black/50 text-white rounded px-2 py-1 text-xs flex items-center gap-1.5">
+          <span>Status:</span>
+          {getStatusBadge()}
       </div>
     </div>
   )
@@ -285,3 +286,5 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
     </Dialog>
   )
 }
+
+    
