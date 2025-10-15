@@ -4,9 +4,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
-import { employeeActivityData } from "@/lib/data"
-import { EmployeeActivityChart } from "./employee-activity-chart"
-
 
 type EmployeePerformance = {
   id: string;
@@ -41,7 +38,7 @@ export function EmployeePerformanceCard({ employee }: EmployeePerformanceCardPro
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <div>
             <div className="flex justify-between items-center mb-1 text-sm">
               <span className="text-muted-foreground">Productivity</span>
@@ -56,9 +53,6 @@ export function EmployeePerformanceCard({ employee }: EmployeePerformanceCardPro
             </div>
             <Progress value={employee.performance.taskCompletion} className="[&>div]:bg-green-500" />
           </div>
-        </div>
-        <div className="pt-4">
-          <EmployeeActivityChart data={employeeActivityData} />
         </div>
       </CardContent>
     </Card>
