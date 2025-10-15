@@ -36,7 +36,7 @@ export function Header() {
             <Button variant="ghost" size="icon" className="rounded-full">
                 <Bell className="h-5 w-5" />
             </Button>
-            <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">3</span>
+            <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">3</span>
         </div>
         <Button variant="ghost" size="icon" className="rounded-full">
             <Moon className="h-5 w-5" />
@@ -73,12 +73,12 @@ export function Header() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={logout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button onClick={logout} variant="destructive" className="bg-red-500 hover:bg-red-600">
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Logout</span>
-        </Button>
       </div>
     </header>
   )
