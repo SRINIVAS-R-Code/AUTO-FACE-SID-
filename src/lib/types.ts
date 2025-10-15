@@ -40,3 +40,14 @@ export type DataAccessLog = {
   targetId: string | null;
   timestamp: string;
 };
+
+export type SecurityEvent = {
+  id: string;
+  timestamp: string;
+  type: 'Failed Login' | 'Permission Change' | 'Unusual Activity' | 'Data Export';
+  user: string;
+  userAvatar: string;
+  description: string;
+  ipAddress: string;
+};
+

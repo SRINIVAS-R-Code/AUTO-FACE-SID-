@@ -1,5 +1,5 @@
 
-import type { Kpi, Employee, AttendanceRecord, DataAccessLog } from "@/lib/types";
+import type { Kpi, Employee, AttendanceRecord, DataAccessLog, SecurityEvent } from "@/lib/types";
 import { Users, Clock, AlertTriangle, UserCheck } from "lucide-react";
 
 export const kpiData: Kpi[] = [
@@ -124,4 +124,12 @@ export const dataAccessLogs: DataAccessLog[] = [
   { id: 'log2', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Analytics', target: 'Bob Johnson', targetId: 'emp003', timestamp: '2024-07-23 10:42 AM' },
   { id: 'log3', adminName: 'Edward Miller', adminAvatar: 'https://picsum.photos/seed/6/100/100', action: 'Exported Report', target: 'All Employees', targetId: null, timestamp: '2024-07-22 03:15 PM' },
   { id: 'log4', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Feed', target: 'Jane Smith', targetId: 'emp011', timestamp: '2024-07-22 11:01 AM' },
+];
+
+export const securityEvents: SecurityEvent[] = [
+  { id: 'sec1', timestamp: '2024-07-24 09:15 AM', type: 'Failed Login', user: 'Unknown', userAvatar: 'https://picsum.photos/seed/13/100/100', description: 'Attempted login with invalid credentials.', ipAddress: '192.168.1.101' },
+  { id: 'sec2', timestamp: '2024-07-24 08:30 AM', type: 'Data Export', user: 'Admin User', userAvatar: 'https://picsum.photos/seed/1/100/100', description: 'Exported performance-report.csv', ipAddress: '192.168.1.100' },
+  { id: 'sec3', timestamp: '2024-07-23 05:00 PM', type: 'Permission Change', user: 'Edward Miller', userAvatar: 'https://picsum.photos/seed/6/100/100', description: 'Assigned "Admin" role to user "Charlie Wilson"', ipAddress: '192.168.1.105' },
+  { id: 'sec4', timestamp: '2024-07-23 11:20 AM', type: 'Unusual Activity', user: 'Diana Davis', userAvatar: 'https://picsum.photos/seed/5/100/100', description: 'Anomalous after-hours system access detected.', ipAddress: '203.0.113.5' },
+  { id: 'sec5', timestamp: '2024-07-22 09:05 AM', type: 'Failed Login', user: 'bob.j@example.com', userAvatar: 'https://picsum.photos/seed/3/100/100', description: 'Attempted login with invalid credentials.', ipAddress: '192.168.1.112' },
 ];
