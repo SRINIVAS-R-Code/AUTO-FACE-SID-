@@ -4,8 +4,11 @@ import { KpiCard } from "@/components/kpi-card"
 import { AttendanceTrendsChart } from "@/components/attendance-trends-chart"
 import { EmployeeStatusTable } from "@/components/employee-status-table"
 import { DepartmentPerformanceChart } from "@/components/department-performance-chart"
-import { Clock, Zap, BarChart3, Users } from "lucide-react"
+import { Clock, Zap, BarChart3, Users, FileDown, FileSpreadsheet, FileText } from "lucide-react"
 import { ProductivityTrendChart } from "@/components/productivity-trend-chart"
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
+
 
 const newKpiData = [
   ...kpiData,
@@ -45,6 +48,24 @@ export default function AdminDashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <FileDown className="mr-2 h-4 w-4" />
+              Export Report
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <FileSpreadsheet className="mr-2 h-4 w-4" />
+              CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <FileText className="mr-2 h-4 w-4" />
+              Word
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
