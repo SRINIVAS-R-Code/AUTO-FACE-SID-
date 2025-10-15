@@ -1,6 +1,7 @@
 
 "use client"
 
+import { useState } from "react"
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { ShieldCheck } from "lucide-react"
@@ -8,6 +9,15 @@ import { useEmployee } from "@/context/employee-context"
 
 export default function SecurityCamerasPage() {
   const { employees } = useEmployee();
+  const [cameraStates, setCameraStates] = useState<Record<string, boolean>>({});
+
+  const setCameraState = (employeeId: string, isOn: boolean | ((prevState: boolean) => boolean)) => {
+    setCameraStates(prev => ({
+      ...prev,
+      [employeeId]: typeof isOn === 'function' ? isOn(prev[employeeId] || false) : isOn,
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
@@ -26,9 +36,16 @@ export default function SecurityCamerasPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {employees.map(employee => (
-          <CameraFeed key={employee.id} employee={employee} />
+           <CameraFeed 
+            key={employee.id} 
+            employee={employee} 
+            isCameraOn={cameraStates[employee.id] || false}
+            setIsCameraOn={(isOn) => setCameraState(employee.id, isOn)}
+          />
         ))}
       </div>
     </div>
   )
 }
+
+    

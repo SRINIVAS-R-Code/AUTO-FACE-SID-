@@ -316,3 +316,5 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
     </Dialog>
   )
 }
+
+    
