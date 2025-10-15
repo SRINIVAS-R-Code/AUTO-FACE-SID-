@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Video, VideoOff, Circle, Camera, Expand } from 'lucide-react'
+import { Video, VideoOff, Camera, Expand } from 'lucide-react'
 import type { Employee } from '@/lib/types'
 import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
@@ -21,40 +21,33 @@ export function CameraFeed({ employee }: CameraFeedProps) {
   const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
 
   useEffect(() => {
-    let stream: MediaStream | null = null;
-    
-    const enableStream = async () => {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (err) {
-        console.error("Error accessing camera: ", err);
-        // We won't alert here to avoid spamming the user if they deny permission for many feeds
-        setIsCameraOn(false);
-      }
-    };
-
-    const disableStream = () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach((track) => track.stop());
-        videoRef.current.srcObject = null;
-      }
-    };
-
+    // This effect handles starting and stopping the camera stream
     if (isCameraOn) {
+      let stream: MediaStream;
+      const enableStream = async () => {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (err) {
+          console.error("Error accessing camera: ", err);
+          setIsCameraOn(false); // Turn button back off if permission is denied
+        }
+      };
       enableStream();
-    } else {
-      disableStream();
-    }
 
-    return () => {
-      // This cleanup runs when the component unmounts OR when dependencies change before the new effect runs.
-      disableStream();
-    };
-  }, [isCameraOn]);
+      // The cleanup function for this effect
+      return () => {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+        }
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+        }
+      };
+    }
+  }, [isCameraOn]); // This effect re-runs whenever isCameraOn changes
 
 
   const toggleCamera = () => {
@@ -63,9 +56,8 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-      {isCameraOn ? (
-         <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
-      ) : (
+      <video ref={videoRef} className={`h-full w-full object-cover ${isCameraOn ? '' : 'hidden'}`} autoPlay muted playsInline />
+      {!isCameraOn && (
         <>
           <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
           {!isFullView && (
@@ -79,7 +71,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
       {isCameraOn && (
         <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-0.5 rounded-md text-xs font-bold flex items-center gap-1">
-          <Circle className="h-2 w-2 fill-white" />
           LIVE
         </div>
       )}
@@ -95,7 +86,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         <CardHeader className="flex-row items-center justify-between">
           <CardTitle className="text-base">{employee.name}</CardTitle>
           <Badge variant={isCameraOn ? 'default' : 'outline'} className={isCameraOn ? 'bg-green-500/20 text-green-700 border-green-500/30' : ''}>
-            <Circle className="mr-2 h-2 w-2 fill-current" />
             {isCameraOn ? 'ONLINE' : 'OFFLINE'}
           </Badge>
         </CardHeader>
