@@ -63,7 +63,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-      <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
+      <video ref={videoRef} className={`h-full w-full object-cover ${!isCameraOn ? 'hidden' : ''}`} autoPlay muted playsInline />
 
       {!isCameraOn && (
         <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
@@ -78,9 +78,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
        {isCameraOn && (
         <>
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-1/2 h-2/3 border-2 border-primary/50 rounded-lg shadow-lg animate-pulse border-dashed" />
-          </div>
           <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-0.5 rounded-md text-xs font-bold flex items-center gap-1">
             <Circle className="h-2 w-2 fill-white" />
             LIVE
