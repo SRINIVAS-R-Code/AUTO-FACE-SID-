@@ -45,12 +45,12 @@ const useSafePathname = () => {
 
 const userNavItems = [
     { href: "/user/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { href: "#", icon: Video, label: "Live Camera" },
-    { href: "#", icon: CalendarCheck, label: "Attendance" },
-    { href: "#", icon: BarChart2, label: "Analytics" },
+    { href: "/user/live-camera", icon: Video, label: "Live Camera" },
+    { href: "/user/attendance", icon: CalendarCheck, label: "Attendance" },
+    { href: "/user/analytics", icon: BarChart2, label: "Analytics" },
     { href: "/user/wellness", icon: Heart, label: "Wellness" },
-    { href: "#", icon: Bell, label: "Notifications" },
-    { href: "#", icon: Settings, label: "Settings" },
+    { href: "/user/notifications", icon: Bell, label: "Notifications" },
+    { href: "/user/settings", icon: Settings, label: "Settings" },
 ]
 
 export function UserSidebarNav() {

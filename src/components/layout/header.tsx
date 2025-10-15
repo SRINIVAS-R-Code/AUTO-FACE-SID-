@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { User, Settings, LogOut, Search, Bell, Moon } from "lucide-react"
 import { useAuth } from "@/context/auth-context";
+import Link from "next/link";
 
 export function Header() {
   const { role, logout, username } = useAuth();
@@ -59,16 +60,18 @@ export function Header() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+            <DropdownMenuItem asChild>
+              <Link href={role === 'admin' ? '/admin/settings' : '/user/settings'}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </Link>
             </DropdownMenuItem>
-            {role === 'admin' && (
-              <DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={role === 'admin' ? '/admin/settings' : '/user/settings'}>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
-              </DropdownMenuItem>
-            )}
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>

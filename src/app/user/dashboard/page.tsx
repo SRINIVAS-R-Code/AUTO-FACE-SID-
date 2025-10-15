@@ -52,7 +52,7 @@ export default function UserDashboardPage() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="text-2xl font-bold">Welcome back, {username || 'Employee'} !</h2>
+              <h2 className="text-2xl font-bold">Welcome, {username || 'Employee'}!</h2>
               <p className="text-muted-foreground">Software Engineer • Employee ID: EMP001</p>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1"><Circle className="h-3 w-3 fill-green-500 text-green-500" /> Active</span>
