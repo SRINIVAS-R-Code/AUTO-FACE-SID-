@@ -1,5 +1,5 @@
 
-import type { Kpi, Employee, AttendanceRecord, DataAccessLog, SecurityEvent } from "@/lib/types";
+import type { Kpi, Employee, AttendanceRecord, DataAccessLog, SecurityEvent, Notification } from "@/lib/types";
 import { Users, Clock, AlertTriangle, UserCheck } from "lucide-react";
 
 export const kpiData: Kpi[] = [
@@ -45,7 +45,7 @@ export const employeeData: Employee[] = [
   { id: 'emp010', name: 'Helen Taylor', email: 'helen.t@example.com', avatar: 'https://picsum.photos/seed/9/100/100', position: 'Legal Counsel', department: 'Legal', status: 'Active', workLocation: 'Home', lastSeen: '9:00 AM' },
   { id: 'emp011', name: 'Jane Smith', email: 'jane.s@example.com', avatar: 'https://picsum.photos/seed/10/100/100', position: 'Marketing Manager', department: 'Marketing', status: 'Active', workLocation: 'Office', lastSeen: '8:45 AM' },
   { id: 'emp012', name: 'John Doe', email: 'john.d@example.com', avatar: 'https://picsum.photos/seed/11/100/100', position: 'Software Developer', department: 'Engineering', status: 'Active', workLocation: 'Office', lastSeen: 'Yesterday' },
-  { id: 'emp013', name: 'User One', email: 'user@example.com', avatar: 'https://picsum.photos/seed/12/100/100', position: 'Staff Member', department: 'General', status: 'Active', workLocation: 'Office', lastSeen: '9:03 AM' },
+  { id: 'emp014', name: 'User One', email: 'user@example.com', avatar: 'https://picsum.photos/seed/12/100/100', position: 'Staff Member', department: 'General', status: 'Active', workLocation: 'Office', lastSeen: '9:03 AM' },
 ];
 
 
@@ -67,7 +67,7 @@ export const attendanceRecords: AttendanceRecord[] = [
   { id: 'rec6', employeeName: 'Grace Hall', employeeAvatar: 'https://picsum.photos/seed/7/100/100', department: 'Marketing', date: '2024-07-22', checkIn: '09:05', checkOut: '17:50', status: 'On Time' },
 ];
 
-export const notifications = [
+export const initialNotifications: Notification[] = [
   { id: 1, title: 'System Update', description: 'Scheduled maintenance this weekend.', time: '2h ago' },
   { id: 2, title: 'Policy Change', description: 'New remote work policy is now in effect.', time: '1d ago' },
   { id: 3, title: 'Holiday Reminder', description: 'Upcoming public holiday next Monday.', time: '3d ago' },

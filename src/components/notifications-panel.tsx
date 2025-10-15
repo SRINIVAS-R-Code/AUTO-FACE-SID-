@@ -1,8 +1,12 @@
+
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Bell } from 'lucide-react'
-import { notifications } from '@/lib/data'
+import { useNotification } from "@/context/notification-context"
 
 export function NotificationsPanel() {
+  const { notifications } = useNotification();
   return (
     <Card>
       <CardHeader className="flex flex-row items-center gap-2">

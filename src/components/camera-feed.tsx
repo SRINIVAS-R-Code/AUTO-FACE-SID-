@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast'
 import { Progress } from './ui/progress'
 import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { useEmployee } from '@/context/employee-context'
+import { useNotification } from '@/context/notification-context'
 
 type CameraFeedProps = {
   employee?: Employee
@@ -28,6 +29,7 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
   const [isCameraOn, setIsCameraOn] = useState(false)
   const { toast } = useToast();
   const { employees } = useEmployee();
+  const { addNotification } = useNotification();
   
   const employee = employeeProp || employees[0];
   const previousWorkLocation = useRef(employee.workLocation);
@@ -108,21 +110,19 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
 
   useEffect(() => {
     if (previousWorkLocation.current !== employee.workLocation) {
-        if (employee.workLocation === 'Disconnected') {
-            toast({
-                variant: 'destructive',
-                title: 'Employee Disconnected',
-                description: `${employee.name} has lost network connection.`,
-            });
-        } else if (previousWorkLocation.current === 'Disconnected') {
-            toast({
-                title: 'Employee Reconnected',
-                description: `${employee.name} is back online.`,
-            });
-        }
+        const notification = {
+            title: employee.workLocation === 'Disconnected' ? 'Employee Disconnected' : 'Employee Reconnected',
+            description: `${employee.name} has ${employee.workLocation === 'Disconnected' ? 'lost network connection' : 'come back online'}.`,
+        };
+        toast({
+            variant: employee.workLocation === 'Disconnected' ? 'destructive' : 'default',
+            title: notification.title,
+            description: notification.description,
+        });
+        addNotification(notification);
         previousWorkLocation.current = employee.workLocation;
     }
-  }, [employee.workLocation, employee.name, toast]);
+  }, [employee.workLocation, employee.name, toast, addNotification]);
 
 
   const toggleCamera = () => {
@@ -136,10 +136,15 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
     }
     const newCameraState = !isCameraOn;
     setIsCameraOn(newCameraState);
-    toast({
+    const notification = {
         title: `Camera ${newCameraState ? 'Activated' : 'Deactivated'}`,
         description: `Camera for ${employee.name} has been turned ${newCameraState ? 'on' : 'off'}.`,
+    };
+    toast({
+        title: notification.title,
+        description: notification.description,
     });
+    addNotification(notification);
   }
 
   const handleCapture = () => {
@@ -225,7 +230,7 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
         </div>
       )}
        <div className="absolute bottom-2 left-2 bg-black/50 text-white rounded px-2 py-1 text-xs flex items-center gap-1.5">
-        <span>Status:</span>
+        <div className="flex items-center gap-1.5">Status:</div>
         {getStatusBadge()}
       </div>
     </div>

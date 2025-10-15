@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/context/theme-provider';
 import { EmployeeProvider } from '@/context/employee-context';
+import { NotificationProvider } from '@/context/notification-context';
 
 export const metadata: Metadata = {
   title: 'Monitor Workers Automatically using Face Recognition and System Interaction Detection',
@@ -31,8 +32,10 @@ export default function RootLayout({
         >
           <AuthProvider>
             <EmployeeProvider>
-              {children}
-              <Toaster />
+              <NotificationProvider>
+                {children}
+                <Toaster />
+              </NotificationProvider>
             </EmployeeProvider>
           </AuthProvider>
         </ThemeProvider>

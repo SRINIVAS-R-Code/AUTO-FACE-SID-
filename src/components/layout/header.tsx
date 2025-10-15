@@ -15,12 +15,13 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { User, Settings, LogOut, Search, Bell, Moon, Sun } from "lucide-react"
 import { useAuth } from "@/context/auth-context";
 import Link from "next/link";
-import { notifications } from "@/lib/data";
 import { useTheme } from "next-themes";
+import { useNotification } from "@/context/notification-context";
 
 export function Header() {
   const { role, logout, username } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { notifications } = useNotification();
   
   const userName = username || (role === 'admin' ? 'Admin User' : 'User');
   const userEmail = role === 'admin' ? 'admin@monitorai.com' : `${(username || 'user').toLowerCase()}@company.com`;

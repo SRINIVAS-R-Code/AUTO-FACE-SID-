@@ -52,4 +52,10 @@ export type SecurityEvent = {
   ipAddress: string;
 };
 
+export type Notification = {
+  id: number;
+  title: string;
+  description: string;
+  time: string;
+};
 
