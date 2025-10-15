@@ -1,13 +1,11 @@
 
-import { kpiData, attendanceChartData, teamProductivityData, productivityTrendData, taskCompletionData } from "@/lib/data"
+import { kpiData, attendanceChartData, teamProductivityData, productivityTrendData } from "@/lib/data"
 import { KpiCard } from "@/components/kpi-card"
 import { AttendanceTrendsChart } from "@/components/attendance-trends-chart"
 import { EmployeeStatusTable } from "@/components/employee-status-table"
 import { DepartmentPerformanceChart } from "@/components/department-performance-chart"
 import { Clock, Zap, BarChart3, Users } from "lucide-react"
 import { ProductivityTrendChart } from "@/components/productivity-trend-chart"
-import { TaskCompletionPieChart } from "@/components/task-completion-pie-chart"
-
 
 const newKpiData = [
   ...kpiData,
@@ -68,16 +66,6 @@ export default function AdminDashboardPage() {
             <EmployeeStatusTable />
         </div>
       </div>
-       <div className="grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-3">
-           <DepartmentPerformanceChart />
-        </div>
-        <div className="lg:col-span-2">
-           <TaskCompletionPieChart data={taskCompletionData} />
-        </div>
-      </div>
-      
-
     </div>
   )
 }
