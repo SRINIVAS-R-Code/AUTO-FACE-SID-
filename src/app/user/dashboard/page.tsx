@@ -1,11 +1,13 @@
 
 "use client";
 
+import { useRef } from "react";
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { ShieldCheck, Activity, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut } from "lucide-react"
+import { ShieldCheck, Activity, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut, Video } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-context";
+import { Button } from "@/components/ui/button";
 
 const timeStats = [
     { title: "Log In Time", value: "09:02 AM", icon: LogIn },
@@ -24,6 +26,11 @@ const recentActivity = [
 
 export default function UserDashboardPage() {
     const { username } = useAuth();
+    const cameraRef = useRef<HTMLDivElement>(null);
+
+    const handleScrollToCamera = () => {
+        cameraRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
   return (
     <div className="space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start gap-4">
@@ -31,13 +38,19 @@ export default function UserDashboardPage() {
             <h1 className="text-2xl font-semibold">Welcome, {username || 'Employee'}!</h1>
             <p className="text-muted-foreground">Here's your live feed and daily overview.</p>
             </div>
-            <Alert className="max-w-md">
-            <ShieldCheck className="h-4 w-4" />
-            <AlertTitle>Privacy and Security</AlertTitle>
-            <AlertDescription>
-                This system uses Face Recognition for attendance and monitoring purposes only. Your privacy is respected.
-            </AlertDescription>
-            </Alert>
+             <div className="flex gap-2">
+                <Button variant="outline" onClick={handleScrollToCamera}>
+                    <Video className="mr-2 h-4 w-4" />
+                    View Live Feed
+                </Button>
+                <Alert className="max-w-md">
+                    <ShieldCheck className="h-4 w-4" />
+                    <AlertTitle>Privacy and Security</AlertTitle>
+                    <AlertDescription>
+                        This system uses Face Recognition for attendance and monitoring purposes only. Your privacy is respected.
+                    </AlertDescription>
+                </Alert>
+            </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -74,7 +87,7 @@ export default function UserDashboardPage() {
             </Card>
         </div>
         
-        <div>
+        <div ref={cameraRef}>
             <CameraFeed />
         </div>
     </div>
