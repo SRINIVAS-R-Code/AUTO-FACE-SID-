@@ -279,7 +279,7 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{isCameraon ? 'Stop' : 'Start'} Stream</p>
+                  <p>{isCameraOn ? 'Stop' : 'Start'} Stream</p>
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
