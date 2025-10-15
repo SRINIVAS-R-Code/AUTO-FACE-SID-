@@ -8,18 +8,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuFooter,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { User, Settings, LogOut, Search, Bell, Moon } from "lucide-react"
+import { User, Settings, LogOut, Search, Bell, Moon, Sun } from "lucide-react"
 import { useAuth } from "@/context/auth-context";
 import Link from "next/link";
 import { notifications } from "@/lib/data";
+import { useTheme } from "next-themes";
 
 export function Header() {
   const { role, logout, username } = useAuth();
+  const { theme, setTheme } = useTheme();
   
   const userName = username || (role === 'admin' ? 'Admin User' : 'User');
   const userEmail = role === 'admin' ? 'admin@monitorai.com' : `${(username || 'user').toLowerCase()}@company.com`;
@@ -41,7 +42,9 @@ export function Header() {
                     <Button variant="ghost" size="icon" className="rounded-full">
                         <Bell className="h-5 w-5" />
                     </Button>
-                    <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">{notifications.length}</span>
+                    {notifications.length > 0 && 
+                      <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">{notifications.length}</span>
+                    }
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-80" align="end">
@@ -68,8 +71,10 @@ export function Header() {
             </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button variant="ghost" size="icon" className="rounded-full">
-            <Moon className="h-5 w-5" />
+        <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">Toggle theme</span>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
