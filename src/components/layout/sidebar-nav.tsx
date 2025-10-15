@@ -40,12 +40,15 @@ const useSafePathname = () => {
   }
 }
 
-const navItems = [
+const adminNavItems = [
   { href: "/", icon: LayoutGrid, label: "Admin Dashboard" },
-  { href: "/user-dashboard", icon: User, label: "User Dashboard" },
   { href: "/attendance", icon: CalendarCheck, label: "Attendance" },
   { href: "/monitoring", icon: Video, label: "Monitoring" },
   { href: "/settings", icon: Settings, label: "Settings" },
+];
+
+const userNavItems = [
+    { href: "/user-dashboard", icon: User, label: "My Dashboard" },
 ]
 
 export function SidebarNav() {
@@ -64,7 +67,24 @@ export function SidebarNav() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {navItems.map((item) => (
+          <p className="text-xs text-muted-foreground px-4 py-2">Admin</p>
+          {adminNavItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <Link href={item.href} passHref>
+                <SidebarMenuButton
+                  isActive={pathname === item.href}
+                  tooltip={{ children: item.label }}
+                >
+                  <item.icon />
+                  <span>{item.label}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+        <SidebarMenu>
+            <p className="text-xs text-muted-foreground px-4 py-2">User</p>
+          {userNavItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <Link href={item.href} passHref>
                 <SidebarMenuButton
