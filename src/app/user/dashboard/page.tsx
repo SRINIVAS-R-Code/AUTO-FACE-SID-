@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -17,16 +17,33 @@ import {
   MapPin,
   Circle,
   Zap,
+  Keyboard,
+  Mouse,
+  Eye
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 
 export default function UserDashboardPage() {
   const [time, setTime] = useState(new Date());
   const { username } = useAuth();
+  const [keyboardActivity, setKeyboardActivity] = useState(75);
+  const [mouseActivity, setMouseActivity] = useState(90);
+  const [screenFocus, setScreenFocus] = useState(85);
+
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
+
+    const activityTimer = setInterval(() => {
+        setKeyboardActivity(Math.floor(Math.random() * 21) + 70); // 70-90
+        setMouseActivity(Math.floor(Math.random() * 21) + 75); // 75-95
+        setScreenFocus(Math.floor(Math.random() * 16) + 80); // 80-95
+      }, 3000);
+
+    return () => {
+        clearInterval(timer);
+        clearInterval(activityTimer);
+    }
   }, []);
 
   const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -129,20 +146,42 @@ export default function UserDashboardPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Computer /> System Interaction</CardTitle>
-             <CardContent className="pt-4">
-              <p className="text-sm text-muted-foreground mb-4">Real-time monitoring of keyboard and mouse activity.</p>
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">Productivity Score</span>
-                  <span className="text-sm font-bold">87%</span>
+             <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-muted rounded-md">
+                    <Computer className="h-6 w-6 text-primary"/>
                 </div>
-                <Progress value={87} />
-              </div>
-            </CardContent>
+                <div>
+                    <CardTitle>System Interaction</CardTitle>
+                    <CardDescription>Real-time activity monitoring</CardDescription>
+                </div>
+            </div>
           </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <div className="flex justify-between items-center mb-1 text-sm">
+                <span className="flex items-center gap-2 text-muted-foreground"><Keyboard /> Keyboard Activity</span>
+                <span className="font-bold text-primary">{keyboardActivity}%</span>
+              </div>
+              <Progress value={keyboardActivity} />
+            </div>
+             <div>
+              <div className="flex justify-between items-center mb-1 text-sm">
+                <span className="flex items-center gap-2 text-muted-foreground"><Mouse /> Mouse Activity</span>
+                <span className="font-bold text-green-500">{mouseActivity}%</span>
+              </div>
+              <Progress value={mouseActivity} className="[&>div]:bg-green-500" />
+            </div>
+             <div>
+              <div className="flex justify-between items-center mb-1 text-sm">
+                <span className="flex items-center gap-2 text-muted-foreground"><Eye /> Screen Focus</span>
+                <span className="font-bold text-blue-500">{screenFocus}%</span>
+              </div>
+              <Progress value={screenFocus} className="[&>div]:bg-blue-500"/>
+            </div>
+          </CardContent>
         </Card>
       </div>
     </div>
   );
 }
+
