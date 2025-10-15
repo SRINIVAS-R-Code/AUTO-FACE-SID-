@@ -1,5 +1,5 @@
 
-import { kpiData, attendanceChartData, teamProductivityData, productivityTrendData } from "@/lib/data"
+import { kpiData, attendanceChartData, teamProductivityData, productivityTrendData, taskCompletionData } from "@/lib/data"
 import { KpiCard } from "@/components/kpi-card"
 import { AttendanceTrendsChart } from "@/components/attendance-trends-chart"
 import { EmployeeStatusTable } from "@/components/employee-status-table"
@@ -8,6 +8,7 @@ import { Clock, Zap, BarChart3, Users, FileDown, FileSpreadsheet, FileText } fro
 import { ProductivityTrendChart } from "@/components/productivity-trend-chart"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { TaskCompletionPieChart } from "@/components/task-completion-pie-chart"
 
 
 const newKpiData = [
@@ -79,12 +80,12 @@ export default function AdminDashboardPage() {
         <ProductivityTrendChart data={productivityTrendData} />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <DepartmentPerformanceChart />
-        </div>
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+        <div className="lg:col-span-3">
             <EmployeeStatusTable />
+        </div>
+        <div className="lg:col-span-2 grid grid-cols-1 gap-6">
+          <DepartmentPerformanceChart />
         </div>
       </div>
     </div>

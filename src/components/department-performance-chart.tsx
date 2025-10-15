@@ -51,7 +51,7 @@ export function DepartmentPerformanceChart() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="h-[240px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={chartData}>
               <PolarGrid />
