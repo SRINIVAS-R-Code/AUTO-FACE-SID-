@@ -17,16 +17,17 @@ import { useEmployee } from '@/context/employee-context'
 import { useNotification } from '@/context/notification-context'
 
 type CameraFeedProps = {
-  employee?: Employee
+  employee?: Employee;
+  isCameraOn: boolean;
+  setIsCameraOn: (isOn: boolean | ((prevState: boolean) => boolean)) => void;
 }
 
 const ACTIVITY_DECAY_RATE = 0.5; // smaller is slower
 const ACTIVITY_UPDATE_INTERVAL = 1000; // ms
 
 
-export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
+export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [isCameraOn, setIsCameraOn] = useState(true)
   const { toast } = useToast();
   const { employees } = useEmployee();
   const { addNotification } = useNotification();
@@ -79,7 +80,7 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
             setIsCameraOn(false);
         }
     }
-  }, [isCameraOn, isDisconnected, toast]); 
+  }, [isCameraOn, isDisconnected, toast, setIsCameraOn]); 
 
   useEffect(() => {
     const handleKeyDown = () => setKeyboardActivity(100);
@@ -278,7 +279,7 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{isCameraOn ? 'Stop' : 'Start'} Stream</p>
+                  <p>{isCameraon ? 'Stop' : 'Start'} Stream</p>
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
@@ -315,5 +316,3 @@ export function CameraFeed({ employee: employeeProp }: CameraFeedProps) {
     </Dialog>
   )
 }
-
-    

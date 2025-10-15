@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { ShieldCheck, Activity, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut, Video } from "lucide-react"
@@ -27,10 +27,16 @@ const recentActivity = [
 export default function UserDashboardPage() {
     const { username } = useAuth();
     const cameraRef = useRef<HTMLDivElement>(null);
+    const [isCameraOn, setIsCameraOn] = useState(false);
 
     const handleScrollToCamera = () => {
         cameraRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    const handleToggleCamera = () => {
+      setIsCameraOn(prevState => !prevState);
+    }
+
   return (
     <div className="space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start gap-4">
@@ -39,9 +45,9 @@ export default function UserDashboardPage() {
             <p className="text-muted-foreground">Here's your live feed and daily overview.</p>
             </div>
              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleScrollToCamera}>
+                <Button variant="outline" onClick={handleToggleCamera}>
                     <Video className="mr-2 h-4 w-4" />
-                    View Live Feed
+                    {isCameraOn ? "Stop Stream" : "Start Stream"}
                 </Button>
                 <Alert className="max-w-md">
                     <ShieldCheck className="h-4 w-4" />
@@ -88,7 +94,7 @@ export default function UserDashboardPage() {
         </div>
         
         <div ref={cameraRef}>
-            <CameraFeed />
+            <CameraFeed isCameraOn={isCameraOn} setIsCameraOn={setIsCameraOn} />
         </div>
     </div>
   )
