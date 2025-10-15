@@ -7,25 +7,32 @@ import { AIAssistant } from "@/components/ai-assistant"
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function UserLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { role } = useAuth();
+  const { role, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (role === 'admin') {
-      router.push('/admin/dashboard');
-    } else if (role === null) {
-      router.push('/');
+    if (!isLoading && role !== 'user') {
+      if (role === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/');
+      }
     }
-  }, [role, router]);
+  }, [role, router, isLoading]);
 
-  if (role !== 'user') {
-    return null; // or a loading spinner
+  if (isLoading || role !== 'user') {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
