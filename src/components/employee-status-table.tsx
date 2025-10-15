@@ -1,3 +1,7 @@
+
+"use client";
+
+import Link from "next/link"
 import {
   Table,
   TableBody,
@@ -12,11 +16,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { employeeData } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { ChevronRight } from "lucide-react"
 
 export function EmployeeStatusTable() {
   const getBadgeVariant = (status: (typeof employeeData)[0]['status']) => {
@@ -79,6 +86,14 @@ export function EmployeeStatusTable() {
           </TableBody>
         </Table>
       </CardContent>
+      <CardFooter className="justify-end">
+        <Button asChild variant="link" className="text-primary">
+          <Link href="/admin/attendance">
+            View More
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      </CardFooter>
     </Card>
   )
 }
