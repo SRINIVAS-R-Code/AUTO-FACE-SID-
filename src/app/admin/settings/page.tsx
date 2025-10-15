@@ -29,8 +29,13 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useAuth } from "@/context/auth-context"
 
 const settingsFormSchema = z.object({
+  // Profile
+  adminName: z.string().min(1, "Name cannot be empty."),
+  adminEmail: z.string().email("Please enter a valid email."),
+
   // General
   systemName: z.string().min(1, "System name cannot be empty."),
   timeZone: z.string(),
@@ -55,10 +60,14 @@ type SettingsFormValues = z.infer<typeof settingsFormSchema>
 
 export default function SettingsPage() {
   const { toast } = useToast()
+  const { username, setUsername: setAuthUsername } = useAuth()
+
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsFormSchema),
     defaultValues: {
+      adminName: username || "Admin User",
+      adminEmail: "admin@monitorai.com",
       systemName: "MonitorAI",
       timeZone: "America/New_York",
       enableFaceRecognition: true,
@@ -75,6 +84,9 @@ export default function SettingsPage() {
 
   function onSubmit(data: SettingsFormValues) {
     console.log(data)
+    if (setAuthUsername) {
+      setAuthUsername(data.adminName)
+    }
     toast({
       title: "Settings Saved",
       description: "Your new system settings have been successfully applied.",
@@ -90,14 +102,67 @@ export default function SettingsPage() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Tabs defaultValue="general" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-6">
+          <Tabs defaultValue="profile" className="w-full">
+            <TabsList className="grid w-full grid-cols-5 mb-6">
+              <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="general">General</TabsTrigger>
               <TabsTrigger value="ai">AI & Monitoring</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="security">Security & Privacy</TabsTrigger>
             </TabsList>
             
+            <TabsContent value="profile">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Administrator Profile</CardTitle>
+                  <CardDescription>Manage your personal administrator account details.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                   <FormField
+                    control={form.control}
+                    name="adminName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your Name" {...field} />
+                        </FormControl>
+                        <FormDescription>This name will be displayed in audit logs and notifications.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="adminEmail"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input placeholder="your.email@company.com" {...field} />
+                        </FormControl>
+                        <FormDescription>Your login email and where you receive direct alerts.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Change Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="Enter a new password" {...field} />
+                        </FormControl>
+                         <FormDescription>Leave blank to keep your current password.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             <TabsContent value="general">
               <Card>
                 <CardHeader>
@@ -366,5 +431,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-    

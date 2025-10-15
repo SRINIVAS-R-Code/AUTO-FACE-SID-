@@ -12,6 +12,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (role: Role, username?: string, rememberMe?: boolean) => void;
   logout: () => void;
+  setUsername: (username: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,6 +40,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     setIsLoading(false);
   }, []);
+
+  const handleSetUsername = (newUsername: string) => {
+    setUsername(newUsername);
+    const storage = localStorage.getItem('userRole') ? localStorage : sessionStorage;
+    storage.setItem('username', newUsername);
+  };
 
   const login = (newRole: Role, name = 'User', rememberMe = false) => {
     setIsLoading(true);
@@ -76,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ role, login, logout, username, isLoading }}>
+    <AuthContext.Provider value={{ role, login, logout, username, isLoading, setUsername: handleSetUsername }}>
       {children}
     </AuthContext.Provider>
   );
