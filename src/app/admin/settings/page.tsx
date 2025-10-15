@@ -4,6 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import { useRef } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -63,6 +64,7 @@ type SettingsFormValues = z.infer<typeof settingsFormSchema>
 export default function SettingsPage() {
   const { toast } = useToast()
   const { username, setUsername: setAuthUsername, avatarUrl, setAvatarUrl } = useAuth()
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
 
   const form = useForm<SettingsFormValues>({
@@ -96,15 +98,27 @@ export default function SettingsPage() {
   }
 
   const handlePhotoChange = () => {
-    if (setAvatarUrl) {
-        const newAvatarUrl = `https://picsum.photos/seed/${Math.random()}/100/100`;
-        setAvatarUrl(newAvatarUrl);
-        toast({
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && setAvatarUrl) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result;
+        if (typeof result === 'string') {
+          setAvatarUrl(result);
+          toast({
             title: "Profile Photo Updated",
             description: "Your new photo has been saved.",
-        });
+          });
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
+
 
   return (
     <div className="space-y-6">
@@ -140,6 +154,13 @@ export default function SettingsPage() {
                              <Button type="button" size="icon" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full" onClick={handlePhotoChange}>
                                 <Camera className="h-4 w-4" />
                              </Button>
+                             <input 
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                accept="image/*"
+                                onChange={handleFileSelect}
+                             />
                         </div>
                         <div>
                             <FormLabel>Profile Photo</FormLabel>
