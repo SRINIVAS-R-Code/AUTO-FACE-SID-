@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useSidebar } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { useAuth } from "@/context/auth-context"
 
 const useSafePathname = () => {
   try {
@@ -55,6 +56,9 @@ const userNavItems = [
 export function UserSidebarNav() {
   const pathname = useSafePathname()
   const { state } = useSidebar()
+  const { username } = useAuth();
+  const userFallback = username ? username.charAt(0).toUpperCase() : "U";
+
 
   return (
     <Sidebar>
@@ -67,11 +71,12 @@ export function UserSidebarNav() {
       <SidebarContent className="flex-grow">
         <div className="p-4 space-y-2">
             <Avatar className="h-16 w-16">
-                <AvatarFallback className="bg-primary/20 text-primary text-3xl">S</AvatarFallback>
+                <AvatarImage src={`https://picsum.photos/seed/${username}/100/100`} alt={username || 'user'} data-ai-hint="person face" />
+                <AvatarFallback className="bg-primary/20 text-primary text-3xl">{userFallback}</AvatarFallback>
             </Avatar>
             <div className="relative">
-                <h3 className="font-semibold">srinivas</h3>
-                <p className="text-xs text-muted-foreground">user@company.com</p>
+                <h3 className="font-semibold">{username || 'Employee'}</h3>
+                <p className="text-xs text-muted-foreground">{username?.toLowerCase() || 'user'}@company.com</p>
                 <button className="absolute top-0 right-0 text-muted-foreground hover:text-foreground">
                     <Pencil size={14} />
                 </button>

@@ -16,10 +16,11 @@ import { User, Settings, LogOut, Search, Bell, Moon } from "lucide-react"
 import { useAuth } from "@/context/auth-context";
 
 export function Header() {
-  const { role, logout } = useAuth();
-  const userName = role === 'admin' ? 'Admin User' : 'srinivas';
-  const userEmail = role === 'admin' ? 'admin@monitorai.com' : 'user@company.com';
-  const userFallback = role === 'admin' ? 'AD' : 'S';
+  const { role, logout, username } = useAuth();
+  
+  const userName = username || (role === 'admin' ? 'Admin User' : 'User');
+  const userEmail = role === 'admin' ? 'admin@monitorai.com' : `${(username || 'user').toLowerCase()}@company.com`;
+  const userFallback = username ? username.charAt(0).toUpperCase() : (role === 'admin' ? 'A' : 'U');
 
   return (
     <header className="flex h-20 items-center justify-between border-b bg-card px-4 md:px-6">
@@ -43,7 +44,7 @@ export function Header() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={`https://picsum.photos/seed/${role === 'admin' ? 9 : 10}/100/100`} alt={userName} data-ai-hint="person face" />
+                <AvatarImage src={`https://picsum.photos/seed/${username || role}/100/100`} alt={userName} data-ai-hint="person face" />
                 <AvatarFallback>{userFallback}</AvatarFallback>
               </Avatar>
             </Button>
