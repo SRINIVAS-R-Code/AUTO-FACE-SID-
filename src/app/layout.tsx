@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/auth-context';
 
 export const metadata: Metadata = {
-  title: 'MonitorAI',
-  description: 'Advanced AI-powered attendance monitoring and employee management system.',
+  title: 'Monitor Workers Automatically using Face Recognition and System Interaction Detection',
+  description: 'An advanced system to monitor workers automatically using face recognition and system interaction detection.',
 };
 
 export default function RootLayout({

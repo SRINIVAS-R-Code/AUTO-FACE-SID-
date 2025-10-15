@@ -46,7 +46,7 @@ export default function LoginPage() {
         <h1 className="text-5xl font-bold">MonitorAI</h1>
         <p className="flex items-center justify-center gap-2 mt-2 text-lg">
           <Sparkles size={16} />
-          Advanced AI-Powered Attendance System
+          Face Recognition and System Interaction Detection
         </p>
       </div>
 

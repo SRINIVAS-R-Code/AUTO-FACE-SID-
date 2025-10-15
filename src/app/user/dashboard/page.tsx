@@ -118,29 +118,29 @@ export default function UserDashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><UserCheck /> Face Recognition</CardTitle>
+             <CardContent className="pt-4">
+              <p className="text-sm text-muted-foreground mb-4">AI-powered identity verification for secure attendance.</p>
+              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
+                <span className="text-sm font-medium">Authentication Status</span>
+                <Badge variant="default" className="bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30">Face Detected</Badge>
+              </div>
+            </CardContent>
           </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-2">AI-powered monitoring</p>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Status</span>
-              <Badge variant="default" className="bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30">Face Detected</Badge>
-            </div>
-          </CardContent>
         </Card>
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><Computer /> System Interaction</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-2">Real-time activity monitoring</p>
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium">Keyboard Activity</span>
-                <span className="text-sm font-bold">87%</span>
+             <CardContent className="pt-4">
+              <p className="text-sm text-muted-foreground mb-4">Real-time monitoring of keyboard and mouse activity.</p>
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-medium">Productivity Score</span>
+                  <span className="text-sm font-bold">87%</span>
+                </div>
+                <Progress value={87} />
               </div>
-              <Progress value={87} />
-            </div>
-          </CardContent>
+            </CardContent>
+          </CardHeader>
         </Card>
       </div>
     </div>
