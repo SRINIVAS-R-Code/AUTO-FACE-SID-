@@ -29,7 +29,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true })
         if (videoRef.current) {
           videoRef.current.srcObject = stream
-          videoRef.current.play()
         }
         setIsCameraOn(true)
       } catch (err) {
@@ -41,7 +40,9 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
   useEffect(() => {
     // Automatically turn on camera for demo purposes
-    toggleCamera();
+    if (!isCameraOn) {
+      toggleCamera();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -49,14 +50,16 @@ export function CameraFeed({ employee }: CameraFeedProps) {
   useEffect(() => {
     return () => {
       // Clean up camera stream on component unmount
-      const stream = videoRef.current?.srcObject as MediaStream | null
-      stream?.getTracks().forEach((track) => track.stop())
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach((track) => track.stop());
+      }
     }
   }, [])
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-      <video ref={videoRef} className="h-full w-full object-cover" muted playsInline />
+      <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
       {!isCameraOn && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/50">
             <VideoOff className="h-12 w-12 text-muted-foreground" />
