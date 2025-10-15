@@ -1,7 +1,7 @@
 
 "use client"
 
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { employeeData, employeeProductivityData, employeeTaskCompletionData, employeeActivityTrendData, employeeActivityData } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
@@ -13,8 +13,10 @@ import { EmployeeTaskCompletionChart } from '@/components/employee-task-completi
 import { EmployeeActivityTrendChart } from '@/components/employee-activity-trend-chart';
 import { EmployeeActivityChart } from '@/components/employee-activity-chart';
 
-export default function EmployeeAnalyticsPage({ params }: { params: { employeeId: string } }) {
-  const employee = employeeData.find(e => e.id === params.employeeId);
+export default function EmployeeAnalyticsPage() {
+  const params = useParams();
+  const employeeId = params.employeeId as string;
+  const employee = employeeData.find(e => e.id === employeeId);
 
   if (!employee) {
     notFound();
