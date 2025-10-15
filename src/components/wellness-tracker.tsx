@@ -1,10 +1,11 @@
+
 "use client"
 
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { provideHealthSuggestions, ProvideHealthSuggestionsOutput } from "@/ai/flows/wellness-monitoring-provide-health-suggestions"
+import { provideHealthSuggestions, ProvideHealthSuggestionsOutput } from "@/ai/flows/wellness-flow"
 
 import { Button } from "@/components/ui/button"
 import {
