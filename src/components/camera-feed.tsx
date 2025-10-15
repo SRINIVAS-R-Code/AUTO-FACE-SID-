@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Video, VideoOff, Square, Circle, Camera, Expand } from 'lucide-react'
+import { Video, VideoOff, Circle, Camera, Expand } from 'lucide-react'
 import type { Employee } from '@/lib/types'
 import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
@@ -105,7 +105,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
                Capture
             </Button>
             <DialogTrigger asChild>
-               <Button variant="outline" size="icon">
+               <Button variant="outline" size="icon" className="h-9 w-9">
                   <Expand className="h-4 w-4" />
                </Button>
             </DialogTrigger>
