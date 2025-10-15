@@ -72,14 +72,6 @@ export const notifications = [
   { id: 3, title: 'Holiday Reminder', description: 'Upcoming public holiday next Monday.', time: '3d ago' },
 ];
 
-export const teamProductivityData = [
-  { department: 'Engineering', productivity: 92 },
-  { department: 'Marketing', productivity: 88 },
-  { department: 'Sales', productivity: 95 },
-  { department: 'HR', productivity: 91 },
-  { department: 'Support', productivity: 85 },
-];
-
 export const productivityTrendData = [
   { month: 'Jan', productivity: 88 },
   { month: 'Feb', productivity: 90 },
@@ -111,11 +103,11 @@ export const employeeTaskCompletionData = [
 ]
 
 export const employeeActivityData = [
-  { metric: "Keyboard", value: 92 },
-  { metric: "Mouse", value: 85 },
+  { metric: "Productivity", value: 92 },
+  { metric: "Task Completion", value: 85 },
   { metric: "Focus", value: 95 },
-  { metric: "Meetings", value: 75 },
-  { metric: "Calls", value: 80 },
+  { metric: "Keyboard", value: 75 },
+  { metric: "Mouse", value: 80 },
 ]
 
 export const employeeActivityTrendData = [

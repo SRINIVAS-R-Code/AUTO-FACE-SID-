@@ -1,7 +1,7 @@
 
 "use client"
 
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts"
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from "recharts"
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 type EmployeeActivityChartProps = {
   data: { metric: string; value: number }[]
@@ -26,20 +26,20 @@ export function EmployeeActivityChart({ data }: EmployeeActivityChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Activity Breakdown</CardTitle>
+        <CardTitle>Performance & Activity Metrics</CardTitle>
         <CardDescription>
-          Real-time interaction metrics.
+          A summary of key performance indicators.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="h-[350px] w-full">
           <RadarChart data={data}>
-            <ChartTooltipContent />
+            <ChartTooltip content={<ChartTooltipContent />} />
             <PolarGrid />
             <PolarAngleAxis dataKey="metric" />
             <PolarRadiusAxis angle={30} domain={[0, 100]} />
             <Radar
-              name="Activity"
+              name="Value"
               dataKey="value"
               stroke="var(--color-value)"
               fill="var(--color-value)"
