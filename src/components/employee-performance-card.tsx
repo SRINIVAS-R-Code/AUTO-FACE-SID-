@@ -8,9 +8,10 @@ import { Button } from "@/components/ui/button"
 import { ArrowUpRight } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { EmployeeTaskCompletionChart } from "./employee-task-completion-chart"
-import { employeeTaskCompletionData, employeeProductivityData, employeeActivityTrendData } from "@/lib/data"
+import { employeeTaskCompletionData, employeeProductivityData, employeeActivityTrendData, employeeActivityData } from "@/lib/data"
 import { EmployeeProductivityChart } from "./employee-productivity-chart"
 import { EmployeeActivityTrendChart } from "./employee-activity-trend-chart"
+import { EmployeeActivityChart } from "./employee-activity-chart"
 
 
 type EmployeePerformance = {
@@ -68,17 +69,20 @@ export function EmployeePerformanceCard({ employee }: EmployeePerformanceCardPro
           </div>
         </CardContent>
       </Card>
-       <DialogContent className="max-w-4xl">
+       <DialogContent className="max-w-6xl">
         <DialogHeader>
-          <DialogTitle>Performance Analytics: {employee.name}</DialogTitle>
+          <DialogTitle>Performance Dashboard: {employee.name}</DialogTitle>
           <DialogDescription>
-            Detailed performance breakdown for {employee.position}.
+            Detailed performance and activity breakdown for {employee.position}.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <EmployeeProductivityChart data={employeeProductivityData} />
             <EmployeeActivityTrendChart data={employeeActivityTrendData} />
             <EmployeeTaskCompletionChart data={employeeTaskCompletionData} />
+            <div className="lg:col-span-3">
+              <EmployeeActivityChart data={employeeActivityData} />
+            </div>
         </div>
       </DialogContent>
     </Dialog>
