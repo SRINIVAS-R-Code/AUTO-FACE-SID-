@@ -30,3 +30,12 @@ export type AttendanceRecord = {
   checkOut: string;
   status: 'On Time' | 'Late' | 'Absent' | 'On Leave';
 };
+
+export type DataAccessLog = {
+  id: string;
+  adminName: string;
+  adminAvatar: string;
+  action: 'Viewed Feed' | 'Viewed Analytics' | 'Exported Report';
+  target: string;
+  timestamp: string;
+};

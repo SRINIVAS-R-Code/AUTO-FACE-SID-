@@ -1,5 +1,5 @@
 
-import type { Kpi, Employee, AttendanceRecord } from "@/lib/types";
+import type { Kpi, Employee, AttendanceRecord, DataAccessLog } from "@/lib/types";
 import { Users, Clock, AlertTriangle, UserCheck } from "lucide-react";
 
 export const kpiData: Kpi[] = [
@@ -117,4 +117,11 @@ export const employeeActivityTrendData = [
   { month: 'Apr', activity: 86 },
   { month: 'May', activity: 90 },
   { month: 'Jun', activity: 92 },
+];
+
+export const dataAccessLogs: DataAccessLog[] = [
+  { id: 'log1', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Feed', target: 'Alice Brown', timestamp: '2024-07-23 10:45 AM' },
+  { id: 'log2', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Analytics', target: 'Bob Johnson', timestamp: '2024-07-23 10:42 AM' },
+  { id: 'log3', adminName: 'Edward Miller', adminAvatar: 'https://picsum.photos/seed/6/100/100', action: 'Exported Report', target: 'All Employees', timestamp: '2024-07-22 03:15 PM' },
+  { id: 'log4', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Feed', target: 'Jane Smith', timestamp: '2024-07-22 11:01 AM' },
 ];
