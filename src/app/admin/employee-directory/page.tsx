@@ -2,10 +2,10 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { employeeData as initialEmployeeData } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
-import { Circle, UserPlus } from "lucide-react";
+import { Circle, UserPlus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +16,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
@@ -24,7 +35,10 @@ import type { Employee } from "@/lib/types";
 export default function EmployeeDirectoryPage() {
   const [employeeData, setEmployeeData] = useState<Employee[]>(initialEmployeeData);
   const [newEmployee, setNewEmployee] = useState({ name: '', email: '', position: '', department: '' });
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
+  const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(null);
   const { toast } = useToast();
 
   const handleAddEmployee = () => {
@@ -52,14 +66,43 @@ export default function EmployeeDirectoryPage() {
       description: `${newEmployee.name} has been added to the directory.`,
     });
     setNewEmployee({ name: '', email: '', position: '', department: '' });
-    setIsDialogOpen(false);
+    setIsAddDialogOpen(false);
   };
+  
+  const handleEditClick = (employee: Employee) => {
+    setEmployeeToEdit(employee);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateEmployee = () => {
+    if (!employeeToEdit) return;
+
+    setEmployeeData(employeeData.map(e => e.id === employeeToEdit.id ? employeeToEdit : e));
+    toast({
+        title: "Employee Updated",
+        description: `${employeeToEdit.name}'s information has been updated.`,
+    });
+    setIsEditDialogOpen(false);
+    setEmployeeToEdit(null);
+  };
+  
+  const handleDeleteEmployee = () => {
+    if (!employeeToDelete) return;
+
+    setEmployeeData(employeeData.filter(e => e.id !== employeeToDelete.id));
+    toast({
+        title: "Employee Removed",
+        description: `${employeeToDelete.name} has been removed from the directory.`,
+    });
+    setEmployeeToDelete(null);
+  };
+
 
   return (
     <div className="space-y-6">
        <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Employee Management</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <UserPlus className="mr-2 h-4 w-4" /> Add Employee
@@ -96,13 +139,51 @@ export default function EmployeeDirectoryPage() {
           </DialogContent>
         </Dialog>
       </div>
+
+       {/* Edit Employee Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+            <DialogTitle>Edit Employee</DialogTitle>
+            <DialogDescription>
+                Update the employee's details below.
+            </DialogDescription>
+            </DialogHeader>
+            {employeeToEdit && (
+            <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-name" className="text-right">Name</Label>
+                    <Input id="edit-name" value={employeeToEdit.name} onChange={(e) => setEmployeeToEdit({...employeeToEdit, name: e.target.value})} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-email" className="text-right">Email</Label>
+                    <Input id="edit-email" value={employeeToEdit.email} onChange={(e) => setEmployeeToEdit({...employeeToEdit, email: e.target.value})} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-position" className="text-right">Position</Label>
+                    <Input id="edit-position" value={employeeToEdit.position} onChange={(e) => setEmployeeToEdit({...employeeToEdit, position: e.target.value})} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-department" className="text-right">Department</Label>
+                    <Input id="edit-department" value={employeeToEdit.department} onChange={(e) => setEmployeeToEdit({...employeeToEdit, department: e.target.value})} className="col-span-3" />
+                </div>
+            </div>
+            )}
+            <DialogFooter>
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
+                <Button type="button" onClick={handleUpdateEmployee}>Save Changes</Button>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {employeeData.map((employee) => (
-          <Card key={employee.id} className="bg-card/80 hover:bg-card/95 transition-colors">
+          <Card key={employee.id} className="bg-card/80 hover:bg-card/95 transition-colors flex flex-col">
             <CardHeader>
               <CardTitle>{employee.name}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm">
+            <CardContent className="space-y-2 text-sm flex-grow">
               <div>
                 <span className="font-semibold text-muted-foreground">Position: </span>
                 <span>{employee.position}</span>
@@ -123,9 +204,37 @@ export default function EmployeeDirectoryPage() {
                 </Badge>
               </div>
             </CardContent>
+             <CardFooter className="pt-4 flex justify-end gap-2">
+                <Button variant="ghost" size="icon" onClick={() => handleEditClick(employee)}>
+                    <Pencil className="h-4 w-4" />
+                </Button>
+                <AlertDialog onOpenChange={(open) => !open && setEmployeeToDelete(null)}>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" onClick={() => setEmployeeToDelete(employee)}>
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently remove {employeeToDelete?.name} from the directory.
+                        </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteEmployee} className="bg-destructive hover:bg-destructive/90">
+                            Delete
+                        </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </CardFooter>
           </Card>
         ))}
       </div>
     </div>
   );
 }
+
+    
