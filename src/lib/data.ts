@@ -71,3 +71,26 @@ export const notifications = [
   { id: 2, title: 'Policy Change', description: 'New remote work policy is now in effect.', time: '1d ago' },
   { id: 3, title: 'Holiday Reminder', description: 'Upcoming public holiday next Monday.', time: '3d ago' },
 ];
+
+export const teamProductivityData = [
+  { department: 'Engineering', productivity: 92 },
+  { department: 'Marketing', productivity: 88 },
+  { department: 'Sales', productivity: 95 },
+  { department: 'HR', productivity: 91 },
+  { department: 'Support', productivity: 85 },
+];
+
+export const productivityTrendData = [
+  { month: 'Jan', productivity: 88 },
+  { month: 'Feb', productivity: 90 },
+  { month: 'Mar', productivity: 89 },
+  { month: 'Apr', productivity: 92 },
+  { month: 'May', productivity: 93 },
+  { month: 'Jun', productivity: 91 },
+];
+
+export const taskCompletionData = [
+    { status: "On Track", count: 75, fill: "hsl(var(--chart-1))" },
+    { status: "Excelling", count: 15, fill: "hsl(var(--chart-2))" },
+    { status: "Behind", count: 10, fill: "hsl(var(--chart-3))" },
+]
