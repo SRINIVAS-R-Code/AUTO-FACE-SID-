@@ -120,8 +120,8 @@ export const employeeActivityTrendData = [
 ];
 
 export const dataAccessLogs: DataAccessLog[] = [
-  { id: 'log1', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Feed', target: 'Alice Brown', timestamp: '2024-07-23 10:45 AM' },
-  { id: 'log2', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Analytics', target: 'Bob Johnson', timestamp: '2024-07-23 10:42 AM' },
-  { id: 'log3', adminName: 'Edward Miller', adminAvatar: 'https://picsum.photos/seed/6/100/100', action: 'Exported Report', target: 'All Employees', timestamp: '2024-07-22 03:15 PM' },
-  { id: 'log4', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Feed', target: 'Jane Smith', timestamp: '2024-07-22 11:01 AM' },
+  { id: 'log1', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Feed', target: 'Alice Brown', targetId: 'emp004', timestamp: '2024-07-23 10:45 AM' },
+  { id: 'log2', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Analytics', target: 'Bob Johnson', targetId: 'emp003', timestamp: '2024-07-23 10:42 AM' },
+  { id: 'log3', adminName: 'Edward Miller', adminAvatar: 'https://picsum.photos/seed/6/100/100', action: 'Exported Report', target: 'All Employees', targetId: null, timestamp: '2024-07-22 03:15 PM' },
+  { id: 'log4', adminName: 'Admin User', adminAvatar: 'https://picsum.photos/seed/1/100/100', action: 'Viewed Feed', target: 'Jane Smith', targetId: 'emp011', timestamp: '2024-07-22 11:01 AM' },
 ];

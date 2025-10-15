@@ -1,7 +1,8 @@
 
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { FileDown, FileText, FileSpreadsheet, Clock, AlertTriangle, Users, Eye } from "lucide-react";
+import { FileDown, FileText, FileSpreadsheet, Clock, AlertTriangle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { dataAccessLogs } from "@/lib/data";
@@ -16,6 +17,20 @@ const complianceKpis = [
 
 
 export default function ComplianceReportsPage() {
+  const getActionLink = (log: (typeof dataAccessLogs)[0]) => {
+    switch (log.action) {
+      case "Viewed Feed":
+        return `/admin/security-cameras`; // General feed page
+      case "Viewed Analytics":
+        return log.targetId ? `/admin/performance-analytics/${log.targetId}` : `/admin/performance-analytics`;
+      case "Exported Report":
+        return `/admin/dashboard`; // Or wherever reports are generated
+      default:
+        return "#";
+    }
+  };
+
+
   return (
     <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
@@ -74,7 +89,7 @@ export default function ComplianceReportsPage() {
                     </TableHeader>
                     <TableBody>
                         {dataAccessLogs.map((log) => (
-                        <TableRow key={log.id}>
+                        <TableRow key={log.id} className="hover:bg-muted/50">
                             <TableCell>
                                 <div className="flex items-center gap-3">
                                     <Avatar className="h-9 w-9">
@@ -85,12 +100,18 @@ export default function ComplianceReportsPage() {
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <Badge variant={
-                                    log.action === "Viewed Feed" ? "default" : 
-                                    log.action === "Viewed Analytics" ? "secondary" : "outline"
-                                }>{log.action}</Badge>
+                                <Link href={getActionLink(log)}>
+                                    <Badge variant={
+                                        log.action === "Viewed Feed" ? "default" : 
+                                        log.action === "Viewed Analytics" ? "secondary" : "outline"
+                                    } className="cursor-pointer">{log.action}</Badge>
+                                </Link>
                             </TableCell>
-                            <TableCell>{log.target}</TableCell>
+                            <TableCell>
+                                 <Link href={getActionLink(log)} className="hover:underline">
+                                    {log.target}
+                                 </Link>
+                            </TableCell>
                             <TableCell className="text-right text-muted-foreground">{log.timestamp}</TableCell>
                         </TableRow>
                         ))}

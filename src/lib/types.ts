@@ -37,5 +37,6 @@ export type DataAccessLog = {
   adminAvatar: string;
   action: 'Viewed Feed' | 'Viewed Analytics' | 'Exported Report';
   target: string;
+  targetId: string | null;
   timestamp: string;
 };
