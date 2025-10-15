@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import {
   Table,
   TableBody,
@@ -100,9 +101,11 @@ export function AttendanceTable() {
                   <TableCell>{record.checkIn}</TableCell>
                   <TableCell>{record.checkOut}</TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="icon">
-                      <Eye className="h-5 w-5" />
-                    </Button>
+                    <Link href="/admin/monitoring">
+                      <Button variant="ghost" size="icon">
+                        <Eye className="h-5 w-5" />
+                      </Button>
+                    </Link>
                   </TableCell>
                   <TableCell className="text-right">
                     <Badge variant={getBadgeVariant(record.status)} className={cn(record.status === 'On Time' && 'bg-green-500/20 text-green-700 border-green-500/30 hover:bg-green-500/30', 'capitalize')}>
