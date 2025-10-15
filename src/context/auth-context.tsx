@@ -22,10 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // On initial load, if there's no role but the user is not on the login page,
     // redirect them to the login page.
     if (!role && pathname !== '/') {
-        // Allow access to login page
-        if(pathname !== '/login'){
-             router.push('/');
-        }
+        router.push('/');
     }
   }, [role, pathname, router]);
 

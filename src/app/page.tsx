@@ -21,9 +21,9 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === "admin" && password === "admin") {
+    if (username.toLowerCase() === "admin" && password.toLowerCase() === "admin") {
       login("admin");
-    } else if (username === "user" && password === "user") {
+    } else if (username.toLowerCase() === "user" && password.toLowerCase() === "user") {
       login("user");
     } else {
       toast({
