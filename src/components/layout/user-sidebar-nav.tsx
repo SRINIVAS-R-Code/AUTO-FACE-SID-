@@ -45,7 +45,6 @@ const useSafePathname = () => {
 
 const userNavItems = [
     { href: "/user/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { href: "/user/live-camera", icon: Video, label: "Live Camera" },
     { href: "/user/attendance", icon: CalendarCheck, label: "Attendance" },
     { href: "/user/analytics", icon: BarChart2, label: "Analytics" },
     { href: "/user/wellness", icon: Heart, label: "Wellness" },
