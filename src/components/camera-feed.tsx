@@ -44,14 +44,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
   }
 
   useEffect(() => {
-    // This effect ensures that the video plays when the stream is attached.
-    if (videoRef.current && videoRef.current.srcObject) {
-      videoRef.current.play().catch(error => {
-        // Autoplay was prevented.
-        console.error("Video play was prevented:", error);
-      });
-    }
-
     return () => {
       // Clean up camera stream on component unmount
       if (videoRef.current && videoRef.current.srcObject) {
@@ -59,34 +51,33 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         stream.getTracks().forEach((track) => track.stop());
       }
     }
-  }, [isCameraOn]);
+  }, []);
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-      <video ref={videoRef} className={`h-full w-full object-cover ${!isCameraOn ? 'hidden' : ''}`} autoPlay muted playsInline />
-
-      {!isCameraOn && (
-        <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
-      )}
-      
-      {!isCameraOn && !isFullView && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
-            <VideoOff className="h-12 w-12 text-white/80" />
-            <p className="mt-2 text-sm text-white/90 font-semibold">Camera is off</p>
-        </div>
-      )}
-
-       {isCameraOn && (
+      {isCameraOn ? (
+        <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
+      ) : (
         <>
-          <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-0.5 rounded-md text-xs font-bold flex items-center gap-1">
-            <Circle className="h-2 w-2 fill-white" />
-            LIVE
-          </div>
+          <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
+          {!isFullView && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
+              <VideoOff className="h-12 w-12 text-white/80" />
+              <p className="mt-2 text-sm text-white/90 font-semibold">Camera is off</p>
+            </div>
+          )}
         </>
       )}
-       <div className="absolute bottom-2 left-2 text-white bg-black/50 rounded p-1 text-xs">
+
+      {isCameraOn && (
+        <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-0.5 rounded-md text-xs font-bold flex items-center gap-1">
+          <Circle className="h-2 w-2 fill-white" />
+          LIVE
+        </div>
+      )}
+      <div className="absolute bottom-2 left-2 text-white bg-black/50 rounded p-1 text-xs">
           <p>Status: {isCameraOn ? 'ONLINE' : 'OFFLINE'}</p>
-       </div>
+      </div>
     </div>
   )
 
