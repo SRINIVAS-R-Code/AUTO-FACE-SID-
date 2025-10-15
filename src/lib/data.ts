@@ -38,6 +38,13 @@ export const employeeData: Employee[] = [
   { id: '3', name: 'Carla Diaz', email: 'carla.d@example.com', avatar: 'https://picsum.photos/seed/3/100/100', department: 'Sales', status: 'On Time', lastSeen: '8:55 AM' },
   { id: '4', name: 'David Lee', email: 'david.l@example.com', avatar: 'https://picsum.photos/seed/4/100/100', department: 'HR', status: 'On Leave', lastSeen: 'Yesterday' },
   { id: '5', name: 'Eva Green', email: 'eva.g@example.com', avatar: 'https://picsum.photos/seed/5/100/100', department: 'Engineering', status: 'Absent', lastSeen: 'Yesterday' },
+  { id: '6', name: 'Frank Miller', email: 'frank.m@example.com', avatar: 'https://picsum.photos/seed/6/100/100', department: 'Sales', status: 'On Time', lastSeen: '9:01 AM' },
+  { id: '7', name: 'Grace Hall', email: 'grace.h@example.com', avatar: 'https://picsum.photos/seed/7/100/100', department: 'Marketing', status: 'On Time', lastSeen: '8:59 AM' },
+  { id: '8', name: 'Henry Ward', email: 'henry.w@example.com', avatar: 'https://picsum.photos/seed/8/100/100', department: 'Engineering', status: 'Late', lastSeen: '9:25 AM' },
+  { id: '9', name: 'Ivy Chen', email: 'ivy.c@example.com', avatar: 'https://picsum.photos/seed/9/100/100', department: 'HR', status: 'On Time', lastSeen: '9:00 AM' },
+  { id: '10', name: 'Jack Taylor', email: 'jack.t@example.com', avatar: 'https://picsum.photos/seed/10/100/100', department: 'Sales', status: 'On Time', lastSeen: '8:45 AM' },
+  { id: '11', name: 'Kate Wilson', email: 'kate.w@example.com', avatar: 'https://picsum.photos/seed/11/100/100', department: 'Marketing', status: 'On Leave', lastSeen: 'Yesterday' },
+  { id: '12', name: 'Leo Martin', email: 'leo.m@example.com', avatar: 'https://picsum.photos/seed/12/100/100', department: 'Engineering', status: 'On Time', lastSeen: '9:03 AM' },
 ];
 
 export const attendanceChartData = [
