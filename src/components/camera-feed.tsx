@@ -8,6 +8,7 @@ import { Video, VideoOff, Circle, Camera, Expand } from 'lucide-react'
 import type { Employee } from '@/lib/types'
 import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 
 type CameraFeedProps = {
   employee: Employee
@@ -62,17 +63,19 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-      {isCameraOn ? (
-         <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
-      ) : (
+      <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
+
+      {!isCameraOn && (
         <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
       )}
+      
       {!isCameraOn && !isFullView && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
             <VideoOff className="h-12 w-12 text-white/80" />
             <p className="mt-2 text-sm text-white/90 font-semibold">Camera is off</p>
         </div>
       )}
+
        {isCameraOn && (
         <>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -82,11 +85,11 @@ export function CameraFeed({ employee }: CameraFeedProps) {
             <Circle className="h-2 w-2 fill-white" />
             LIVE
           </div>
-          <div className="absolute bottom-2 left-2 text-white bg-black/50 rounded p-1 text-xs">
-            <p>Status: ONLINE</p>
-          </div>
         </>
       )}
+       <div className="absolute bottom-2 left-2 text-white bg-black/50 rounded p-1 text-xs">
+          <p>Status: {isCameraOn ? 'ONLINE' : 'OFFLINE'}</p>
+       </div>
     </div>
   )
 
@@ -95,28 +98,49 @@ export function CameraFeed({ employee }: CameraFeedProps) {
       <Card className="flex flex-col">
         <CardHeader className="flex-row items-center justify-between">
           <CardTitle className="text-base">{employee.name}</CardTitle>
-          <Badge variant={employee.status === 'On Time' || employee.status === 'Late' ? 'default' : 'outline'} className={employee.status === 'On Time' || employee.status === 'Late' ? 'bg-green-500/20 text-green-700 border-green-500/30' : ''}>
+          <Badge variant={isCameraOn ? 'default' : 'outline'} className={isCameraOn ? 'bg-green-500/20 text-green-700 border-green-500/30' : ''}>
             <Circle className="mr-2 h-2 w-2 fill-current" />
-            ONLINE
+            {isCameraOn ? 'ONLINE' : 'OFFLINE'}
           </Badge>
         </CardHeader>
         <CardContent className="flex-grow">
           <VideoPlayer />
         </CardContent>
         <CardFooter className="mt-4 flex justify-center gap-2">
-            <Button onClick={toggleCamera} variant="outline" size="sm">
-              {isCameraOn ? <VideoOff className="mr-2 h-4 w-4" /> : <Video className="mr-2 h-4 w-4" />}
-              {isCameraOn ? 'Stop' : 'Start'} Stream
-            </Button>
-            <Button variant="outline" size="sm">
-               <Camera className="mr-2 h-4 w-4" />
-               Capture
-            </Button>
-            <DialogTrigger asChild>
-               <Button variant="outline" size="icon" className="h-9 w-9">
-                  <Expand className="h-4 w-4" />
-               </Button>
-            </DialogTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={toggleCamera} variant="outline" size="icon">
+                    {isCameraOn ? <VideoOff className="h-4 w-4" /> : <Video className="h-4 w-4" />}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{isCameraOn ? 'Stop' : 'Start'} Stream</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Camera className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Capture</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="icon">
+                        <Expand className="h-4 w-4" />
+                    </Button>
+                  </DialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Full View</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </CardFooter>
       </Card>
       <DialogContent className="max-w-4xl">
