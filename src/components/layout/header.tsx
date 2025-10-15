@@ -8,6 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuFooter,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -15,6 +16,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { User, Settings, LogOut, Search, Bell, Moon } from "lucide-react"
 import { useAuth } from "@/context/auth-context";
 import Link from "next/link";
+import { notifications } from "@/lib/data";
 
 export function Header() {
   const { role, logout, username } = useAuth();
@@ -22,6 +24,7 @@ export function Header() {
   const userName = username || (role === 'admin' ? 'Admin User' : 'User');
   const userEmail = role === 'admin' ? 'admin@monitorai.com' : `${(username || 'user').toLowerCase()}@company.com`;
   const userFallback = username ? username.charAt(0).toUpperCase() : (role === 'admin' ? 'A' : 'U');
+  const notificationsLink = role === 'admin' ? '/admin/notifications' : '/user/notifications';
 
   return (
     <header className="flex h-20 items-center justify-between border-b bg-card px-4 md:px-6">
@@ -32,12 +35,39 @@ export function Header() {
         <Button variant="ghost" size="icon" className="rounded-full">
             <Search className="h-5 w-5" />
         </Button>
-        <div className="relative">
-            <Button variant="ghost" size="icon" className="rounded-full">
-                <Bell className="h-5 w-5" />
-            </Button>
-            <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">3</span>
-        </div>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                 <div className="relative">
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                        <Bell className="h-5 w-5" />
+                    </Button>
+                    <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">{notifications.length}</span>
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-80" align="end">
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="p-2 space-y-2">
+                    {notifications.slice(0, 3).map((notification) => (
+                        <div key={notification.id} className="grid grid-cols-[25px_1fr] items-start gap-3">
+                             <span className="flex h-2 w-2 translate-y-1.5 rounded-full bg-primary" />
+                             <div className="space-y-1">
+                                <p className="text-sm font-medium leading-none">{notification.title}</p>
+                                <p className="text-sm text-muted-foreground">{notification.description}</p>
+                                <p className="text-xs text-muted-foreground pt-1">{notification.time}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                    <Link href={notificationsLink} className="justify-center">
+                        View all notifications
+                    </Link>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+
         <Button variant="ghost" size="icon" className="rounded-full">
             <Moon className="h-5 w-5" />
         </Button>
