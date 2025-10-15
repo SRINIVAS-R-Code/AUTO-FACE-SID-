@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -76,16 +76,19 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
 
   useEffect(() => {
     if (previousWorkLocation.current !== employee.workLocation) {
-        const notification = {
-            title: employee.workLocation === 'Disconnected' ? 'Employee Disconnected' : 'Employee Reconnected',
-            description: `${employee.name} has ${employee.workLocation === 'Disconnected' ? 'lost network connection' : 'come back online'}.`,
-        };
+        const notificationTitle = employee.workLocation === 'Disconnected' ? 'You are Disconnected' : 'You are Reconnected';
+        const notificationDescription = `You have ${employee.workLocation === 'Disconnected' ? 'lost network connection' : 'come back online'}.`;
+        
+        addNotification({
+            title: notificationTitle,
+            description: notificationDescription,
+        });
+
         toast({
             variant: employee.workLocation === 'Disconnected' ? 'destructive' : 'default',
-            title: notification.title,
-            description: notification.description,
+            title: notificationTitle,
+            description: notificationDescription,
         });
-        addNotification(notification);
         previousWorkLocation.current = employee.workLocation;
     }
   }, [employee.workLocation, employee.name, toast, addNotification]);
@@ -96,26 +99,22 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
         toast({
             variant: "destructive",
             title: "Cannot Start Camera",
-            description: "The employee's system is disconnected from the network.",
+            description: "Your system is disconnected from the network.",
         });
         return;
     }
     const newCameraState = !isCameraOn;
     setIsCameraOn(newCameraState);
-    const notification = {
-        title: `Camera ${newCameraState ? 'Activated' : 'Deactivated'}`,
-        description: `Camera for ${employee.name} has been turned ${newCameraState ? 'on' : 'off'}.`,
-    };
-    toast({
-        title: notification.title,
-        description: notification.description,
+    
+    addNotification({
+        title: `Camera Stream ${newCameraState ? 'Started' : 'Stopped'}`,
+        description: `Your camera stream has been turned ${newCameraState ? 'on' : 'off'}.`,
     });
-    addNotification(notification);
   }
 
   const handleCapture = () => {
     if (isDisconnected) {
-      toast({ variant: "destructive", title: "Cannot Capture", description: "Employee is disconnected." });
+      toast({ variant: "destructive", title: "Cannot Capture", description: "You are disconnected." });
       return;
     }
     if (videoRef.current && isCameraOn) {
@@ -147,7 +146,7 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
       toast({
         variant: "destructive",
         title: "Camera is Off",
-        description: "Please turn on the camera to capture a snapshot.",
+        description: "Please turn on your camera to capture a snapshot.",
       });
     }
   };

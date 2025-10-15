@@ -68,9 +68,9 @@ export const attendanceRecords: AttendanceRecord[] = [
 ];
 
 export const initialNotifications: Notification[] = [
-  { id: 1, title: 'System Update', description: 'Scheduled maintenance this weekend.', time: '2h ago' },
-  { id: 2, title: 'Policy Change', description: 'New remote work policy is now in effect.', time: '1d ago' },
-  { id: 3, title: 'Holiday Reminder', description: 'Upcoming public holiday next Monday.', time: '3d ago' },
+    { id: 1, title: 'Welcome!', description: 'You checked in at 9:02 AM.', time: '1m ago' },
+    { id: 2, title: 'AI Wellness Suggestion', description: 'New wellness suggestions are available.', time: '1d ago' },
+    { id: 3, title: 'Weekly Summary', description: 'Your performance summary is ready to view.', time: '3d ago' },
 ];
 
 export const productivityTrendData = [
