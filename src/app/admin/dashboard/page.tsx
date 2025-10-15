@@ -60,7 +60,15 @@ export default function AdminDashboardPage() {
         <ProductivityTrendChart data={productivityTrendData} />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-1">
+          <DepartmentPerformanceChart />
+        </div>
+        <div className="lg:col-span-2">
+            <EmployeeStatusTable />
+        </div>
+      </div>
+       <div className="grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-3">
            <DepartmentPerformanceChart />
         </div>
@@ -69,7 +77,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
       
-      <EmployeeStatusTable />
+
     </div>
   )
 }
