@@ -80,14 +80,12 @@ export default function AdminDashboardPage() {
         <ProductivityTrendChart data={productivityTrendData} />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-3">
-            <EmployeeStatusTable />
-        </div>
-        <div className="lg:col-span-2 grid grid-cols-1 gap-6">
-          <DepartmentPerformanceChart />
-        </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <DepartmentPerformanceChart />
+        <TaskCompletionPieChart data={taskCompletionData} />
       </div>
+      
+      <EmployeeStatusTable />
     </div>
   )
 }
