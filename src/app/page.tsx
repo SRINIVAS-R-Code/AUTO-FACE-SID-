@@ -115,6 +115,7 @@ export default function LoginPage() {
           <Card className="bg-background/80 backdrop-blur-sm border-white/20">
              <CardHeader>
               <CardTitle className="text-3xl">Register</CardTitle>
+              <CardDescription>This is for demonstration purposes only.</CardDescription>
             </CardHeader>
             <CardContent>
               <form className="space-y-6">
