@@ -7,10 +7,8 @@ import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 import { ArrowUpRight } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { EmployeeProductivityChart } from "./employee-productivity-chart"
 import { EmployeeTaskCompletionChart } from "./employee-task-completion-chart"
-import { EmployeeActivityChart } from "./employee-activity-chart"
-import { employeeProductivityData, employeeTaskCompletionData, employeeActivityData } from "@/lib/data"
+import { employeeTaskCompletionData } from "@/lib/data"
 
 
 type EmployeePerformance = {
@@ -68,17 +66,15 @@ export function EmployeePerformanceCard({ employee }: EmployeePerformanceCardPro
           </div>
         </CardContent>
       </Card>
-       <DialogContent className="max-w-4xl">
+       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Performance Analytics: {employee.name}</DialogTitle>
           <DialogDescription>
             Detailed performance breakdown for {employee.position}.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 py-4">
-            <EmployeeProductivityChart data={employeeProductivityData} />
+        <div className="py-4">
             <EmployeeTaskCompletionChart data={employeeTaskCompletionData} />
-            <EmployeeActivityChart data={employeeActivityData} />
         </div>
       </DialogContent>
     </Dialog>
