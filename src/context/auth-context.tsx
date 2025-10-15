@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
@@ -9,7 +10,7 @@ interface AuthContextType {
   role: Role;
   username: string | null;
   isLoading: boolean;
-  login: (role: Role, username?: string) => void;
+  login: (role: Role, username?: string, rememberMe?: boolean) => void;
   logout: () => void;
 }
 
@@ -23,9 +24,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Simulate checking for a persisted session
-    const sessionRole = sessionStorage.getItem('userRole') as Role;
-    const sessionUser = sessionStorage.getItem('username');
+    // Check localStorage first, then sessionStorage
+    let sessionRole = localStorage.getItem('userRole') as Role;
+    let sessionUser = localStorage.getItem('username');
+
+    if (!sessionRole || !sessionUser) {
+      sessionRole = sessionStorage.getItem('userRole') as Role;
+      sessionUser = sessionStorage.getItem('username');
+    }
+    
     if (sessionRole && sessionUser) {
       setRole(sessionRole);
       setUsername(sessionUser);
@@ -33,43 +40,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (role) {
-        sessionStorage.setItem('userRole', role);
-        if (username) sessionStorage.setItem('username', username);
-      } else {
-        sessionStorage.removeItem('userRole');
-        sessionStorage.removeItem('username');
-      }
-    }
-  }, [role, username, isLoading]);
-
-  useEffect(() => {
-    // When loading is finished and role is determined, stop showing loader on layouts
-    if (!isLoading) {
-      // This is a bit of a hack to force re-render on layouts after loading
-    }
-  }, [isLoading])
-
-
-  const login = (newRole: Role, name = 'User') => {
+  const login = (newRole: Role, name = 'User', rememberMe = false) => {
     setIsLoading(true);
     setRole(newRole);
+    const storage = rememberMe ? localStorage : sessionStorage;
+
     if (newRole === 'admin') {
       setUsername('Admin');
+      storage.setItem('userRole', 'admin');
+      storage.setItem('username', 'Admin');
       router.push('/admin/dashboard');
     } else if (newRole === 'user') {
       setUsername(name);
+      storage.setItem('userRole', 'user');
+      storage.setItem('username', name);
       router.push('/user/dashboard');
     }
-    // Set a timeout to simulate loading and allow destination page to mount
+
+    // Clear the other storage
+    const otherStorage = rememberMe ? sessionStorage : localStorage;
+    otherStorage.removeItem('userRole');
+    otherStorage.removeItem('username');
+
     setTimeout(() => setIsLoading(false), 500); 
   };
 
   const logout = () => {
     setRole(null);
     setUsername(null);
+    sessionStorage.removeItem('userRole');
+    sessionStorage.removeItem('username');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('username');
     router.push('/');
   };
 

@@ -17,6 +17,7 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const { toast } = useToast();
 
   const handleLogin = (e: React.FormEvent) => {
@@ -25,10 +26,10 @@ export default function LoginPage() {
     const trimmedPassword = password.trim();
 
     if (trimmedUsername === "admin" && trimmedPassword === "admin") {
-      login("admin", "Admin");
+      login("admin", "Admin", rememberMe);
     } else if (trimmedPassword === "user") {
       // Any username can be used for the user role
-      login("user", trimmedUsername || "User");
+      login("user", trimmedUsername || "User", rememberMe);
     } else {
       toast({
         variant: "destructive",
@@ -95,7 +96,7 @@ export default function LoginPage() {
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                        <Checkbox id="remember-me" />
+                        <Checkbox id="remember-me" checked={rememberMe} onCheckedChange={(checked) => setRememberMe(!!checked)} />
                         <Label htmlFor="remember-me" className="text-sm font-normal">Remember me</Label>
                     </div>
                     <a href="#" className="text-sm text-primary hover:underline">Forgot password?</a>
