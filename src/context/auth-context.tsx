@@ -19,22 +19,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    // On initial load, if there's no role but the user is not on the login page,
-    // redirect them to the login page.
-    if (!role && pathname !== '/') {
-      router.push('/');
-    } else if (role && pathname === '/') {
-      // If user is logged in and on the login page, redirect them to their dashboard
+    // If user is logged in and on the login page, redirect them to their dashboard
+    if (role && pathname === '/') {
       if (role === 'admin') {
         router.push('/admin/dashboard');
       } else if (role === 'user') {
         router.push('/user/dashboard');
       }
     }
+    // If user is not logged in and trying to access a protected route, redirect to login
+    else if (!role && pathname !== '/') {
+      router.push('/');
+    }
   }, [role, pathname, router]);
 
   const login = (newRole: Role) => {
     setRole(newRole);
+    // Redirect logic is now primarily handled by the useEffect hook.
+    // This simplifies the login function.
     if (newRole === 'admin') {
       router.push('/admin/dashboard');
     } else if (newRole === 'user') {
