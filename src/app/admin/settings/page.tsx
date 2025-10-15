@@ -95,7 +95,7 @@ export default function SettingsPage() {
               <TabsTrigger value="general">General</TabsTrigger>
               <TabsTrigger value="ai">AI & Monitoring</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
-              <TabsTrigger value="security">Security</TabsTrigger>
+              <TabsTrigger value="security">Security & Privacy</TabsTrigger>
             </TabsList>
             
             <TabsContent value="general">
@@ -301,6 +301,7 @@ export default function SettingsPage() {
                 </CardContent>
               </Card>
             </TabsContent>
+            
             <TabsContent value="security">
               <Card>
                 <CardHeader>
@@ -365,3 +366,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
