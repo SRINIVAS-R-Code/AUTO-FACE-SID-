@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -26,9 +26,12 @@ import { cn } from "@/lib/utils"
 import { Eye } from "lucide-react"
 import { Button } from "./ui/button"
 
+const RECORDS_PER_PAGE = 8;
+
 export function AttendanceTable() {
   const [departmentFilter, setDepartmentFilter] = useState("all")
   const [searchFilter, setSearchFilter] = useState("")
+  const [currentPage, setCurrentPage] = useState(1);
 
   const getBadgeVariant = (status: (typeof attendanceRecords)[0]['status']) => {
     switch (status) {
@@ -48,6 +51,21 @@ export function AttendanceTable() {
       record.employeeName.toLowerCase().includes(searchFilter.toLowerCase())
     )
 
+  const totalPages = Math.ceil(filteredRecords.length / RECORDS_PER_PAGE);
+  const paginatedRecords = filteredRecords.slice(
+    (currentPage - 1) * RECORDS_PER_PAGE,
+    currentPage * RECORDS_PER_PAGE
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+
   return (
     <Card>
       <CardContent className="pt-6">
@@ -55,10 +73,16 @@ export function AttendanceTable() {
           <Input
             placeholder="Search by name..."
             value={searchFilter}
-            onChange={(e) => setSearchFilter(e.target.value)}
+            onChange={(e) => {
+              setSearchFilter(e.target.value)
+              setCurrentPage(1)
+            }}
             className="max-w-xs"
           />
-          <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+          <Select value={departmentFilter} onValueChange={(value) => {
+            setDepartmentFilter(value)
+            setCurrentPage(1)
+          }}>
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Department" />
             </SelectTrigger>
@@ -71,7 +95,7 @@ export function AttendanceTable() {
             </SelectContent>
           </Select>
         </div>
-        <div className="relative w-full overflow-auto">
+        <div className="relative w-full overflow-auto border rounded-lg">
           <Table>
             <TableHeader>
               <TableRow>
@@ -85,7 +109,7 @@ export function AttendanceTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredRecords.map((record) => (
+              {paginatedRecords.map((record) => (
                 <TableRow key={record.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -118,6 +142,30 @@ export function AttendanceTable() {
           </Table>
         </div>
       </CardContent>
+       <CardFooter className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          Showing {Math.min(paginatedRecords.length, filteredRecords.length)} of {filteredRecords.length} records.
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <span className="text-sm font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   )
 }
