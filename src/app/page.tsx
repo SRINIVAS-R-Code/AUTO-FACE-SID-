@@ -21,8 +21,8 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmedUsername = username.trim().toLowerCase();
-    const trimmedPassword = password.trim().toLowerCase();
+    const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
 
     if (trimmedUsername === "admin" && trimmedPassword === "admin") {
       login("admin");
@@ -102,7 +102,7 @@ export default function LoginPage() {
                 <Button type="submit" className="w-full text-lg py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity">
                   Sign In
                 </Button>
-                <CardDescription className="text-center text-sm pt-4 text-muted-foreground/90">
+                <CardDescription className="text-center text-sm pt-4 font-semibold text-muted-foreground/90">
                   Demo: Use `admin`/`admin` for Admin Portal or `user`/`user` for User Portal.
                 </CardDescription>
               </form>

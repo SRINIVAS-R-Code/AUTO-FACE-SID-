@@ -19,7 +19,7 @@ export default function UserLayout({
   useEffect(() => {
     if (role === 'admin') {
       router.push('/admin/dashboard');
-    } else if (role !== 'user') {
+    } else if (role === null) {
       router.push('/');
     }
   }, [role, router]);
