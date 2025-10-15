@@ -47,7 +47,7 @@ const userNavItems = [
     { href: "#", icon: Video, label: "Live Camera" },
     { href: "#", icon: CalendarCheck, label: "Attendance" },
     { href: "#", icon: BarChart2, label: "Analytics" },
-    { href: "#", icon: Heart, label: "Wellness" },
+    { href: "/user/wellness", icon: Heart, label: "Wellness" },
     { href: "#", icon: Bell, label: "Notifications" },
     { href: "#", icon: Settings, label: "Settings" },
 ]
