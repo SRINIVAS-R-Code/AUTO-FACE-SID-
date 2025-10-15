@@ -1,7 +1,7 @@
 
 "use client";
 
-import { kpiData, productivityTrendData, taskCompletionData, teamProductivityData } from "@/lib/data"
+import { productivityTrendData, taskCompletionData, teamProductivityData } from "@/lib/data"
 import { KpiCard } from "@/components/kpi-card"
 import { DepartmentPerformanceChart } from "@/components/department-performance-chart"
 import { ProductivityTrendChart } from "@/components/productivity-trend-chart"

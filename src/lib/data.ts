@@ -88,6 +88,14 @@ export const taskCompletionData = [
     { status: "Behind", count: 10, fill: "hsl(var(--chart-3))" },
 ]
 
+export const teamProductivityData = [
+    { department: "Engineering", productivity: 95 },
+    { department: "Marketing", productivity: 92 },
+    { department: "Sales", productivity: 98 },
+    { department: "HR", productivity: 91 },
+    { department: "Support", productivity: 89 },
+]
+
 export const employeeProductivityData = [
   { month: "Jan", productivity: 85 },
   { month: "Feb", productivity: 88 },
