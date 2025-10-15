@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Video, VideoOff, Circle, Camera, Expand } from 'lucide-react'
@@ -15,6 +16,9 @@ type CameraFeedProps = {
 export function CameraFeed({ employee }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isCameraOn, setIsCameraOn] = useState(false)
+  
+  // Unique placeholder based on employee ID
+  const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
 
   const toggleCamera = async () => {
     if (isCameraOn) {
@@ -39,15 +43,6 @@ export function CameraFeed({ employee }: CameraFeedProps) {
   }
 
   useEffect(() => {
-    // Automatically turn on camera for demo purposes
-    if (!isCameraOn) {
-      toggleCamera();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-
-  useEffect(() => {
     return () => {
       // Clean up camera stream on component unmount
       if (videoRef.current && videoRef.current.srcObject) {
@@ -59,14 +54,18 @@ export function CameraFeed({ employee }: CameraFeedProps) {
 
   const VideoPlayer = ({ isFullView = false }: { isFullView?: boolean }) => (
     <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-      <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
-      {!isCameraOn && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/50">
-            <VideoOff className="h-12 w-12 text-muted-foreground" />
-            <p className="mt-2 text-sm text-muted-foreground">Camera is off</p>
+      {isCameraOn ? (
+         <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
+      ) : (
+        <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} layout="fill" objectFit="cover" data-ai-hint="office background" />
+      )}
+      {!isCameraOn && !isFullView && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
+            <VideoOff className="h-12 w-12 text-white/80" />
+            <p className="mt-2 text-sm text-white/90 font-semibold">Camera is off</p>
         </div>
       )}
-      {isCameraOn && (
+       {isCameraOn && (
         <>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-1/2 h-2/3 border-2 border-primary/50 rounded-lg shadow-lg animate-pulse border-dashed" />
@@ -98,7 +97,7 @@ export function CameraFeed({ employee }: CameraFeedProps) {
         </CardContent>
         <CardFooter className="mt-4 flex justify-center gap-2">
             <Button onClick={toggleCamera} variant="outline" size="sm">
-              <Video className="mr-2 h-4 w-4" />
+              {isCameraOn ? <VideoOff className="mr-2 h-4 w-4" /> : <Video className="mr-2 h-4 w-4" />}
               {isCameraOn ? 'Stop' : 'Start'} Stream
             </Button>
             <Button variant="outline" size="sm">
