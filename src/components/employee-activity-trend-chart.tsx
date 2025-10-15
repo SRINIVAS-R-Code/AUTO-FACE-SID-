@@ -24,7 +24,7 @@ const chartConfig = {
 
 export function EmployeeActivityTrendChart({ data }: EmployeeActivityTrendChartProps) {
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Activity Trend</CardTitle>
         <CardDescription>Overall activity level over the last 6 months.</CardDescription>

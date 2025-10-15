@@ -24,7 +24,7 @@ const chartConfig = {
 
 export function EmployeeProductivityChart({ data }: EmployeeProductivityChartProps) {
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Monthly Productivity</CardTitle>
         <CardDescription>Productivity score over the last 6 months.</CardDescription>

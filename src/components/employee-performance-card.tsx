@@ -29,7 +29,7 @@ type EmployeePerformanceCardProps = {
 
 export function EmployeePerformanceCard({ employee }: EmployeePerformanceCardProps) {
   return (
-    <Card>
+    <Card className="hover:bg-card/95 hover:border-primary/50 transition-all h-full">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar className="h-12 w-12">
           <AvatarImage src={employee.avatar} alt={employee.name} data-ai-hint="person face" />
@@ -41,19 +41,21 @@ export function EmployeePerformanceCard({ employee }: EmployeePerformanceCardPro
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
-          <div className="flex justify-between items-center mb-1 text-sm">
-            <span className="text-muted-foreground">Productivity</span>
-            <span className="font-bold">{employee.performance.productivity}%</span>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <div className="flex justify-between items-center mb-1 text-sm">
+              <span className="text-muted-foreground">Productivity</span>
+              <span className="font-bold">{employee.performance.productivity}%</span>
+            </div>
+            <Progress value={employee.performance.productivity} />
           </div>
-          <Progress value={employee.performance.productivity} />
-        </div>
-        <div>
-          <div className="flex justify-between items-center mb-1 text-sm">
-            <span className="text-muted-foreground">Task Completion</span>
-            <span className="font-bold">{employee.performance.taskCompletion}%</span>
+          <div>
+            <div className="flex justify-between items-center mb-1 text-sm">
+              <span className="text-muted-foreground">Task Completion</span>
+              <span className="font-bold">{employee.performance.taskCompletion}%</span>
+            </div>
+            <Progress value={employee.performance.taskCompletion} className="[&>div]:bg-green-500" />
           </div>
-          <Progress value={employee.performance.taskCompletion} className="[&>div]:bg-green-500" />
         </div>
         <div className="pt-4">
           <EmployeeActivityChart data={employeeActivityData} />

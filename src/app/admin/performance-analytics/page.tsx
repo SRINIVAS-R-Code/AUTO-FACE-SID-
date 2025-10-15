@@ -1,7 +1,7 @@
 
+import Link from "next/link";
 import { EmployeePerformanceCard } from "@/components/employee-performance-card";
 import { employeeData } from "@/lib/data";
-
 
 const performanceData = employeeData.map(employee => ({
   ...employee,
@@ -18,7 +18,9 @@ export default function PerformanceAnalyticsPage() {
       
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {performanceData.map((employee) => (
-            <EmployeePerformanceCard key={employee.id} employee={employee} />
+          <Link href={`/admin/performance-analytics/${employee.id}`} key={employee.id}>
+            <EmployeePerformanceCard employee={employee} />
+          </Link>
         ))}
       </div>
     </div>

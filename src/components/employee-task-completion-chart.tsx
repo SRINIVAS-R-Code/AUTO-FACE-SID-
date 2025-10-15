@@ -35,7 +35,7 @@ const chartConfig = {
 
 export function EmployeeTaskCompletionChart({ data }: EmployeeTaskCompletionChartProps) {
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Task Status</CardTitle>
         <CardDescription>Distribution of assigned tasks.</CardDescription>
