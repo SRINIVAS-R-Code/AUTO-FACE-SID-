@@ -35,35 +35,6 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
   const previousWorkLocation = useRef(workLocation);
   const isDisconnected = workLocation === 'Disconnected';
 
-  useEffect(() => {
-    // Stop stream if disconnected
-    if (isDisconnected && mediaStream) {
-      mediaStream.getTracks().forEach((track) => track.stop());
-      setMediaStream(null);
-      setIsCameraOn(false);
-    }
-  }, [isDisconnected, mediaStream]);
-
-  useEffect(() => {
-    // Notification for connection status change
-    if (previousWorkLocation.current !== workLocation) {
-        const notificationTitle = workLocation === 'Disconnected' ? `${employeeName} is Disconnected` : `${employeeName} is Reconnected`;
-        const notificationDescription = `${employeeName} has ${workLocation === 'Disconnected' ? 'lost network connection' : 'come back online'}.`;
-        
-        addNotification({
-            title: notificationTitle,
-            description: notificationDescription,
-        });
-
-        toast({
-            variant: workLocation === 'Disconnected' ? 'destructive' : 'default',
-            title: notificationTitle,
-            description: notificationDescription,
-        });
-        previousWorkLocation.current = workLocation;
-    }
-  }, [workLocation, employeeName, toast, addNotification]);
-
   const toggleCamera = async () => {
     if (isDisconnected) {
         toast({
@@ -103,21 +74,70 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
   };
 
   useEffect(() => {
-    if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
+    // Automatically try to turn on camera on component mount
+    if (!isCameraOn && !isDisconnected) {
+      toggleCamera();
     }
-    if (isDialogOpen && fullVideoRef.current) {
-        fullVideoRef.current.srcObject = mediaStream;
+
+    // Cleanup stream on component unmount
+    return () => {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach((track) => track.stop());
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // Stop stream if disconnected
+    if (isDisconnected && mediaStream) {
+      mediaStream.getTracks().forEach((track) => track.stop());
+      setMediaStream(null);
+      setIsCameraOn(false);
+    }
+  }, [isDisconnected, mediaStream]);
+
+  useEffect(() => {
+    // Notification for connection status change
+    if (previousWorkLocation.current !== workLocation) {
+        const notificationTitle = workLocation === 'Disconnected' ? `${employeeName} is Disconnected` : `${employeeName} is Reconnected`;
+        const notificationDescription = `${employeeName} has ${workLocation === 'Disconnected' ? 'lost network connection' : 'come back online'}.`;
+        
+        addNotification({
+            title: notificationTitle,
+            description: notificationDescription,
+        });
+
+        toast({
+            variant: workLocation === 'Disconnected' ? 'destructive' : 'default',
+            title: notificationTitle,
+            description: notificationDescription,
+        });
+        previousWorkLocation.current = workLocation;
+    }
+  }, [workLocation, employeeName, toast, addNotification]);
+
+  useEffect(() => {
+    const applyStream = (videoElement: HTMLVideoElement | null) => {
+        if (videoElement && mediaStream) {
+            if (videoElement.srcObject !== mediaStream) {
+                videoElement.srcObject = mediaStream;
+            }
+        }
+    }
+    applyStream(videoRef.current);
+    if(isDialogOpen) {
+        applyStream(fullVideoRef.current);
     }
   }, [mediaStream, isDialogOpen]);
 
   const handleScreenshot = () => {
     const videoElement = isDialogOpen ? fullVideoRef.current : videoRef.current;
 
-    if (!videoElement || !mediaStream) {
+    if (!videoElement || !mediaStream || videoElement.readyState < 2) {
       toast({
         variant: "destructive",
-        title: "Camera is Off",
+        title: "Camera is Off or Not Ready",
         description: "Please turn on the camera to capture a screenshot.",
       });
       return;
@@ -260,3 +280,5 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
 }
 
 export const CameraFeed = memo(CameraFeedComponent);
+
+    
