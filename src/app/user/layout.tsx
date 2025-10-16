@@ -8,6 +8,7 @@ import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { EmployeeProvider } from "@/context/employee-context";
 
 export default function UserLayout({
   children,
@@ -36,15 +37,17 @@ export default function UserLayout({
   }
 
   return (
-    <SidebarProvider>
-      <UserSidebarNav />
-      <SidebarInset className="min-h-screen">
-        <Header />
-        <main className="flex-1 p-4 md:p-6">
-          {children}
-        </main>
-      </SidebarInset>
-      <AIAssistant />
-    </SidebarProvider>
+    <EmployeeProvider>
+      <SidebarProvider>
+        <UserSidebarNav />
+        <SidebarInset className="min-h-screen">
+          <Header />
+          <main className="flex-1 p-4 md:p-6">
+            {children}
+          </main>
+        </SidebarInset>
+        <AIAssistant />
+      </SidebarProvider>
+    </EmployeeProvider>
   )
 }

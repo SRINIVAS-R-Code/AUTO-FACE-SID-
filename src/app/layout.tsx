@@ -3,7 +3,6 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/context/theme-provider';
-import { EmployeeProvider } from '@/context/employee-context';
 import { NotificationProvider } from '@/context/notification-context';
 
 export const metadata: Metadata = {
@@ -31,12 +30,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <EmployeeProvider>
               <NotificationProvider>
                 {children}
                 <Toaster />
               </NotificationProvider>
-            </EmployeeProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
