@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState, memo } from 'react'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,30 +12,26 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { useToast } from '@/hooks/use-toast'
 import { Alert, AlertDescription, AlertTitle } from './ui/alert'
-import { useEmployee } from '@/context/employee-context'
 import { useNotification } from '@/context/notification-context'
 
 type CameraFeedProps = {
-  employee?: Employee;
-  isCameraOn: boolean;
-  setIsCameraOn: (isOn: boolean | ((prevState: boolean) => boolean)) => void;
+  employeeId: string;
+  employeeName: string;
+  workLocation: Employee['workLocation'];
+  placeholderImage: string;
 }
 
-export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }: CameraFeedProps) {
+function CameraFeedComponent({ employeeId, employeeName, workLocation, placeholderImage }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const { toast } = useToast();
-  const { employees } = useEmployee();
   const { addNotification } = useNotification();
+  const [isCameraOn, setIsCameraOn] = useState(false);
   
-  const employee = employeeProp || employees[0];
-  const previousWorkLocation = useRef(employee.workLocation);
+  const previousWorkLocation = useRef(workLocation);
 
-  const placeholderImage = `https://picsum.photos/seed/${employee.id}/400/300`;
-
-  const isDisconnected = employee.workLocation === 'Disconnected';
+  const isDisconnected = workLocation === 'Disconnected';
 
   useEffect(() => {
-    // This effect handles starting and stopping the camera stream
     let stream: MediaStream;
     if (isCameraOn && !isDisconnected) {
       const enableStream = async () => {
@@ -46,7 +42,7 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
           }
         } catch (err) {
           console.error("Error accessing camera: ", err);
-          setIsCameraOn(false); // Turn button back off if permission is denied
+          setIsCameraOn(false); 
           toast({
             variant: "destructive",
             title: "Camera Access Denied",
@@ -56,7 +52,6 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
       };
       enableStream();
 
-      // The cleanup function for this effect
       return () => {
         if (stream) {
           stream.getTracks().forEach((track) => track.stop());
@@ -65,18 +60,15 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
           videoRef.current.srcObject = null;
         }
       };
-    } else {
-        // Ensure camera is off if disconnected
-        if (isDisconnected && isCameraOn) {
-            setIsCameraOn(false);
-        }
+    } else if (isDisconnected && isCameraOn) {
+        setIsCameraOn(false);
     }
-  }, [isCameraOn, isDisconnected, toast, setIsCameraOn]); 
+  }, [isCameraOn, isDisconnected, toast]); 
 
   useEffect(() => {
-    if (previousWorkLocation.current !== employee.workLocation) {
-        const notificationTitle = employee.workLocation === 'Disconnected' ? 'You are Disconnected' : 'You are Reconnected';
-        const notificationDescription = `You have ${employee.workLocation === 'Disconnected' ? 'lost network connection' : 'come back online'}.`;
+    if (previousWorkLocation.current !== workLocation) {
+        const notificationTitle = workLocation === 'Disconnected' ? 'You are Disconnected' : 'You are Reconnected';
+        const notificationDescription = `You have ${workLocation === 'Disconnected' ? 'lost network connection' : 'come back online'}.`;
         
         addNotification({
             title: notificationTitle,
@@ -84,13 +76,13 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
         });
 
         toast({
-            variant: employee.workLocation === 'Disconnected' ? 'destructive' : 'default',
+            variant: workLocation === 'Disconnected' ? 'destructive' : 'default',
             title: notificationTitle,
             description: notificationDescription,
         });
-        previousWorkLocation.current = employee.workLocation;
+        previousWorkLocation.current = workLocation;
     }
-  }, [employee.workLocation, employee.name, toast, addNotification]);
+  }, [workLocation, employeeName, toast, addNotification]);
 
 
   const toggleCamera = () => {
@@ -131,7 +123,7 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
             <div className="mt-2">
               <Image
                 src={dataUrl}
-                alt={`Snapshot of ${employee.name}`}
+                alt={`Snapshot of ${employeeName}`}
                 width={400}
                 height={300}
                 className="rounded-md object-contain"
@@ -151,7 +143,7 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
   };
 
   const getStatusBadge = () => {
-    switch(employee.workLocation) {
+    switch(workLocation) {
       case 'Office':
         return <Badge variant={isCameraOn ? 'default' : 'outline'} className={isCameraOn ? 'bg-green-500/20 text-green-700 border-green-500/30' : ''}>{isCameraOn ? 'Online' : 'Offline'}</Badge>;
       case 'Home':
@@ -168,7 +160,7 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
       <video ref={videoRef} className={`h-full w-full object-cover ${isCameraOn ? '' : 'hidden'}`} autoPlay muted playsInline />
       {!isCameraOn && (
         <>
-          <Image src={placeholderImage} alt={`${employee.name}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
+          <Image src={placeholderImage} alt={`${employeeName}'s feed placeholder`} fill objectFit="cover" data-ai-hint="office background" />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 p-4 text-center">
             {isDisconnected ? (
                <Alert variant="destructive" className="max-w-xs bg-destructive/50 border-destructive/80 text-destructive-foreground">
@@ -204,7 +196,7 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
     <Dialog>
       <Card className="flex flex-col">
         <CardHeader className="flex-row items-center justify-between">
-          <CardTitle className="text-base">{employee.name}</CardTitle>
+          <CardTitle className="text-base">{employeeName}</CardTitle>
           {getStatusBadge()}
         </CardHeader>
         <CardContent className="flex-grow space-y-4">
@@ -249,10 +241,12 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
       </Card>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>{`${employee.name} - Live Feed`}</DialogTitle>
+          <DialogTitle>{`${employeeName} - Live Feed`}</DialogTitle>
         </DialogHeader>
         <VideoPlayer isFullView />
       </DialogContent>
     </Dialog>
   )
 }
+
+export const CameraFeed = memo(CameraFeedComponent);

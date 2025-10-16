@@ -1,14 +1,14 @@
 
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { ShieldCheck, Activity, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut, Video } from "lucide-react"
+import { ShieldCheck, Activity, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-context";
-import { Button } from "@/components/ui/button";
 import { ActivityMonitor } from "@/components/activity-monitor";
+import { useEmployee } from "@/context/employee-context";
 
 const timeStats = [
     { title: "Log In Time", value: "09:02 AM", icon: LogIn },
@@ -27,16 +27,11 @@ const recentActivity = [
 
 export default function UserDashboardPage() {
     const { username } = useAuth();
+    const { employees } = useEmployee();
     const cameraRef = useRef<HTMLDivElement>(null);
-    const [isCameraOn, setIsCameraOn] = useState(false);
-
-    const handleScrollToCamera = () => {
-        cameraRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    const handleToggleCamera = () => {
-      setIsCameraOn(prevState => !prevState);
-    }
+    
+    // Find the current user's employee data
+    const currentUser = employees.find(e => e.name === username) || employees.find(e => e.email.startsWith(username?.toLowerCase() || '')) || employees[0];
 
   return (
     <div className="space-y-6">
@@ -46,10 +41,6 @@ export default function UserDashboardPage() {
             <p className="text-muted-foreground">Here's your live feed and daily overview.</p>
             </div>
              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleToggleCamera}>
-                    <Video className="mr-2 h-4 w-4" />
-                    {isCameraOn ? "Stop Stream" : "Start Stream"}
-                </Button>
                 <Alert className="max-w-md">
                     <ShieldCheck className="h-4 w-4" />
                     <AlertTitle>Privacy and Security</AlertTitle>
@@ -96,7 +87,12 @@ export default function UserDashboardPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2" ref={cameraRef}>
-                <CameraFeed isCameraOn={isCameraOn} setIsCameraOn={setIsCameraOn} />
+                <CameraFeed 
+                    employeeId={currentUser.id}
+                    employeeName={currentUser.name}
+                    workLocation={currentUser.workLocation}
+                    placeholderImage={currentUser.avatar}
+                />
             </div>
             <div className="lg:col-span-1">
                 <ActivityMonitor />
