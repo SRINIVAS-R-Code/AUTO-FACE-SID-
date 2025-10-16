@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Bot, Mic, Send, User, X } from "lucide-react"
+import { Bot, Mic, Send, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
@@ -19,7 +19,6 @@ type Message = {
   content: string
 }
 
-// SpeechRecognition might have vendor prefixes
 const SpeechRecognition =
   (typeof window !== 'undefined' && window.SpeechRecognition) ||
   (typeof window !== 'undefined' && (window as any).webkitSpeechRecognition)
@@ -37,21 +36,17 @@ export function AIAssistant() {
 
    useEffect(() => {
     if (!SpeechRecognition) {
-      // You can optionally show a toast or disable the mic button permanently
       console.warn("Speech Recognition API not supported in this browser.")
       return
     }
 
     const recognition = new SpeechRecognition()
-    recognition.continuous = true
-    recognition.interimResults = true
+    recognition.continuous = false
+    recognition.interimResults = false
     recognition.lang = "en-US"
 
     recognition.onresult = (event: any) => {
-      const transcript = Array.from(event.results)
-        .map((result: any) => result[0])
-        .map((result) => result.transcript)
-        .join("")
+      const transcript = event.results[0][0].transcript;
       setInput(transcript)
     }
 
@@ -72,7 +67,9 @@ export function AIAssistant() {
     recognitionRef.current = recognition
 
     return () => {
-      recognition.stop()
+      if (recognitionRef.current) {
+        recognitionRef.current.stop()
+      }
     }
   }, [toast])
 
@@ -88,10 +85,11 @@ export function AIAssistant() {
 
     if (isRecording) {
       recognitionRef.current.stop()
+      setIsRecording(false)
     } else {
       recognitionRef.current.start()
+      setIsRecording(true)
     }
-    setIsRecording(!isRecording)
   }
 
 
