@@ -72,21 +72,16 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
       }
     }
   };
-
+  
   useEffect(() => {
-    // Automatically try to turn on camera on component mount
-    if (!isCameraOn && !isDisconnected) {
-      toggleCamera();
-    }
-
     // Cleanup stream on component unmount
     return () => {
       if (mediaStream) {
         mediaStream.getTracks().forEach((track) => track.stop());
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mediaStream]);
+
 
   useEffect(() => {
     // Stop stream if disconnected
@@ -280,3 +275,5 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
 }
 
 export const CameraFeed = memo(CameraFeedComponent);
+
+    
