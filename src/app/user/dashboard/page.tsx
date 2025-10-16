@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { CameraFeed } from "@/components/camera-feed"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { ShieldCheck, Activity, ScreenShare, Briefcase, Coffee, VideoOff, LogIn, LogOut } from "lucide-react"
@@ -25,7 +25,7 @@ const recentActivity = [
     { id: 3, description: "Weekly performance summary is ready." },
 ]
 
-export default function UserDashboardPage() {
+function UserDashboardPage() {
     const { username } = useAuth();
     const { employees } = useEmployee();
     const cameraRef = useRef<HTMLDivElement>(null);
@@ -101,3 +101,5 @@ export default function UserDashboardPage() {
     </div>
   )
 }
+
+export default React.memo(UserDashboardPage);

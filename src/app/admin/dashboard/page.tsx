@@ -1,6 +1,6 @@
 
 "use client";
-
+import React from "react";
 import { kpiData, attendanceChartData, teamProductivityData, productivityTrendData, taskCompletionData } from "@/lib/data"
 import { KpiCard } from "@/components/kpi-card"
 import { AttendanceTrendsChart } from "@/components/attendance-trends-chart"
@@ -14,7 +14,7 @@ import { TaskCompletionPieChart } from "@/components/task-completion-pie-chart"
 import { useEmployee } from "@/context/employee-context"
 
 
-export default function AdminDashboardPage() {
+function AdminDashboardPage() {
   const { employees } = useEmployee();
   const handleExport = (format: 'csv' | 'word') => {
     let data = '';
@@ -118,3 +118,5 @@ export default function AdminDashboardPage() {
     </div>
   )
 }
+
+export default React.memo(AdminDashboardPage);

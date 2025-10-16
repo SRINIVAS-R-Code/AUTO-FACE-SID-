@@ -1,6 +1,6 @@
 
 "use client"
-
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -67,7 +67,7 @@ const settingsFormSchema = z.object({
 
 type SettingsFormValues = z.infer<typeof settingsFormSchema>
 
-export default function SettingsPage() {
+function SettingsPage() {
   const { toast } = useToast()
   const { username, setUsername: setAuthUsername, avatarUrl, setAvatarUrl } = useAuth()
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -512,3 +512,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+export default React.memo(SettingsPage);

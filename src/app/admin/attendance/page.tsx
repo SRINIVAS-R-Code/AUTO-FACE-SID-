@@ -1,6 +1,6 @@
 
 "use client";
-
+import React from "react";
 import { AttendanceTable } from "@/components/attendance-table"
 import {
   DropdownMenu,
@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { FileDown, FileText, FileSpreadsheet } from "lucide-react"
 
-export default function AttendancePage() {
+function AttendancePage() {
   const handleExport = (format: 'csv' | 'word') => {
     let data = '';
     let mimeType = '';
@@ -65,3 +65,5 @@ export default function AttendancePage() {
     </div>
   )
 }
+
+export default React.memo(AttendancePage);

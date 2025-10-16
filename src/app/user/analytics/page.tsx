@@ -1,6 +1,6 @@
 
 "use client";
-
+import React from "react";
 import { taskCompletionData, teamProductivityData, employeeActivityData } from "@/lib/data"
 import { KpiCard } from "@/components/kpi-card"
 import { TaskCompletionPieChart } from "@/components/task-completion-pie-chart"
@@ -10,7 +10,7 @@ import { TeamProductivityChart } from "@/components/team-productivity-chart";
 import { EmployeeActivityChart } from "@/components/employee-activity-chart";
 import { ActivityMonitor } from "@/components/activity-monitor";
 
-export default function AnalyticsPage() {
+function AnalyticsPage() {
     const { username } = useAuth();
     const userKpiData = [
         {
@@ -65,3 +65,5 @@ export default function AnalyticsPage() {
     </div>
   );
 }
+
+export default React.memo(AnalyticsPage);

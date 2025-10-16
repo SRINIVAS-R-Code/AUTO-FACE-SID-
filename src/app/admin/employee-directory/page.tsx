@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Circle, UserPlus, Pencil, Trash2 } from "lucide-react";
@@ -32,7 +32,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Employee } from "@/lib/types";
 import { useEmployee } from "@/context/employee-context";
 
-export default function EmployeeDirectoryPage() {
+function EmployeeDirectoryPage() {
   const { employees, addEmployee, updateEmployee, deleteEmployee } = useEmployee();
   const [newEmployee, setNewEmployee] = useState({ id: '', name: '', email: '', position: '', department: '' });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -223,3 +223,5 @@ export default function EmployeeDirectoryPage() {
     </div>
   );
 }
+
+export default React.memo(EmployeeDirectoryPage);

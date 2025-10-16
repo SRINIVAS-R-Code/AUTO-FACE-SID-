@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { EmployeePerformanceCard } from "@/components/employee-performance-card";
 import { useEmployee } from "@/context/employee-context";
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button"
 import { FileDown, FileText, FileSpreadsheet, Search } from "lucide-react"
 import { Input } from "@/components/ui/input";
 
-export default function PerformanceAnalyticsPage() {
+function PerformanceAnalyticsPage() {
   const { employees } = useEmployee();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -102,3 +102,5 @@ a.click();
     </div>
   );
 }
+
+export default React.memo(PerformanceAnalyticsPage);

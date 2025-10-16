@@ -1,7 +1,8 @@
 
+import React from "react";
 import { UserAttendanceCalendar } from "@/components/user-attendance-calendar"
 
-export default function UserAttendancePage() {
+function UserAttendancePage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">My Attendance</h1>
@@ -9,3 +10,5 @@ export default function UserAttendancePage() {
     </div>
   )
 }
+
+export default React.memo(UserAttendancePage);
