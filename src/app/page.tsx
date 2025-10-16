@@ -45,7 +45,7 @@ export default function LoginPage() {
         <div className="inline-block p-4 bg-white/20 rounded-2xl mb-4">
           <BrainCircuit size={40} className="text-white" />
         </div>
-        <h1 className="text-5xl font-bold">MonitorAI</h1>
+        <h1 className="text-5xl font-bold">AUTO FACE SID</h1>
         <p className="flex items-center justify-center gap-2 mt-2 text-lg">
           <Sparkles size={16} />
           Face Recognition and System Interaction Detection
