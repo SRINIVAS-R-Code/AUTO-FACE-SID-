@@ -1,6 +1,7 @@
+
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Bot, Mic, Send, User, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -11,17 +12,88 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { assistantFlow } from "@/ai/flows/ai-assistant-flow"
 import { Skeleton } from "./ui/skeleton"
+import { useToast } from "@/hooks/use-toast"
 
 type Message = {
   role: "user" | "assistant"
   content: string
 }
 
+// SpeechRecognition might have vendor prefixes
+const SpeechRecognition =
+  (typeof window !== 'undefined' && window.SpeechRecognition) ||
+  (typeof window !== 'undefined' && (window as any).webkitSpeechRecognition)
+
+
 export function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false);
+  const [isRecording, setIsRecording] = useState(false)
+  const recognitionRef = useRef<any>(null)
+  const { toast } = useToast()
+
+
+   useEffect(() => {
+    if (!SpeechRecognition) {
+      // You can optionally show a toast or disable the mic button permanently
+      console.warn("Speech Recognition API not supported in this browser.")
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.lang = "en-US"
+
+    recognition.onresult = (event: any) => {
+      const transcript = Array.from(event.results)
+        .map((result: any) => result[0])
+        .map((result) => result.transcript)
+        .join("")
+      setInput(transcript)
+    }
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error", event.error)
+       toast({
+        variant: "destructive",
+        title: "Speech Recognition Error",
+        description: `An error occurred: ${event.error}. Please ensure microphone access is granted.`,
+      })
+      setIsRecording(false)
+    }
+    
+    recognition.onend = () => {
+      setIsRecording(false)
+    }
+
+    recognitionRef.current = recognition
+
+    return () => {
+      recognition.stop()
+    }
+  }, [toast])
+
+  const handleMicClick = () => {
+    if (!recognitionRef.current) {
+        toast({
+            variant: "destructive",
+            title: "Not Supported",
+            description: "Voice input is not supported in your browser.",
+        })
+        return;
+    }
+
+    if (isRecording) {
+      recognitionRef.current.stop()
+    } else {
+      recognitionRef.current.start()
+    }
+    setIsRecording(!isRecording)
+  }
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
@@ -136,7 +208,14 @@ export function AIAssistant() {
               className="flex-1"
               disabled={isLoading}
             />
-            <Button type="button" variant="ghost" size="icon" disabled={isLoading}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              disabled={isLoading || !SpeechRecognition}
+              onClick={handleMicClick}
+              className={cn(isRecording && "bg-red-500/20 text-red-500 hover:bg-red-500/30 hover:text-red-600")}
+            >
               <Mic className="h-5 w-5" />
               <span className="sr-only">Use voice input</span>
             </Button>
