@@ -8,6 +8,7 @@ import { ShieldCheck, Activity, ScreenShare, Briefcase, Coffee, VideoOff, LogIn,
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
+import { ActivityMonitor } from "@/components/activity-monitor";
 
 const timeStats = [
     { title: "Log In Time", value: "09:02 AM", icon: LogIn },
@@ -92,9 +93,14 @@ export default function UserDashboardPage() {
                 </CardContent>
             </Card>
         </div>
-        
-        <div ref={cameraRef}>
-            <CameraFeed isCameraOn={isCameraOn} setIsCameraOn={setIsCameraOn} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2" ref={cameraRef}>
+                <CameraFeed isCameraOn={isCameraOn} setIsCameraOn={setIsCameraOn} />
+            </div>
+            <div className="lg:col-span-1">
+                <ActivityMonitor />
+            </div>
         </div>
     </div>
   )

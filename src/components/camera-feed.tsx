@@ -14,7 +14,6 @@ import { useToast } from '@/hooks/use-toast'
 import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { useEmployee } from '@/context/employee-context'
 import { useNotification } from '@/context/notification-context'
-import { ActivityMonitor } from './activity-monitor'
 
 type CameraFeedProps = {
   employee?: Employee;
@@ -210,11 +209,8 @@ export function CameraFeed({ employee: employeeProp, isCameraOn, setIsCameraOn }
         </CardHeader>
         <CardContent className="flex-grow space-y-4">
           <VideoPlayer />
-           <div className="pt-2">
-            <ActivityMonitor />
-           </div>
         </CardContent>
-        <CardFooter className="mt-auto flex justify-center gap-2 pt-0">
+        <CardFooter className="mt-auto flex justify-center gap-2 pt-4">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
