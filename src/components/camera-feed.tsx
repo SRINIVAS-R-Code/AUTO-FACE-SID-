@@ -260,5 +260,3 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
 }
 
 export const CameraFeed = memo(CameraFeedComponent);
-
-    
