@@ -14,7 +14,7 @@ To run this project on your local machine using Visual Studio Code, follow these
 
 2.  **Set Up Environment Variables:**
     This project uses Genkit for its AI features, which requires a Gemini API key.
-    -   Create a file named `.env.local` in the root of the project.
+    -   A file named `.env.local` has been created for you in the root of the project.
     -   Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
     -   Add the following line to your `.env.local` file, replacing `"YOUR_API_KEY_HERE"` with your actual key:
         ```
