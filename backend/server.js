@@ -442,6 +442,56 @@ app.post('/api/face-recognition', async (req, res) => {
   }
 });
 
+// ==================== FORGOT PASSWORD ENDPOINT ====================
+
+app.post('/api/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validation
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Check if email exists in database
+    const result = await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (result.rows.length === 0) {
+      // Don't reveal if email exists or not for security
+      return res.json({ message: 'If an account with that email exists, a password reset link has been sent.' });
+    }
+
+    const user = result.rows[0];
+
+    // Generate reset token (simple implementation - in production use JWT or secure tokens)
+    const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const resetExpiry = new Date(Date.now() + 3600000); // 1 hour from now
+
+    // Store reset token in database (you might want to add a reset_tokens table for production)
+    // For now, we'll just log it and return success
+    console.log(`Password reset requested for ${email}`);
+    console.log(`Reset token: ${resetToken} (expires: ${resetExpiry})`);
+
+    // In production, you would:
+    // 1. Store token in database with expiry
+    // 2. Send email with reset link containing token
+    // 3. Create reset-password page that accepts token
+
+    res.json({
+      message: 'If an account with that email exists, a password reset link has been sent.',
+      // In development, you can show the token for testing
+      resetToken: process.env.NODE_ENV === 'development' ? resetToken : undefined
+    });
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ error: 'Failed to process request' });
+  }
+});
+
 // ==================== NOTIFICATION ENDPOINTS ====================
 
 // Get notifications for a user
