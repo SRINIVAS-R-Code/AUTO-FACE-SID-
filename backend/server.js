@@ -442,6 +442,94 @@ app.post('/api/face-recognition', async (req, res) => {
   }
 });
 
+// ==================== LIVE CHAT ENDPOINTS ====================
+
+// Send message
+app.post('/api/chat/send', async (req, res) => {
+  try {
+    const { sender_id, receiver_id, message } = req.body;
+
+    if (!sender_id || !receiver_id || !message) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO live_chat (sender_id, receiver_id, message, timestamp)
+       VALUES ($1, $2, $3, NOW())
+       RETURNING *`,
+      [sender_id, receiver_id, message]
+    );
+
+    res.status(201).json(result.rows[0]);
+
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ error: 'Failed to send message' });
+  }
+});
+
+// Get conversation between two users
+app.get('/api/chat/conversation/:userId1/:userId2', async (req, res) => {
+  try {
+    const { userId1, userId2 } = req.params;
+
+    const result = await pool.query(
+      `SELECT c.*,
+        s.name as sender_name,
+        s.role as sender_role
+       FROM live_chat c
+       LEFT JOIN users s ON c.sender_id = s.id
+       WHERE (c.sender_id = $1 AND c.receiver_id = $2)
+          OR (c.sender_id = $2 AND c.receiver_id = $1)
+       ORDER BY c.timestamp ASC
+       LIMIT 100`,
+      [userId1, userId2]
+    );
+
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error('Error fetching conversation:', error);
+    res.status(500).json({ error: 'Failed to fetch messages' });
+  }
+});
+
+// Get unread message count
+app.get('/api/chat/unread/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const result = await pool.query(
+      'SELECT COUNT(*) as count FROM live_chat WHERE receiver_id = $1 AND is_read = false',
+      [userId]
+    );
+
+    res.json({ count: parseInt(result.rows[0].count) });
+
+  } catch (error) {
+    console.error('Error fetching unread count:', error);
+    res.status(500).json({ error: 'Failed to fetch count' });
+  }
+});
+
+// Mark messages as read
+app.put('/api/chat/mark-read/:userId/:senderId', async (req, res) => {
+  try {
+    const { userId, senderId } = req.params;
+
+    await pool.query(
+      'UPDATE live_chat SET is_read = true WHERE receiver_id = $1 AND sender_id = $2',
+      [userId, senderId]
+    );
+
+    res.json({ message: 'Messages marked as read' });
+
+  } catch (error) {
+    console.error('Error marking as read:', error);
+    res.status(500).json({ error: 'Failed to update' });
+  }
+});
+
 // ==================== FORGOT PASSWORD ENDPOINT ====================
 
 app.post('/api/forgot-password', async (req, res) => {

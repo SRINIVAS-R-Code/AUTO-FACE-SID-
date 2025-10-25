@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { TaskCompletionPieChart } from "@/components/task-completion-pie-chart"
 import { useEmployee } from "@/context/employee-context"
+import { LiveChatWidget } from "@/components/live-chat-widget"
 
 
 function AdminDashboardPage() {
@@ -75,7 +76,7 @@ function AdminDashboardPage() {
 
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
         <DropdownMenu>
@@ -113,8 +114,17 @@ function AdminDashboardPage() {
         <DepartmentPerformanceChart />
         <TaskCompletionPieChart data={taskCompletionData} />
       </div>
-      
+
       <EmployeeStatusTable />
+
+      {/* Live Chat Widget - Floating */}
+      <LiveChatWidget
+        currentUserId={1} // Admin ID
+        currentUserName="Admin User"
+        otherUserId={2} // Default to John Doe
+        otherUserName="John Doe"
+        otherUserRole="user"
+      />
     </div>
   )
 }

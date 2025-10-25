@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-context";
 import { ActivityMonitor } from "@/components/activity-monitor";
 import { useEmployee } from "@/context/employee-context";
+import { LiveChatWidget } from "@/components/live-chat-widget";
 
 const timeStats = [
     { title: "Log In Time", value: "09:02 AM", icon: LogIn },
@@ -34,7 +35,7 @@ function UserDashboardPage() {
     const currentUser = employees.find(e => e.name === username) || employees.find(e => e.email.startsWith(username?.toLowerCase() || '')) || employees[0];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
         <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             <div>
             <h1 className="text-2xl font-semibold">Welcome, {username || 'Employee'}!</h1>
@@ -87,7 +88,7 @@ function UserDashboardPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2" ref={cameraRef}>
-                <CameraFeed 
+                <CameraFeed
                     employeeId={currentUser.id}
                     employeeName={currentUser.name}
                     workLocation={currentUser.workLocation}
@@ -98,6 +99,15 @@ function UserDashboardPage() {
                 <ActivityMonitor />
             </div>
         </div>
+
+        {/* Live Chat Widget - Floating */}
+        <LiveChatWidget
+          currentUserId={2} // User ID
+          currentUserName={username || "Employee"}
+          otherUserId={1} // Admin ID
+          otherUserName="Admin User"
+          otherUserRole="admin"
+        />
     </div>
   )
 }
