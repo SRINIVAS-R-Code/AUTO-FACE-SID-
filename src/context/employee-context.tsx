@@ -42,11 +42,11 @@ export const EmployeeProvider = ({ children }: { children: ReactNode }) => {
         description: `${updatedEmployee.name}'s information has been updated.`,
     });
   };
-  
+
   const deleteEmployee = (employeeId: string) => {
     const employeeToDelete = employees.find(e => e.id === employeeId);
     if (!employeeToDelete) return;
-    
+
     setEmployees(prev => prev.filter(e => e.id !== employeeId));
     toast({
         title: "Employee Removed",

@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
@@ -42,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       sessionEmail = sessionStorage.getItem('email');
       sessionAvatar = sessionStorage.getItem('avatarUrl');
     }
-    
+
     if (sessionRole && sessionUser && sessionEmail) {
       setRole(sessionRole);
       setUsername(sessionUser);
@@ -57,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const storage = localStorage.getItem('userRole') ? localStorage : sessionStorage;
     storage.setItem('username', newUsername);
   };
-  
+
   const handleSetAvatarUrl = (newAvatarUrl: string) => {
     setAvatarUrl(newAvatarUrl);
     const storage = localStorage.getItem('userRole') ? localStorage : sessionStorage;
@@ -81,7 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       storage.setItem('username', adminName);
       storage.setItem('email', adminEmail);
       storage.setItem('avatarUrl', newAvatarUrl);
-      
+
       // Send login event to backend
       try {
         await fetch('http://localhost:5000/api/login', {
@@ -96,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.error('Failed to log login event:', error);
       }
-      
+
       router.push('/admin/dashboard');
     } else if (newRole === 'user') {
       const userEmail = `${name.toLowerCase().replace(/\s/g, '.')}@company.com`;
@@ -107,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       storage.setItem('username', name);
       storage.setItem('email', userEmail);
       storage.setItem('avatarUrl', newAvatarUrl);
-      
+
       // Send login event to backend
       try {
         await fetch('http://localhost:5000/api/login', {
@@ -122,7 +121,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.error('Failed to log login event:', error);
       }
-      
+
       router.push('/user/dashboard');
     }
 
