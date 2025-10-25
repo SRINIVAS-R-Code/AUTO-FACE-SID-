@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
 
-  const login = (newRole: Role, name = 'User', rememberMe = false) => {
+  const login = async (newRole: Role, name = 'User', rememberMe = false) => {
     setIsLoading(true);
     setRole(newRole);
     const storage = rememberMe ? localStorage : sessionStorage;
@@ -81,6 +81,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       storage.setItem('username', adminName);
       storage.setItem('email', adminEmail);
       storage.setItem('avatarUrl', newAvatarUrl);
+      
+      // Send login event to backend
+      try {
+        await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: adminEmail,
+            password: 'admin123',
+            username: adminName
+          })
+        });
+      } catch (error) {
+        console.error('Failed to log login event:', error);
+      }
+      
       router.push('/admin/dashboard');
     } else if (newRole === 'user') {
       const userEmail = `${name.toLowerCase().replace(/\s/g, '.')}@company.com`;
@@ -91,6 +107,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       storage.setItem('username', name);
       storage.setItem('email', userEmail);
       storage.setItem('avatarUrl', newAvatarUrl);
+      
+      // Send login event to backend
+      try {
+        await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: userEmail,
+            password: 'user123',
+            username: name
+          })
+        });
+      } catch (error) {
+        console.error('Failed to log login event:', error);
+      }
+      
       router.push('/user/dashboard');
     }
 

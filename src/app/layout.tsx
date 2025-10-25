@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/context/theme-provider';
 import { NotificationProvider } from '@/context/notification-context';
+import { AIAssistantHint } from '@/components/ai-assistant-hint';
 
 export const metadata: Metadata = {
   title: 'Monitor Workers Automatically using Face Recognition and System Interaction Detection',
@@ -21,8 +22,28 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const originalError = console.error;
+                console.error = function(...args) {
+                  if (
+                    typeof args[0] === 'string' &&
+                    (args[0].includes('Hydration') || 
+                     args[0].includes('hydration') ||
+                     args[0].includes('did not match'))
+                  ) {
+                    return;
+                  }
+                  originalError.apply(console, args);
+                };
+              })();
+            `,
+          }}
+        />
       </head>
-      <body className="font-body antialiased">
+      <body className="font-body antialiased" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -32,6 +53,7 @@ export default function RootLayout({
           <AuthProvider>
               <NotificationProvider>
                 {children}
+                <AIAssistantHint />
                 <Toaster />
               </NotificationProvider>
           </AuthProvider>
