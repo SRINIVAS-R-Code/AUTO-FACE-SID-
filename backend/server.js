@@ -70,33 +70,39 @@ app.get('/api/users', async (req, res) => {
 // Login endpoint
 app.post('/api/login', async (req, res) => {
   const { email, password, username } = req.body;
-  
+
   try {
     const result = await pool.query(
       'SELECT id, username, email, role FROM users WHERE email = $1 AND password = $2',
       [email, password]
     );
-    
+
     if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    
+
     const user = result.rows[0];
-    
+
+    // 🆕 UPDATE: Save last login time
+    await pool.query(
+      'UPDATE users SET last_login = NOW() WHERE id = $1',
+      [user.id]
+    );
+
     // Log the login event
     await pool.query(
       'INSERT INTO activity (employee_id, activity_type, details) VALUES ((SELECT id FROM employees WHERE user_id = $1), $2, $3)',
       [user.id, 'login', `User ${user.username} logged in from ${req.ip}`]
     );
-    
+
     // Create notification for admin
     await pool.query(
       'INSERT INTO notifications (user_id, title, message, type) VALUES ((SELECT id FROM users WHERE role = $1 LIMIT 1), $2, $3, $4)',
       ['admin', `${user.username} logged in`, `${user.role === 'admin' ? 'Admin' : 'Employee'} logged in at ${new Date().toLocaleTimeString()}`, 'info']
     );
-    
-    res.json({ 
-      ...user, 
+
+    res.json({
+      ...user,
       loginEvent: {
         timestamp: new Date().toISOString(),
         ipAddress: req.ip
@@ -434,37 +440,45 @@ app.put('/api/notifications/:id/read', async (req, res) => {
   }
 });
 
-// Get recent login events
+// ========================================
+// LOGIN EVENTS ENDPOINT (for monitoring)
+// ========================================
 app.get('/api/login-events', async (req, res) => {
-  const { limit = 10 } = req.query;
-  
   try {
-    const result = await pool.query(`
-      SELECT 
-        a.id,
-        a.employee_id,
-        COALESCE(e.first_name || ' ' || e.last_name, 
-                 (SELECT username FROM users WHERE username = SUBSTRING(a.details FROM 'User ([^ ]+)')::text LIMIT 1),
-                 'Unknown') as username,
-        COALESCE(u.email, 
-                 (SELECT email FROM users WHERE username = SUBSTRING(a.details FROM 'User ([^ ]+)')::text LIMIT 1),
-                 'unknown@example.com') as email,
-        COALESCE(u.role,
-                 (SELECT role FROM users WHERE username = SUBSTRING(a.details FROM 'User ([^ ]+)')::text LIMIT 1),
-                 'user') as role,
-        a.timestamp,
-        a.details
-      FROM activity a
-      LEFT JOIN employees e ON a.employee_id = e.id
-      LEFT JOIN users u ON e.user_id = u.id
-      WHERE a.activity_type = 'login'
-      ORDER BY a.timestamp DESC
-      LIMIT $1
-    `, [limit]);
-    
-    res.json(result.rows);
+    const limit = parseInt(req.query.limit) || 10;
+
+    // Query recent login events
+    const result = await pool.query(
+      `SELECT
+        u.id,
+        u.username,
+        COALESCE(e.first_name || ' ' || e.last_name, u.username) as name,
+        u.role,
+        u.last_login,
+        u.created_at
+      FROM users u
+      LEFT JOIN employees e ON e.user_id = u.id
+      WHERE u.last_login IS NOT NULL
+      ORDER BY u.last_login DESC
+      LIMIT $1`,
+      [limit]
+    );
+
+    // Format as login events
+    const events = result.rows.map(user => ({
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      role: user.role,
+      timestamp: user.last_login,
+      event: 'login'
+    }));
+
+    res.json(events);
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching login events:', error);
+    res.status(500).json({ error: 'Failed to fetch login events' });
   }
 });
 
