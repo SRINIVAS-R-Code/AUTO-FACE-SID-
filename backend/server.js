@@ -114,16 +114,19 @@ app.post('/api/login', async (req, res) => {
 });
 
 // ========================================
-// REGISTRATION ENDPOINT
+// REGISTRATION ENDPOINT (Updated)
 // ========================================
 app.post('/api/register', async (req, res) => {
   try {
-    const { username, password, name, email } = req.body;
+    const { username, password, name, email, role } = req.body;
 
     // Validation
     if (!username || !password || !name || !email) {
       return res.status(400).json({ error: 'All fields are required' });
     }
+
+    // Validate role (only allow 'user' or 'admin')
+    const userRole = (role === 'admin' || role === 'user') ? role : 'user';
 
     // Check if username already exists
     const existingUser = await pool.query(
@@ -145,15 +148,15 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
-    // Insert new user
+    // Insert new user with selected role
     const result = await pool.query(
       `INSERT INTO users (username, password, name, email, role, created_at)
-       VALUES ($1, $2, $3, $4, 'user', NOW())
+       VALUES ($1, $2, $3, $4, $5, NOW())
        RETURNING id, username, name, email, role`,
-      [username, password, name, email]
+      [username, password, name, email, userRole]  // Use selected role
     );
 
-    console.log('New user registered:', result.rows[0].username);
+    console.log('New user registered:', result.rows[0].username, 'as', result.rows[0].role);
 
     res.status(201).json({
       message: 'Registration successful',

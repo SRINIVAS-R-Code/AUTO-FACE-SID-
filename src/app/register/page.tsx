@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Eye, EyeOff, Lock, User, Shield, Mail } from 'lucide-react'
+import { Eye, EyeOff, Lock, User, Shield, Mail, Users } from 'lucide-react'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -11,7 +11,8 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: '',
     name: '',
-    email: ''
+    email: '',
+    role: 'user' // Default to user
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -19,7 +20,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -53,7 +54,8 @@ export default function RegisterPage() {
           username: formData.username,
           password: formData.password,
           name: formData.name,
-          email: formData.email
+          email: formData.email,
+          role: formData.role // Send selected role
         })
       })
 
@@ -63,7 +65,7 @@ export default function RegisterPage() {
       }
 
       // Success! Redirect to login
-      alert('Registration successful! Please login.')
+      alert(`Registration successful! You can now login as ${formData.role}.`)
       router.push('/')
 
     } catch (error) {
@@ -181,6 +183,68 @@ export default function RegisterPage() {
                   style={{ color: '#000000' }}
                 />
               </div>
+            </div>
+
+            {/* Password input */}
+            <div className="space-y-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Create a password"
+                  required
+                  className="block w-full pl-10 pr-12 py-3 border-2 border-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-black font-medium bg-white placeholder-gray-500"
+                  style={{ color: '#000000' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* NEW: User Type Selection */}
+            <div className="space-y-2">
+              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                Account Type
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Users className="h-5 w-5 text-gray-400" />
+                </div>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  required
+                  className="block w-full pl-10 pr-3 py-3 border-2 border-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-black font-medium bg-white appearance-none cursor-pointer"
+                  style={{ color: '#000000' }}
+                >
+                  <option value="user">👤 User (Regular Employee)</option>
+                  <option value="admin">🛡️ Admin (Administrator)</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Select your account type based on your role
+              </p>
             </div>
 
             {/* Password input */}
