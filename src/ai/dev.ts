@@ -4,7 +4,7 @@ config();
 import './flows/ai-assistant-flow';
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/google-genai';
-import {defineFlow, startFlows} from '@genkit-ai/flow';
+import {defineFlow} from '@genkit-ai/flow';
 
 genkit({
   plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
@@ -22,4 +22,4 @@ defineFlow(
     console.log('started');
   }
 );
-startFlows();
+// startFlows(); // Commented out as it's not available in current version

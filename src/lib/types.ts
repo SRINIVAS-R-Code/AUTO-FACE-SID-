@@ -18,7 +18,7 @@ export type Kpi = {
   value: string;
   change: string;
   changeType: 'increase' | 'decrease';
-  icon: LucideIcon;
+  icon?: LucideIcon;
 };
 
 export type AttendanceRecord = {

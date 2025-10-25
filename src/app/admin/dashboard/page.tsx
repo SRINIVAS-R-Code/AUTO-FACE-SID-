@@ -47,28 +47,28 @@ function AdminDashboardPage() {
       title: "Total Employees",
       value: employees.length.toString(),
       change: "+1.5%",
-      changeType: "increase",
+      changeType: "increase" as const,
       icon: Users,
     },
     {
       title: "Productivity",
       value: "99.2%",
       change: "+1.2%",
-      changeType: "increase",
+      changeType: "increase" as const,
       icon: Zap,
     },
     {
       title: "Overtime Hours",
       value: "120",
       change: "-5%",
-      changeType: "decrease",
+      changeType: "decrease" as const,
       icon: Clock,
     },
      {
       title: "Active Employees",
       value: employees.filter(e => e.status === 'Active').length.toString(),
       change: "+10",
-      changeType: "increase",
+      changeType: "increase" as const,
       icon: Users,
     }
   ].slice(0, 4);

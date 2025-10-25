@@ -45,7 +45,7 @@ export function EmployeeTaskCompletionChart({ data }: EmployeeTaskCompletionChar
           <PieChart>
             <ChartTooltipContent
               nameKey="tasks"
-              content={<ChartTooltipContent nameKey="tasks" hideLabel />}
+              hideLabel
             />
             <Pie data={data} dataKey="tasks" nameKey="status" innerRadius={50} strokeWidth={5} />
             <ChartLegend

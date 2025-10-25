@@ -68,6 +68,10 @@ export const faceRecognitionApi = {
     method: 'POST',
     body: JSON.stringify(recognitionData),
   }),
+  recordRecognition: (recognitionData: any) => apiRequest('/api/face-recognition', {
+    method: 'POST',
+    body: JSON.stringify(recognitionData),
+  }),
 };
 
 // General data API call

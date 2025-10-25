@@ -15,7 +15,7 @@ import { useEmployee } from '@/context/employee-context';
 
 export default function EmployeeAnalyticsPage() {
   const params = useParams();
-  const employeeId = params.employeeId as string;
+  const employeeId = params?.employeeId as string;
   const { getEmployeeById } = useEmployee();
   const employee = getEmployeeById(employeeId);
 

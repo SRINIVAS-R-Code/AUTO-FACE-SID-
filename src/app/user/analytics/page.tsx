@@ -17,28 +17,28 @@ function AnalyticsPage() {
           title: "My Productivity",
           value: "94.5%",
           change: "+2.1%",
-          changeType: "increase",
+          changeType: "increase" as const,
           icon: Zap,
         },
         {
           title: "On-Time Rate",
           value: "99.1%",
           change: "+0.8%",
-          changeType: "increase",
+          changeType: "increase" as const,
           icon: UserCheck,
         },
         {
           title: "Avg. Focus Time",
           value: "6.8h",
           change: "-0.2h",
-          changeType: "decrease",
+          changeType: "decrease" as const,
           icon: Clock,
         },
          {
           title: "Tasks Completed",
           value: "134",
           change: "+12",
-          changeType: "increase",
+          changeType: "increase" as const,
           icon: Users,
         }
       ];
