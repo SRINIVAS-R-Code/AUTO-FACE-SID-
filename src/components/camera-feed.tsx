@@ -53,6 +53,21 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
         title: `Camera Stream Stopped`,
         description: `Your camera stream has been turned off.`,
       });
+
+      // Notify admin that camera is OFF
+      try {
+        await fetch('http://localhost:5000/api/camera/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: parseInt(employeeId),
+            is_active: false
+          })
+        });
+      } catch (error) {
+        console.error('Failed to update camera status:', error);
+      }
+
     } else {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -62,6 +77,21 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
           title: `Camera Stream Started`,
           description: `Your camera stream has been turned on.`,
         });
+
+        // Notify admin that camera is ON
+        try {
+          await fetch('http://localhost:5000/api/camera/status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: parseInt(employeeId),
+              is_active: true
+            })
+          });
+        } catch (error) {
+          console.error('Failed to update camera status:', error);
+        }
+
       } catch (err) {
         console.error("Error accessing camera: ", err);
         toast({
@@ -81,6 +111,28 @@ function CameraFeedComponent({ employeeId, employeeName, workLocation, placehold
       }
     };
   }, [mediaStream]);
+
+  // Heartbeat: Keep telling admin we're still streaming
+  useEffect(() => {
+    if (isCameraOn) {
+      const interval = setInterval(async () => {
+        try {
+          await fetch('http://localhost:5000/api/camera/status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: parseInt(employeeId),
+              is_active: true
+            })
+          });
+        } catch (error) {
+          console.error('Failed to send heartbeat:', error);
+        }
+      }, 10000); // Every 10 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [isCameraOn, employeeId]);
 
 
   useEffect(() => {

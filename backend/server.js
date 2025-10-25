@@ -442,6 +442,89 @@ app.post('/api/face-recognition', async (req, res) => {
   }
 });
 
+// ==================== CAMERA STREAMING ENDPOINTS ====================
+
+// Update camera status (when user turns on/off camera)
+app.post('/api/camera/status', async (req, res) => {
+  try {
+    const { user_id, is_active } = req.body;
+
+    // Check if record exists
+    const existing = await pool.query(
+      'SELECT * FROM camera_streams WHERE user_id = $1',
+      [user_id]
+    );
+
+    if (existing.rows.length > 0) {
+      // Update existing
+      await pool.query(
+        'UPDATE camera_streams SET is_active = $1, last_updated = NOW() WHERE user_id = $2',
+        [is_active, user_id]
+      );
+    } else {
+      // Insert new
+      await pool.query(
+        'INSERT INTO camera_streams (user_id, is_active, last_updated) VALUES ($1, $2, NOW())',
+        [user_id, is_active]
+      );
+    }
+
+    res.json({ message: 'Camera status updated' });
+
+  } catch (error) {
+    console.error('Error updating camera status:', error);
+    res.status(500).json({ error: 'Failed to update camera status' });
+  }
+});
+
+// Get all active camera streams (for admin)
+app.get('/api/camera/active-streams', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT
+        c.user_id,
+        c.is_active,
+        c.last_updated,
+        u.name,
+        u.username,
+        u.email
+       FROM camera_streams c
+       JOIN users u ON c.user_id = u.id
+       WHERE c.is_active = true
+       AND c.last_updated > NOW() - INTERVAL '30 seconds'
+       ORDER BY c.last_updated DESC`
+    );
+
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error('Error fetching active streams:', error);
+    res.status(500).json({ error: 'Failed to fetch streams' });
+  }
+});
+
+// Get camera status for specific user
+app.get('/api/camera/status/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const result = await pool.query(
+      'SELECT * FROM camera_streams WHERE user_id = $1',
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({ is_active: false });
+    }
+
+    res.json(result.rows[0]);
+
+  } catch (error) {
+    console.error('Error fetching camera status:', error);
+    res.status(500).json({ error: 'Failed to fetch status' });
+  }
+});
+
 // ==================== LIVE CHAT ENDPOINTS ====================
 
 // Send message
