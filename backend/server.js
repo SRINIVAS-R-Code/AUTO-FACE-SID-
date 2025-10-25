@@ -113,25 +113,56 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Register endpoint
+// ========================================
+// REGISTRATION ENDPOINT
+// ========================================
 app.post('/api/register', async (req, res) => {
-  const { username, email, password, role } = req.body;
-  
   try {
-    // Validate role
-    const userRole = role && (role === 'admin' || role === 'user') ? role : 'user';
-    
-    const result = await pool.query(
-      'INSERT INTO users (username, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, username, email, role',
-      [username, email, password, userRole]
-    );
-    
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    if (error.code === '23505') { // Unique violation
-      return res.status(400).json({ error: 'User already exists' });
+    const { username, password, name, email } = req.body;
+
+    // Validation
+    if (!username || !password || !name || !email) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
-    res.status(500).json({ error: error.message });
+
+    // Check if username already exists
+    const existingUser = await pool.query(
+      'SELECT * FROM users WHERE username = $1',
+      [username]
+    );
+
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+
+    // Check if email already exists
+    const existingEmail = await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (existingEmail.rows.length > 0) {
+      return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    // Insert new user
+    const result = await pool.query(
+      `INSERT INTO users (username, password, name, email, role, created_at)
+       VALUES ($1, $2, $3, $4, 'user', NOW())
+       RETURNING id, username, name, email, role`,
+      [username, password, name, email]
+    );
+
+    console.log('New user registered:', result.rows[0].username);
+
+    res.status(201).json({
+      message: 'Registration successful',
+      user: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ error: 'Registration failed' });
   }
 });
 
