@@ -485,13 +485,11 @@ app.get('/api/camera/active-streams', async (req, res) => {
         c.user_id,
         c.is_active,
         c.last_updated,
-        u.name,
         u.username,
         u.email
        FROM camera_streams c
        JOIN users u ON c.user_id = u.id
        WHERE c.is_active = true
-       AND c.last_updated > NOW() - INTERVAL '30 seconds'
        ORDER BY c.last_updated DESC`
     );
 
