@@ -80,6 +80,24 @@ CREATE TABLE performance (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create camera_streams table for camera monitoring
+CREATE TABLE camera_streams (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  is_active BOOLEAN DEFAULT false,
+  last_updated TIMESTAMP DEFAULT NOW()
+);
+
+-- Create live_chat table for messaging
+CREATE TABLE live_chat (
+  id SERIAL PRIMARY KEY,
+  sender_id INTEGER REFERENCES users(id),
+  receiver_id INTEGER REFERENCES users(id),
+  message TEXT NOT NULL,
+  timestamp TIMESTAMP DEFAULT NOW(),
+  is_read BOOLEAN DEFAULT false
+);
+
 -- Insert sample data
 INSERT INTO users (username, email, password, role) VALUES
 ('admin', 'admin@company.com', 'admin', 'admin'),
