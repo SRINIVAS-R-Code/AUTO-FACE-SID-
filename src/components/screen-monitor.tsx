@@ -25,7 +25,7 @@ function ScreenMonitorComponent({ employeeId, employeeName, workLocation, status
   const fullVideoRef = useRef<HTMLVideoElement>(null);
   const fullScreenVideoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
-  
+
   const [isCameraOn, setIsCameraOn] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -33,6 +33,24 @@ function ScreenMonitorComponent({ employeeId, employeeName, workLocation, status
 
   const isDisconnected = workLocation === 'Disconnected';
   const isOnline = status === 'Active';
+
+  // Fetch camera status from backend on component mount and periodically
+  useEffect(() => {
+    const fetchCameraStatus = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/camera/status/${employeeId}`);
+        const data = await response.json();
+        setIsCameraOn(data.is_active || false);
+      } catch (error) {
+        console.error('Failed to fetch camera status:', error);
+      }
+    };
+
+    fetchCameraStatus();
+    const interval = setInterval(fetchCameraStatus, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [employeeId]);
 
   // Demo video URLs - using free stock videos
   const cameraVideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";

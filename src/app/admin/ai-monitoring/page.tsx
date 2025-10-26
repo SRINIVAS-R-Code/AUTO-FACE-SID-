@@ -67,94 +67,51 @@ export default function AIMonitoringPage() {
         </Alert>
       </div>
 
-      {/* Live Camera Monitoring Section */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <Video className="h-5 w-5" />
-          Live Camera Monitoring
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activeStreams.map((stream) => (
-            <div key={stream.user_id} className="bg-white rounded-lg shadow-lg p-4 border-2 border-green-500">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h3 className="font-bold text-lg">{stream.name}</h3>
-                  <p className="text-sm text-gray-600">@{stream.username}</p>
-                </div>
-                <div className="flex items-center gap-2 bg-green-100 px-3 py-1 rounded-full">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs font-bold text-green-700">LIVE</span>
-                </div>
+      {/* Live Camera Monitoring - Full Page */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {activeStreams.map((stream) => (
+          <div key={stream.user_id} className="bg-white rounded-lg shadow-lg p-4 border-2 border-green-500">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-sm text-gray-600">@{stream.username}</p>
               </div>
-
-              {/* Camera Status */}
-              <div className="bg-black rounded-lg aspect-video flex items-center justify-center mb-3">
-                <div className="text-center text-white">
-                  <Video className="w-12 h-12 mx-auto mb-2 animate-pulse" />
-                  <p className="text-sm">Camera Active</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Last seen: {new Date(stream.last_updated).toLocaleTimeString()}
-                  </p>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-2">
-                <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700">
-                  View Feed
-                </button>
-                <button className="bg-gray-200 text-gray-700 py-2 px-3 rounded-lg text-sm hover:bg-gray-300">
-                  Info
-                </button>
+              <div className="flex items-center gap-2 bg-green-100 px-3 py-1 rounded-full">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-bold text-green-700">LIVE</span>
               </div>
             </div>
-          ))}
 
-          {activeStreams.length === 0 && (
-            <div className="col-span-full text-center py-12 text-gray-500">
-              <VideoOff className="w-16 h-16 mx-auto mb-3 opacity-50" />
-              <p className="text-lg font-medium">No active camera streams</p>
-              <p className="text-sm">Waiting for users to start their cameras...</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* AI Screen Monitoring Section */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <Cpu className="h-5 w-5" />
-          AI Screen Monitoring
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {employees.map((employee, index) => {
-            const aiStatus = aiStatuses[index % aiStatuses.length];
-            let badgeVariant: "default" | "secondary" | "destructive" | "outline" = "default";
-            if (aiStatus === "Active") badgeVariant = "default";
-            else if (aiStatus === "Idle") badgeVariant = "secondary";
-            else if (aiStatus === "Not Detected") badgeVariant = "destructive";
-            else if (aiStatus === "Low Engagement") badgeVariant = "outline";
-
-            return (
-              <div key={employee.id} className="relative">
-                <ScreenMonitor
-                  employeeId={employee.id}
-                  employeeName={employee.name}
-                  workLocation={employee.workLocation}
-                  status={employee.status}
-                />
-                <div className="absolute top-16 right-4 z-10">
-                  <Badge variant={badgeVariant} className="shadow-lg">
-                    AI: {aiStatus}
-                  </Badge>
-                </div>
+            {/* Camera Status */}
+            <div className="bg-black rounded-lg aspect-video flex items-center justify-center mb-3">
+              <div className="text-center text-white">
+                <Video className="w-12 h-12 mx-auto mb-2 animate-pulse" />
+                <p className="text-sm">Camera Active</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Last seen: {new Date(stream.last_updated).toLocaleTimeString()}
+                </p>
               </div>
-            )
-          })}
-        </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-2">
+              <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700">
+                View Feed
+              </button>
+              <button className="bg-gray-200 text-gray-700 py-2 px-3 rounded-lg text-sm hover:bg-gray-300">
+                Info
+              </button>
+            </div>
+          </div>
+        ))}
+
+        {activeStreams.length === 0 && (
+          <div className="col-span-full text-center py-12 text-gray-500">
+            <VideoOff className="w-16 h-16 mx-auto mb-3 opacity-50" />
+            <p className="text-lg font-medium">No active camera streams</p>
+            <p className="text-sm">Waiting for users to start their cameras...</p>
+          </div>
+        )}
       </div>
     </div>
   )
